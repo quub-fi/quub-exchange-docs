@@ -1,0 +1,33 @@
+@startuml Validation_Flow
+title Secure request flow: "orgId from JWT, never from body"
+
+actor Client
+participant "API Gateway / Fastify" as GW
+participant "Auth Middleware" as AM
+participant "Route Validator\n(Zod/OpenAPI)" as VAL
+participant "Handler\n(marketHandlers)" as H
+participant "Repository\n(ports only)" as REPO
+database "DB\n(RLS on orgId)" as DB
+
+Client -> GW : POST /orgs/{orgId}/markets\nAuthorization: Bearer JWT\nBody: {symbol, quoteCcy, ...}
+GW -> AM : Extract & verify JWT
+AM -> AM : Verify signature\nCheck exp/nbf/aud\nCheck revocation list
+AM -> GW : Claims {userId, orgId=ORG_JWT, roles}
+
+GW -> VAL : Parse body with ZCreateMarketInput\n(❌ orgId not allowed in body)
+VAL -> GW : Validated data or 422 on error
+
+GW -> H : createMarket(repo, orgId=ORG_JWT, data)
+note right of H
+Handler rule:
+- orgId comes ONLY from JWT
+- NEVER trusts orgId from body
+end note
+
+H -> REPO : repo.create({...data, orgId: ORG_JWT})
+REPO -> DB : INSERT market with orgId = ORG_JWT
+DB --> REPO : OK (RLS ensures isolation)
+REPO --> H : Market
+H --> GW : 201 Market
+GW --> Client : 201 Market
+@enduml

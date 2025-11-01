@@ -1,0 +1,40 @@
+@startuml Testing_JWT
+title Testing JWT & org isolation (layers)
+
+actor "Test Runner\n(Vitest)" as VT
+participant "Unit Tests" as UT
+participant "Integration Tests" as IT
+participant "E2E Tests" as E2E
+participant "Mock Repos\n(@quub/testing)" as MOCK
+participant "Real Adapter\n(Prisma)" as ADP
+participant "HTTP App\n(Fastify instance)" as APP
+participant "Auth Utils\n(test JWT signer)" as AUTH
+
+== Unit (handlers only) ==
+VT -> UT : seedFaker(); make JWT claims
+UT -> MOCK : new MockMarketRepository().reset()
+UT -> UT : call createMarket(repo, orgId='ORG_A', data)
+UT -> MOCK : repo assertions (defaults, pagination)
+UT <-- MOCK : OK\n(invariants hold)
+
+== Integration (route -> handler, no network) ==
+VT -> IT : buildApp({deps: MOCK})
+IT -> AUTH : signTestJWT({orgId:'ORG_A'})
+IT -> APP : inject POST /orgs/ORG_A/markets\nAuthorization: Bearer <JWT>\nBody: {symbol:"AAPL", ...}
+APP -> APP : Zod validates body (no orgId)\nAuth middleware verifies JWT\nURL orgId == JWT orgId
+APP -> MOCK : repo.create({... , orgId:'ORG_A'})
+IT <-- APP : 201 Created
+
+== E2E (full HTTP) ==
+VT -> E2E : start Fastify with real plugins
+E2E -> AUTH : signTestJWT({orgId:'ORG_A'})
+E2E -> APP : real HTTP injects or supertest
+APP -> ADP : optional DB/Prisma (or test DB)
+E2E <-- APP : 2xx/4xx as spec
+
+== Contract tests (mocks match real) ==
+VT -> ADP : run shared repository contract suite
+VT -> MOCK : run the same suite against mocks
+VT <-- ADP : must pass the same behaviors
+VT <-- MOCK : must pass the same behaviors
+@enduml

@@ -1,0 +1,37 @@
+@startuml JWT_Lifecycle
+title JWT lifecycle: issue → use → refresh → revoke
+
+actor User as U
+participant "Front-End\n(React/Web)" as FE
+participant "Auth Service\n(Fastify + JWT)" as AUTH
+participant "Exchange API\n(Service)" as API
+database "DB\n(RLS by orgId)" as DB
+collections "Cache/Revocation List" as REV
+
+== Login ==
+U -> FE : Enter credentials
+FE -> AUTH : POST /auth/login {email, password}
+AUTH -> AUTH : Verify credentials\nCreate claims {userId, orgId, roles}
+AUTH -> FE : 200 {accessJWT, refreshJWT}\n(access: short ttl, refresh: long ttl)
+
+== Use Access Token ==
+U -> FE : Perform action
+FE -> API : POST /orgs/:orgId/orders\nAuthorization: Bearer accessJWT
+API -> API : Auth middleware:\n1) Verify signature & expiry\n2) Check revocation\n3) Read claims {orgId, userId}
+API -> API : Validate URL orgId == JWT orgId
+API -> DB : Execute with app.orgId = JWT.orgId\n(RLS enforces tenant isolation)
+DB --> API : Rows scoped to JWT.orgId
+API --> FE : 201 {order ...}
+
+== Access Token Expired ⇒ Refresh ==
+... sometime later ...
+FE -> AUTH : POST /auth/refresh {refreshJWT}
+AUTH -> AUTH : Verify refresh, rotation, blacklist
+AUTH -> FE : 200 {new accessJWT, new refreshJWT}
+
+== Logout / Revoke ==
+U -> FE : Logout
+FE -> AUTH : POST /auth/logout {refreshJWT}
+AUTH -> REV : Mark refreshJWT (and its family) revoked
+AUTH --> FE : 204 No Content
+@enduml
