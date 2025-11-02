@@ -9,6 +9,7 @@ _Based on OpenAPI specification: exchange.yaml_
 The Exchange API serves as the core trading engine for Quub Exchange, providing high-performance order matching, market management, and trade execution capabilities. It supports multi-tenant orchestration across multiple blockchain networks while maintaining regulatory compliance through integrated circuit breakers and market halts.
 
 **Key Business Value:**
+
 - **High-Performance Trading:** Sub-millisecond order matching with 99.99% uptime SLA
 - **Multi-Asset Support:** Native support for spot markets, tokenized RWAs, and derivatives
 - **Regulatory Compliance:** Built-in ATS/MTF frameworks with automated market surveillance
@@ -16,6 +17,7 @@ The Exchange API serves as the core trading engine for Quub Exchange, providing 
 - **Risk Management:** Real-time position monitoring and automated circuit breakers
 
 **Strategic Importance:**
+
 - Core revenue driver through trading fees and market data services
 - Competitive advantage through superior execution quality and low latency
 - Regulatory compliance foundation for global expansion
@@ -26,6 +28,7 @@ The Exchange API serves as the core trading engine for Quub Exchange, providing 
 **Audience:** All
 
 **Business Purpose:**
+
 - Provide institutional-grade trading infrastructure for digital assets
 - Enable fair and orderly markets through automated surveillance and circuit breakers
 - Support multi-asset trading with seamless blockchain integration
@@ -33,6 +36,7 @@ The Exchange API serves as the core trading engine for Quub Exchange, providing 
 - Maintain regulatory compliance through comprehensive audit trails and reporting
 
 **Technical Architecture:**
+
 - **Matching Engine:** High-performance order book with price-time priority matching
 - **Multi-Tenant Design:** Isolated execution environments per organization
 - **Blockchain Agnostic:** Support for multiple chains with atomic settlement
@@ -46,6 +50,7 @@ The Exchange API serves as the core trading engine for Quub Exchange, providing 
 **Audience:** Technical
 
 **Base Configuration:**
+
 ```yaml
 openapi: 3.1.0
 info:
@@ -57,6 +62,7 @@ servers:
 ```
 
 **Authentication & Authorization:**
+
 - **OAuth2 Scopes:** `read:exchange`, `write:exchange` for granular permissions
 - **API Key Authentication:** HMAC-SHA256 signed requests for programmatic access
 - **Multi-Tenant Isolation:** Organization-scoped resources with RBAC controls
@@ -69,14 +75,16 @@ servers:
 ### Markets Management
 
 **GET /orgs/{orgId}/markets**
-*Business Use Case:* Retrieve active markets for trading and market analysis
-*Request Example:*
+_Business Use Case:_ Retrieve active markets for trading and market analysis
+_Request Example:_
+
 ```json
 GET /orgs/123e4567-e89b-12d3-a456-426614174000/markets?status=OPEN&limit=50
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-*Response Example:*
+_Response Example:_
+
 ```json
 {
   "data": [
@@ -86,7 +94,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
       "instrumentId": "789e0123-e45c-67d8-b901-234567890123",
       "quoteCcy": "USD",
       "chainId": 1,
-      "priceBandPct": 0.10,
+      "priceBandPct": 0.1,
       "lotSize": 100,
       "marketType": "SPOT",
       "status": "OPEN",
@@ -100,15 +108,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 }
 ```
 
-*Implementation Notes:*
+_Implementation Notes:_
+
 - Use cursor-based pagination for large market lists
 - Cache market metadata for 5-minute intervals
 - Filter by status to optimize query performance
 - Include chainId for multi-chain routing logic
 
 **POST /orgs/{orgId}/markets**
-*Business Use Case:* Create new trading markets for instruments
-*Request Example:*
+_Business Use Case:_ Create new trading markets for instruments
+_Request Example:_
+
 ```json
 POST /orgs/123e4567-e89b-12d3-a456-426614174000/markets
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
@@ -124,7 +134,8 @@ Content-Type: application/json
 }
 ```
 
-*Response Example:*
+_Response Example:_
+
 ```json
 {
   "data": {
@@ -133,7 +144,7 @@ Content-Type: application/json
     "instrumentId": "789e0123-e45c-67d8-b901-234567890123",
     "quoteCcy": "USD",
     "chainId": 1,
-    "priceBandPct": 0.10,
+    "priceBandPct": 0.1,
     "lotSize": 100,
     "marketType": "SPOT",
     "status": "OPEN",
@@ -142,7 +153,8 @@ Content-Type: application/json
 }
 ```
 
-*Implementation Notes:*
+_Implementation Notes:_
+
 - Validate instrument exists before market creation
 - Set appropriate price bands based on asset volatility
 - Initialize order book and market data feeds
@@ -151,8 +163,9 @@ Content-Type: application/json
 ### Order Management
 
 **POST /orgs/{orgId}/orders**
-*Business Use Case:* Submit orders for immediate execution or order book placement
-*Request Example:*
+_Business Use Case:_ Submit orders for immediate execution or order book placement
+_Request Example:_
+
 ```json
 POST /orgs/123e4567-e89b-12d3-a456-426614174000/orders
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
@@ -170,7 +183,8 @@ Idempotency-Key: 550e8400-e29b-41d4-a716-446655440001
 }
 ```
 
-*Response Example:*
+_Response Example:_
+
 ```json
 {
   "data": {
@@ -181,7 +195,7 @@ Idempotency-Key: 550e8400-e29b-41d4-a716-446655440001
     "side": "BUY",
     "type": "LIMIT",
     "qty": 1000,
-    "px": 45000.00,
+    "px": 45000.0,
     "tif": "GTC",
     "status": "OPEN",
     "filledQty": 0,
@@ -190,21 +204,24 @@ Idempotency-Key: 550e8400-e29b-41d4-a716-446655440001
 }
 ```
 
-*Implementation Notes:*
+_Implementation Notes:_
+
 - Use idempotency keys to prevent duplicate orders
 - Validate account balances and position limits pre-submission
 - Support multiple order types for different trading strategies
 - Implement immediate execution for market orders
 
 **DELETE /orgs/{orgId}/orders/{orderId}**
-*Business Use Case:* Cancel open orders to prevent unwanted execution
-*Request Example:*
+_Business Use Case:_ Cancel open orders to prevent unwanted execution
+_Request Example:_
+
 ```json
 DELETE /orgs/123e4567-e89b-12d3-a456-426614174000/orders/345e6789-e01d-34f5-c678-426614174002
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-*Response Example:*
+_Response Example:_
+
 ```json
 {
   "data": {
@@ -215,7 +232,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 }
 ```
 
-*Implementation Notes:*
+_Implementation Notes:_
+
 - Only cancel orders in OPEN or PARTIAL status
 - Maintain audit trail of cancellation reasons
 - Return remaining quantity to account balance
@@ -224,14 +242,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ### Trade Execution
 
 **GET /orgs/{orgId}/trades**
-*Business Use Case:* Retrieve trade history for settlement and reconciliation
-*Request Example:*
+_Business Use Case:_ Retrieve trade history for settlement and reconciliation
+_Request Example:_
+
 ```json
 GET /orgs/123e4567-e89b-12d3-a456-426614174000/trades?marketId=550e8400-e29b-41d4-a716-446655440000&limit=100
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-*Response Example:*
+_Response Example:_
+
 ```json
 {
   "data": [
@@ -241,7 +261,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
       "buyOrderId": "345e6789-e01d-34f5-c678-426614174002",
       "sellOrderId": "567e8901-e23f-56h7-e890-426614174004",
       "qty": 500,
-      "px": 45000.00,
+      "px": 45000.0,
       "executedAt": "2025-01-15T10:30:30Z"
     }
   ],
@@ -252,7 +272,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 }
 ```
 
-*Implementation Notes:*
+_Implementation Notes:_
+
 - Filter by time range for performance optimization
 - Include both sides of trade for complete audit trail
 - Support real-time trade feeds via WebSocket
@@ -261,14 +282,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ### Position Management
 
 **GET /orgs/{orgId}/positions**
-*Business Use Case:* Monitor account positions and P/L for risk management
-*Request Example:*
+_Business Use Case:_ Monitor account positions and P/L for risk management
+_Request Example:_
+
 ```json
 GET /orgs/123e4567-e89b-12d3-a456-426614174000/positions?accountId=234e5678-e90c-23e4-b567-426614174001
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-*Response Example:*
+_Response Example:_
+
 ```json
 {
   "data": [
@@ -276,15 +299,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
       "accountId": "234e5678-e90c-23e4-b567-426614174001",
       "instrumentId": "789e0123-e45c-67d8-b901-234567890123",
       "qty": 1500,
-      "avgPx": 44750.00,
-      "realizedPnL": 1250.00,
-      "unrealizedPnL": -500.00
+      "avgPx": 44750.0,
+      "realizedPnL": 1250.0,
+      "unrealizedPnL": -500.0
     }
   ]
 }
 ```
 
-*Implementation Notes:*
+_Implementation Notes:_
+
 - Calculate P/L in real-time using mark-to-market pricing
 - Aggregate positions across multiple markets
 - Support margin calculations for leveraged positions
@@ -295,6 +319,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 **Audience:** Technical + Project Teams
 
 **Multi-tenant Isolation:**
+
 ```json
 {
   "orgId": "123e4567-e89b-12d3-a456-426614174000",
@@ -312,12 +337,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 **Data Protection Measures:**
+
 - End-to-end encryption for order data in transit and at rest
 - Tokenization of sensitive financial information
 - Audit logging of all API interactions with tamper-proof records
 - Regular security assessments and penetration testing
 
 **Access Controls:**
+
 - Role-based permissions with granular resource-level access
 - Time-based access restrictions for sensitive operations
 - Geographic restrictions based on regulatory requirements
@@ -369,6 +396,7 @@ graph TD
 **Audience:** Project Teams
 
 **Development Setup:**
+
 ```bash
 # Install dependencies
 npm install axios crypto ws
@@ -380,9 +408,10 @@ export QUUB_BASE_URL="https://api.sandbox.quub.exchange/v2"
 ```
 
 **JavaScript/Node.js Example:**
+
 ```javascript
-const axios = require('axios');
-const crypto = require('crypto');
+const axios = require("axios");
+const crypto = require("crypto");
 
 class QuubExchangeClient {
   constructor(apiKey, apiSecret, baseUrl) {
@@ -393,7 +422,7 @@ class QuubExchangeClient {
 
   async createOrder(orgId, orderData) {
     const timestamp = Date.now();
-    const method = 'POST';
+    const method = "POST";
     const path = `/orgs/${orgId}/orders`;
     const body = JSON.stringify(orderData);
 
@@ -401,12 +430,12 @@ class QuubExchangeClient {
 
     const response = await axios.post(`${this.baseUrl}${path}`, orderData, {
       headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-        'X-Timestamp': timestamp,
-        'X-Signature': signature,
-        'Content-Type': 'application/json',
-        'Idempotency-Key': crypto.randomUUID()
-      }
+        Authorization: `Bearer ${this.apiKey}`,
+        "X-Timestamp": timestamp,
+        "X-Signature": signature,
+        "Content-Type": "application/json",
+        "Idempotency-Key": crypto.randomUUID(),
+      },
     });
 
     return response.data;
@@ -414,16 +443,17 @@ class QuubExchangeClient {
 
   generateSignature(method, path, timestamp, body) {
     const message = `${method}${path}${timestamp}${body}`;
-    return crypto.createHmac('sha256', this.apiSecret)
-                 .update(message)
-                 .digest('hex');
+    return crypto
+      .createHmac("sha256", this.apiSecret)
+      .update(message)
+      .digest("hex");
   }
 
   async getMarkets(orgId) {
     const response = await axios.get(`${this.baseUrl}/orgs/${orgId}/markets`, {
       headers: {
-        'Authorization': `Bearer ${this.apiKey}`
-      }
+        Authorization: `Bearer ${this.apiKey}`,
+      },
     });
     return response.data;
   }
@@ -437,20 +467,21 @@ const client = new QuubExchangeClient(
 );
 
 // Create a limit order
-const order = await client.createOrder('123e4567-e89b-12d3-a456-426614174000', {
-  accountId: '234e5678-e90c-23e4-b567-426614174001',
-  instrumentId: '789e0123-e45c-67d8-b901-234567890123',
-  side: 'BUY',
-  type: 'LIMIT',
+const order = await client.createOrder("123e4567-e89b-12d3-a456-426614174000", {
+  accountId: "234e5678-e90c-23e4-b567-426614174001",
+  instrumentId: "789e0123-e45c-67d8-b901-234567890123",
+  side: "BUY",
+  type: "LIMIT",
   qty: 1000,
-  px: 45000.00,
-  tif: 'GTC'
+  px: 45000.0,
+  tif: "GTC",
 });
 
-console.log('Order created:', order);
+console.log("Order created:", order);
 ```
 
 **Python Example:**
+
 ```python
 import requests
 import hmac
@@ -529,6 +560,7 @@ print("Order created:", order)
 ```
 
 **Testing Strategy:**
+
 - Unit tests for order validation and matching logic
 - Integration tests with testnet blockchain for settlement verification
 - Load testing with 10,000+ concurrent orders per second
@@ -539,14 +571,15 @@ print("Order created:", order)
 **Audience:** Technical + Project Teams
 
 **Standard Error Response:**
+
 ```json
 {
   "error": {
     "code": "INSUFFICIENT_BALANCE",
     "message": "Account balance insufficient for order quantity",
     "details": {
-      "required": 4500000.00,
-      "available": 2500000.00,
+      "required": 4500000.0,
+      "available": 2500000.0,
       "currency": "USD"
     },
     "timestamp": "2025-01-15T10:30:45Z",
@@ -557,16 +590,17 @@ print("Order created:", order)
 
 **Error Codes Reference:**
 
-| Code | HTTP Status | Description | Resolution |
-|------|-------------|-------------|------------|
-| `INSUFFICIENT_BALANCE` | 400 | Account lacks funds for order | Add funds or reduce order size |
-| `INVALID_ORDER_PARAMS` | 400 | Order parameters are invalid | Check required fields and formats |
-| `MARKET_HALTED` | 409 | Market is currently halted | Wait for market resumption |
-| `ORDER_NOT_FOUND` | 404 | Specified order does not exist | Verify order ID and permissions |
-| `RATE_LIMIT_EXCEEDED` | 429 | API rate limit exceeded | Implement exponential backoff |
-| `MARKET_CLOSED` | 409 | Market is closed for trading | Check market hours and status |
+| Code                   | HTTP Status | Description                    | Resolution                        |
+| ---------------------- | ----------- | ------------------------------ | --------------------------------- |
+| `INSUFFICIENT_BALANCE` | 400         | Account lacks funds for order  | Add funds or reduce order size    |
+| `INVALID_ORDER_PARAMS` | 400         | Order parameters are invalid   | Check required fields and formats |
+| `MARKET_HALTED`        | 409         | Market is currently halted     | Wait for market resumption        |
+| `ORDER_NOT_FOUND`      | 404         | Specified order does not exist | Verify order ID and permissions   |
+| `RATE_LIMIT_EXCEEDED`  | 429         | API rate limit exceeded        | Implement exponential backoff     |
+| `MARKET_CLOSED`        | 409         | Market is closed for trading   | Check market hours and status     |
 
 **Error Handling Best Practices:**
+
 ```javascript
 async function submitOrder(orderData) {
   try {
@@ -576,11 +610,11 @@ async function submitOrder(orderData) {
     switch (error.response?.status) {
       case 400:
         // Validation error - check order parameters
-        console.error('Invalid order:', error.response.data.error);
+        console.error("Invalid order:", error.response.data.error);
         throw new ValidationError(error.response.data.error.message);
       case 409:
         // Market or order state conflict
-        if (error.response.data.error.code === 'MARKET_HALTED') {
+        if (error.response.data.error.code === "MARKET_HALTED") {
           await waitForMarketResume();
           return submitOrder(orderData); // Retry
         }
@@ -588,10 +622,10 @@ async function submitOrder(orderData) {
       case 429:
         // Rate limited - exponential backoff
         const delay = Math.pow(2, retryCount) * 1000;
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
         return submitOrder(orderData);
       default:
-        throw new ExchangeError('Unexpected error occurred');
+        throw new ExchangeError("Unexpected error occurred");
     }
   }
 }
@@ -602,6 +636,7 @@ async function submitOrder(orderData) {
 **Audience:** Project Teams
 
 ### Pre-Development
+
 - [ ] Review OpenAPI specification for complete endpoint coverage
 - [ ] Set up sandbox environment access and API credentials
 - [ ] Implement HMAC-SHA256 signature generation for authentication
@@ -610,6 +645,7 @@ async function submitOrder(orderData) {
 - [ ] Define error handling strategies and retry logic
 
 ### Development Phase
+
 - [ ] Implement core order submission and cancellation endpoints
 - [ ] Add market data retrieval and order book management
 - [ ] Integrate position tracking and P/L calculations
@@ -619,6 +655,7 @@ async function submitOrder(orderData) {
 - [ ] Create trade history and execution reporting
 
 ### Testing Phase
+
 - [ ] Unit tests for all business logic and validation rules
 - [ ] Integration tests with sandbox environment
 - [ ] Load testing with high-frequency order scenarios
@@ -628,6 +665,7 @@ async function submitOrder(orderData) {
 - [ ] Cross-browser compatibility for WebSocket connections
 
 ### Production Readiness
+
 - [ ] Implement comprehensive logging and audit trails
 - [ ] Set up monitoring and alerting for critical metrics
 - [ ] Configure production API credentials and secrets management
@@ -641,6 +679,7 @@ async function submitOrder(orderData) {
 **Audience:** Technical + Project Teams
 
 **Key Metrics:**
+
 - **Order Execution Latency:** Target <100ms average, <500ms p95
 - **Matching Engine Throughput:** Target 10,000+ orders/second
 - **API Availability:** Target 99.99% uptime SLA
@@ -649,6 +688,7 @@ async function submitOrder(orderData) {
 - **WebSocket Connections:** Track active real-time data subscribers
 
 **Logging Requirements:**
+
 ```json
 {
   "timestamp": "2025-01-15T10:30:15.123Z",
@@ -661,13 +701,14 @@ async function submitOrder(orderData) {
   "instrumentId": "789e0123-e45c-67d8-b901-234567890123",
   "side": "BUY",
   "quantity": 1000,
-  "price": 45000.00,
+  "price": 45000.0,
   "executionTimeMs": 45,
   "status": "EXECUTED"
 }
 ```
 
 **Alerting Configuration:**
+
 ```yaml
 alerting:
   rules:
@@ -697,6 +738,7 @@ alerting:
 **Audience:** All
 
 **Current Version (v2.0.0):**
+
 - Complete rewrite with improved performance and scalability
 - Enhanced security with OAuth2 and API key authentication
 - Multi-tenant architecture with organization isolation
@@ -704,6 +746,7 @@ alerting:
 - Advanced order types and time-in-force options
 
 **Planned Enhancements (v2.1):**
+
 - Algorithmic order types (TWAP, VWAP, Iceberg)
 - Advanced risk management features
 - Portfolio margin and cross-margin support
@@ -711,6 +754,7 @@ alerting:
 - Improved API rate limiting with burst allowances
 
 **Breaking Changes (v3.0 - Future):**
+
 - Migration to GraphQL API for complex queries
 - Removal of deprecated order types and parameters
 - Changes to authentication flow requiring token refresh
@@ -722,12 +766,14 @@ alerting:
 **Audience:** All
 
 **For Stakeholders:**
+
 - [Trading Platform Overview](https://docs.quub.exchange/trading-platform)
 - [Market Structure and Regulation](https://docs.quub.exchange/market-structure)
 - [Performance Benchmarks](https://docs.quub.exchange/benchmarks)
 - [Security and Compliance](https://docs.quub.exchange/security)
 
 **For Technical Teams:**
+
 - [API Reference Documentation](https://developers.quub.exchange/api-reference)
 - [WebSocket Protocol Specification](https://developers.quub.exchange/websocket-protocol)
 - [Order Matching Engine Architecture](https://developers.quub.exchange/matching-engine)
@@ -735,9 +781,10 @@ alerting:
 - [Rate Limiting and Best Practices](https://developers.quub.exchange/rate-limiting)
 
 **For Project Teams:**
+
 - [Sandbox Environment Setup](https://developers.quub.exchange/sandbox-setup)
 - [SDK Libraries and Tools](https://developers.quub.exchange/sdks)
 - [Integration Testing Guide](https://developers.quub.exchange/integration-testing)
 - [Deployment and Operations](https://developers.quub.exchange/operations)
 - [Troubleshooting Common Issues](https://developers.quub.exchange/troubleshooting)</content>
-<parameter name="filePath">/Users/nrahal/@code_2025/products/quub/quub-exchange-docs/use-cases/exchange/exchange-api-documentation.md
+  <parameter name="filePath">/Users/nrahal/@code_2025/products/quub/quub-exchange-docs/use-cases/exchange/exchange-api-documentation.md
