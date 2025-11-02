@@ -1,4 +1,5 @@
 # Observability API Documentation
+
 _Based on OpenAPI specification: observability.yaml_
 
 ## Executive Summary
@@ -14,6 +15,7 @@ _Based on OpenAPI specification: observability.yaml_
 **Audience:** All
 
 - Business Purpose:
+
   - Provide immutable audit logs for all user and system actions to support compliance and forensic investigations.
   - Enable querying of system logs for debugging and operational monitoring.
   - Deliver organization-level metrics for performance tracking and capacity planning.
@@ -78,7 +80,7 @@ Authorization: Bearer <token>
       "action": "LOGIN_SUCCESS",
       "resourceType": "ACCOUNT",
       "resourceId": "user-123",
-      "changes": {"lastLogin": "2025-11-02T10:00:00Z"},
+      "changes": { "lastLogin": "2025-11-02T10:00:00Z" },
       "ipAddress": "192.168.1.1",
       "userAgent": "Mozilla/5.0...",
       "hashChain": "abc123..."
@@ -116,7 +118,7 @@ Authorization: Bearer <admin-token>
       "service": "exchange-core",
       "message": "Failed to process trade order",
       "traceId": "req_abc123",
-      "metadata": {"orderId": "ord-456", "error": "insufficient funds"}
+      "metadata": { "orderId": "ord-456", "error": "insufficient funds" }
     }
   ]
 }
@@ -183,6 +185,7 @@ multiTenant:
 ```
 
 - Data protection measures:
+
   - Audit logs encrypted at rest with WORM storage.
   - PII in logs (IP addresses, user agents) masked or anonymized where possible.
   - Access logs for all observability queries to detect misuse.
@@ -190,7 +193,7 @@ multiTenant:
 - Access Controls (example):
 
 ```json
-{"roles": ["org_admin","observability_reader","platform_admin"]}
+{ "roles": ["org_admin", "observability_reader", "platform_admin"] }
 ```
 
 ## Business Workflows
@@ -243,18 +246,24 @@ export API_BASE=https://api.quub.exchange/v1
 - JavaScript/Node.js example (query audit logs):
 
 ```javascript
-import axios from 'axios';
+import axios from "axios";
 
 async function queryAuditLogs(orgId, token, params = {}) {
-  const res = await axios.get(`https://api.quub.exchange/v1/orgs/${orgId}/audit-logs`, {
-    headers: { 'Authorization': `Bearer ${token}` },
-    params
-  });
+  const res = await axios.get(
+    `https://api.quub.exchange/v1/orgs/${orgId}/audit-logs`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      params,
+    }
+  );
   return res.data;
 }
 
 // usage
-queryAuditLogs('org-uuid', process.env.API_TOKEN, { eventType: 'TRADE_EXECUTED', limit: 10 });
+queryAuditLogs("org-uuid", process.env.API_TOKEN, {
+  eventType: "TRADE_EXECUTED",
+  limit: 10,
+});
 ```
 
 - Python example (get metrics):
@@ -284,7 +293,7 @@ get_metrics('org-uuid', 'TOKEN', '7d')
   "error": {
     "code": "ValidationError",
     "message": "Invalid time range",
-    "details": [{"field":"range","message":"Must be one of: 1h, 24h, 7d"}]
+    "details": [{ "field": "range", "message": "Must be one of: 1h, 24h, 7d" }]
   }
 }
 ```
@@ -309,16 +318,19 @@ get_metrics('org-uuid', 'TOKEN', '7d')
 **Audience:** Project Teams
 
 - Pre-Development:
+
   - [ ] Confirm WORM storage provider and hash algorithm (SHA-256).
   - [ ] Define retention policies and archival strategy.
   - [ ] Prepare RBAC policies for observability access.
 
 - Development Phase:
+
   - [ ] Implement endpoints with pagination and filtering.
   - [ ] Add hash chain verification for audit logs.
   - [ ] Integrate with telemetry systems for metrics.
 
 - Testing Phase:
+
   - [ ] Unit tests for query logic and validation.
   - [ ] Integration tests with mock WORM storage.
   - [ ] Load tests for high-volume log queries.
@@ -333,6 +345,7 @@ get_metrics('org-uuid', 'TOKEN', '7d')
 **Audience:** Technical + Project Teams
 
 - Key metrics:
+
   - query_latency_ms (target: <500ms p95)
   - audit_log_integrity_checks (target: 100% pass rate)
   - storage_usage_gb (target: <80% capacity)
@@ -347,7 +360,7 @@ get_metrics('org-uuid', 'TOKEN', '7d')
   "service": "observability-api",
   "event": "audit_log_query",
   "orgId": "org-uuid",
-  "queryParams": {"eventType": "LOGIN", "limit": 100},
+  "queryParams": { "eventType": "LOGIN", "limit": 100 },
   "resultCount": 50
 }
 ```
@@ -377,10 +390,12 @@ alerts:
 **Audience:** All
 
 - Stakeholders:
+
   - Compliance guide: /docs/observability/compliance
   - Security overview: /docs/observability/security
 
 - Technical:
+
   - OpenAPI spec: /openapi/observability.yaml
   - Hash chaining docs: /docs/observability/hash-chaining
 
