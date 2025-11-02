@@ -10,7 +10,6 @@ highlighter: rouge
 plugins:
   - jekyll-feed
   - jekyll-sitemap
-  - jekyll-seo-tag
 
 exclude:
   - Gemfile
@@ -24,15 +23,9 @@ exclude:
 include:
   - _pages
 
-collections:
-  api_docs:
-    output: true
-    permalink: /:collection/:name/
-
 defaults:
   - scope:
-      path: ""
-      type: "api_docs"
+      path: "use-cases"
     values:
       layout: "api_doc"
   - scope:
