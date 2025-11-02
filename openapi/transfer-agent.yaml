@@ -1,0 +1,1044 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Transfer Agent API
+  version: "2.0.0"
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+  description: |
+    Transfer Agent services for managing shareholder registries, transfer restrictions,
+    and corporate actions administration.
+
+    **Core Functions:**
+    - Shareholder registry (cap table of record)
+    - Transfer restrictions enforcement (Rule 144, lock-ups)
+    - Certificate issuance and cancellation
+    - Corporate actions processing (splits, dividends, etc.)
+    - Annual shareholder reporting
+
+    **Compliance:**
+    - SEC Rule 17Ad-10 (Prompt Posting)
+    - Regulation S-T (Electronic Filing)
+    - State Blue Sky laws
+servers:
+  - url: https://api.quub.exchange/v1
+    description: Production API
+tags:
+  - name: Registry
+    description: Shareholder registry operations
+  - name: Transfers
+    description: Transfer requests and restrictions
+  - name: Certificates
+    description: Certificate issuance and management
+  - name: Corporate Actions
+    description: Corporate actions administration
+  - name: Reports
+    description: Shareholder reports and statements
+paths:
+  /orgs/{orgId}/transfer-agent/registry/assets/{assetId}/holders:
+    get:
+      operationId: getShareholderRegistry
+      summary: Get shareholder registry (cap table)
+      tags:
+        - Registry
+      security:
+        - oauth2: [read:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: asOfDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Point-in-time snapshot (defaults to current)
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "200":
+          description: Paginated list of shareholders
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ShareholderPosition"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/registry/holders/{accountId}:
+    get:
+      operationId: getHolderPositions
+      summary: Get holder positions across all assets
+      tags:
+        - Registry
+      security:
+        - oauth2: [read:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Holder positions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ShareholderPosition"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/transfers:
+    get:
+      operationId: listTransferRequests
+      summary: List transfer requests
+      tags:
+        - Transfers
+      security:
+        - oauth2: [read:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - APPROVED
+              - REJECTED
+              - COMPLETED
+              - CANCELLED
+          description: Filter by transfer status
+        - name: assetId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by asset/security ID
+        - name: fromAccountId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by sender account ID
+        - name: toAccountId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by recipient account ID
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter transfers requested on or after this date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter transfers requested on or before this date
+      responses:
+        "200":
+          description: Paginated list of transfer requests
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TransferRequest"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+    post:
+      operationId: createTransferRequest
+      summary: Create transfer request
+      tags:
+        - Transfers
+      security:
+        - oauth2: [write:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTransferRequest"
+      responses:
+        "201":
+          description: Transfer request created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TransferRequest"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/transfers/{transferId}/approve:
+    post:
+      operationId: approveTransferRequest
+      summary: Approve transfer request
+      tags:
+        - Transfers
+      security:
+        - oauth2: [write:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+        - name: transferId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Transfer request approved
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TransferRequest"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/restrictions:
+    get:
+      operationId: listTransferRestrictions
+      summary: List transfer restrictions
+      tags:
+        - Transfers
+      security:
+        - oauth2: [read:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+        - name: assetId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: accountId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: List of transfer restrictions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TransferRestriction"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+    post:
+      operationId: createTransferRestriction
+      summary: Create transfer restriction
+      tags:
+        - Transfers
+      security:
+        - oauth2: [write:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRestrictionRequest"
+      responses:
+        "201":
+          description: Transfer restriction created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TransferRestriction"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/certificates:
+    get:
+      operationId: listCertificates
+      summary: List certificates
+      tags:
+        - Certificates
+      security:
+        - oauth2: [read:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: assetId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - ACTIVE
+              - CANCELLED
+              - VOID
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "200":
+          description: Paginated list of certificates
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Certificate"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+    post:
+      operationId: issueCertificate
+      summary: Issue certificate
+      tags:
+        - Certificates
+      security:
+        - oauth2: [write:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueCertificateRequest"
+      responses:
+        "201":
+          description: Certificate issued
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Certificate"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/certificates/{certificateId}/cancel:
+    post:
+      operationId: cancelCertificate
+      summary: Cancel certificate
+      tags:
+        - Certificates
+      security:
+        - oauth2: [write:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+        - name: certificateId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        "200":
+          description: Certificate cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Certificate"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/corporate-actions:
+    get:
+      operationId: listCorporateActions
+      summary: List corporate actions
+      tags:
+        - Corporate Actions
+      security:
+        - oauth2: [read:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: assetId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum:
+              - SPLIT
+              - REVERSE_SPLIT
+              - DIVIDEND
+              - MERGER
+              - CONSOLIDATION
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "200":
+          description: Paginated list of corporate actions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CorporateAction"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+    post:
+      operationId: createCorporateAction
+      summary: Create corporate action
+      tags:
+        - Corporate Actions
+      security:
+        - oauth2: [write:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCorporateActionRequest"
+      responses:
+        "201":
+          description: Corporate action created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/CorporateAction"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/corporate-actions/{actionId}/execute:
+    post:
+      operationId: executeCorporateAction
+      summary: Execute corporate action
+      tags:
+        - Corporate Actions
+      security:
+        - oauth2: [write:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+        - name: actionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Corporate action executed
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/CorporateAction"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/transfer-agent/reports/shareholders:
+    get:
+      operationId: generateShareholderReport
+      summary: Generate shareholder report
+      tags:
+        - Reports
+      security:
+        - oauth2: [read:transfer-agent]
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: assetId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: asOfDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum:
+              - PDF
+              - CSV
+              - JSON
+            default: PDF
+      responses:
+        "200":
+          description: Shareholder report
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/ShareholderReport"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/csv:
+              schema:
+                type: string
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey
+  schemas:
+    ShareholderPosition:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        accountName:
+          type: string
+        assetId:
+          type: string
+          format: uuid
+        assetName:
+          type: string
+        shares:
+          type: string
+        percentOwnership:
+          type: string
+        certificateNumbers:
+          type: array
+          items:
+            type: string
+        restrictions:
+          type: array
+          items:
+            type: string
+        acquisitionDate:
+          type: string
+          format: date
+    TransferRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        fromAccountId:
+          type: string
+          format: uuid
+        toAccountId:
+          type: string
+          format: uuid
+        shares:
+          type: string
+        status:
+          type: string
+          enum:
+            - PENDING
+            - APPROVED
+            - REJECTED
+            - COMPLETED
+            - CANCELLED
+        requestedAt:
+          type: string
+          format: date-time
+        approvedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        restrictionCheck:
+          type: object
+          properties:
+            passed:
+              type: boolean
+            violations:
+              type: array
+              items:
+                type: string
+    CreateTransferRequest:
+      type: object
+      required:
+        - assetId
+        - fromAccountId
+        - toAccountId
+        - shares
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        fromAccountId:
+          type: string
+          format: uuid
+        toAccountId:
+          type: string
+          format: uuid
+        shares:
+          type: string
+        notes:
+          type: string
+    TransferRestriction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        restrictionType:
+          type: string
+          enum:
+            - LOCK_UP
+            - RULE_144
+            - VESTING
+            - REGULATORY
+            - CONTRACTUAL
+        description:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+    CreateRestrictionRequest:
+      type: object
+      required:
+        - assetId
+        - restrictionType
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        restrictionType:
+          type: string
+          enum:
+            - LOCK_UP
+            - RULE_144
+            - VESTING
+            - REGULATORY
+            - CONTRACTUAL
+        description:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+    Certificate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        certificateNumber:
+          type: string
+        assetId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        shares:
+          type: string
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - CANCELLED
+            - VOID
+        issuedAt:
+          type: string
+          format: date-time
+        cancelledAt:
+          type: string
+          format: date-time
+    IssueCertificateRequest:
+      type: object
+      required:
+        - assetId
+        - accountId
+        - shares
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        shares:
+          type: string
+        certificateNumber:
+          type: string
+    CorporateAction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        actionType:
+          type: string
+          enum:
+            - SPLIT
+            - REVERSE_SPLIT
+            - DIVIDEND
+            - MERGER
+            - CONSOLIDATION
+        description:
+          type: string
+        recordDate:
+          type: string
+          format: date
+        effectiveDate:
+          type: string
+          format: date
+        ratio:
+          type: string
+        status:
+          type: string
+          enum:
+            - ANNOUNCED
+            - PENDING
+            - EXECUTED
+            - CANCELLED
+        executedAt:
+          type: string
+          format: date-time
+    CreateCorporateActionRequest:
+      type: object
+      required:
+        - assetId
+        - actionType
+        - recordDate
+        - effectiveDate
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        actionType:
+          type: string
+          enum:
+            - SPLIT
+            - REVERSE_SPLIT
+            - DIVIDEND
+            - MERGER
+            - CONSOLIDATION
+        description:
+          type: string
+        recordDate:
+          type: string
+          format: date
+        effectiveDate:
+          type: string
+          format: date
+        ratio:
+          type: string
+    ShareholderReport:
+      type: object
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        asOfDate:
+          type: string
+          format: date
+        totalShares:
+          type: string
+        holders:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShareholderPosition"

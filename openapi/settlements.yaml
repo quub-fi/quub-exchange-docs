@@ -1,0 +1,879 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Settlement & Clearing API
+  version: 2.0.0
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+  description: "Settlement and clearing operations for trades and transfers.
+
+
+    **Settlement Models:**
+
+    - DVP (Delivery vs Payment) - Securities for cash
+
+    - DAP (Delivery Against Payment) - Same-day settlement
+
+    - RVP (Receive vs Payment) - Custodian settlement
+
+    - FOP (Free of Payment) - Transfer only
+
+
+    **Settlement Cycles:**
+
+    - T+0 (same day)
+
+    - T+1 (next business day)
+
+    - T+2 (standard for most securities)
+
+    "
+servers:
+  - url: https://api.quub.exchange/v1
+    description: Production API
+tags:
+  - name: Settlement Instructions
+    description: Create and manage settlement instructions
+  - name: Settlement Status
+    description: Track settlement lifecycle
+  - name: Netting
+    description: Netting and batching operations
+  - name: Failed Trades
+    description: Failed trade management and resolution
+paths:
+  /orgs/{orgId}/settlements/instructions:
+    get:
+      operationId: listSettlementInstructions
+      summary: List settlement instructions
+      tags:
+        - Settlement Instructions
+      security:
+        - oauth2:
+            - read:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - MATCHED
+              - SETTLED
+              - FAILED
+              - CANCELLED
+        - name: settlementDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of settlement instructions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/SettlementInstruction"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      operationId: createSettlementInstruction
+      summary: Create settlement instruction
+      tags:
+        - Settlement Instructions
+      security:
+        - oauth2:
+            - write:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSettlementInstructionRequest"
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Settlement instruction created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/SettlementInstruction"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/settlements/instructions/{instructionId}:
+    get:
+      operationId: getSettlementInstruction
+      summary: Get settlement instruction details
+      tags:
+        - Settlement Instructions
+      security:
+        - oauth2:
+            - read:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: instructionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Settlement instruction details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/SettlementInstruction"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    put:
+      operationId: updateSettlementInstruction
+      summary: Update settlement instruction
+      tags:
+        - Settlement Instructions
+      security:
+        - oauth2:
+            - write:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: instructionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  $ref: "#/components/schemas/SettlementStatus"
+                priority:
+                  type: string
+                  enum:
+                    - HIGH
+                    - MEDIUM
+                    - LOW
+                notes:
+                  type: string
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Settlement instruction updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/SettlementInstruction"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    delete:
+      operationId: cancelSettlementInstruction
+      summary: Cancel settlement instruction
+      tags:
+        - Settlement Instructions
+      security:
+        - oauth2:
+            - admin:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: instructionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "204":
+          $ref: ./common/responses.yaml#/components/responses/NoContentResponse
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/settlements/status:
+    get:
+      operationId: getSettlementStatus
+      summary: Get settlement status overview
+      tags:
+        - Settlement Status
+      security:
+        - oauth2:
+            - read:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: settlementDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Settlement status overview
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/SettlementStatusRecord"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /settlements/calendar:
+    get:
+      operationId: getSettlementCalendar
+      summary: Get settlement calendar
+      tags:
+        - Settlement Status
+      security:
+        - oauth2:
+            - read:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Settlement calendar
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/SettlementCalendar"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/settlements/netting:
+    post:
+      operationId: calculateNetting
+      summary: Calculate netting
+      tags:
+        - Netting
+      security:
+        - oauth2:
+            - write:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlementDate:
+                  type: string
+                  format: date
+                counterpartyId:
+                  type: string
+                  format: uuid
+                assetId:
+                  type: string
+                  format: uuid
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Netting calculation completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/NettingResult"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/settlements/batches:
+    get:
+      operationId: listSettlementBatches
+      summary: List settlement batches
+      tags:
+        - Netting
+      security:
+        - oauth2:
+            - read:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+        - name: settlementDate
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of settlement batches
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/SettlementBatch"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/settlements/failed-trades:
+    get:
+      operationId: listFailedTrades
+      summary: List failed trades
+      tags:
+        - Failed Trades
+      security:
+        - oauth2:
+            - read:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - PENDING_RESOLUTION
+              - RESOLVING
+              - RESOLVED
+              - CANCELLED
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of failed trades
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/FailedTrade"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/settlements/failed-trades/{tradeId}/resolve:
+    post:
+      operationId: resolveFailedTrade
+      summary: Resolve failed trade
+      tags:
+        - Failed Trades
+      security:
+        - oauth2:
+            - write:settlements
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: tradeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resolutionType:
+                  type: string
+                  enum:
+                    - RETRY
+                    - CANCEL
+                    - MANUAL_SETTLE
+                notes:
+                  type: string
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Failed trade resolved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/FailedTrade"
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey
+  schemas:
+    SettlementInstruction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        tradeId:
+          type: string
+          format: uuid
+        settlementType:
+          type: string
+          enum:
+            - DVP
+            - DAP
+            - RVP
+            - FOP
+        settlementDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+            - PENDING
+            - MATCHED
+            - AFFIRMED
+            - SETTLED
+            - FAILED
+            - CANCELLED
+        deliveryAccount:
+          type: string
+        receivingAccount:
+          type: string
+        assetId:
+          type: string
+          format: uuid
+        quantity:
+          type: string
+        cashAmount:
+          type: string
+        currency:
+          type: string
+        counterpartyId:
+          type: string
+          format: uuid
+        model:
+          type: string
+          enum:
+            - DVP
+            - DAP
+            - RVP
+            - FOP
+          description: Alias for settlementType (for converter compatibility)
+        cycle:
+          type: string
+          enum:
+            - T+0
+            - T+1
+            - T+2
+            - T+3
+          description: Settlement cycle
+        securityId:
+          type: string
+          description: Security identifier
+        amount:
+          type: string
+          description: Alias for cashAmount (for converter compatibility)
+        settledAt:
+          type: string
+          format: date-time
+          description: Timestamp when settlement was completed
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional metadata
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateSettlementInstructionRequest:
+      type: object
+      required:
+        - tradeId
+        - settlementType
+        - settlementDate
+      properties:
+        tradeId:
+          type: string
+          format: uuid
+        settlementType:
+          type: string
+          enum:
+            - DVP
+            - DAP
+            - RVP
+            - FOP
+        settlementDate:
+          type: string
+          format: date
+        deliveryAccount:
+          type: string
+        receivingAccount:
+          type: string
+        notes:
+          type: string
+    SettlementStatus:
+      type: string
+      enum:
+        - PENDING
+        - MATCHED
+        - AFFIRMED
+        - SETTLED
+        - FAILED
+        - CANCELLED
+    SettlementStatusSummary:
+      type: object
+      properties:
+        settlementDate:
+          type: string
+          format: date
+        totalInstructions:
+          type: integer
+        pending:
+          type: integer
+        matched:
+          type: integer
+        settled:
+          type: integer
+        failed:
+          type: integer
+        totalValue:
+          type: string
+        currency:
+          type: string
+    SettlementDate:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        isBusinessDay:
+          type: boolean
+        isSettlementDay:
+          type: boolean
+        holidays:
+          type: array
+          items:
+            type: string
+    NettingResult:
+      type: object
+      properties:
+        settlementDate:
+          type: string
+          format: date
+        counterpartyId:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        grossBuy:
+          type: string
+        grossSell:
+          type: string
+        netPosition:
+          type: string
+        netDirection:
+          type: string
+          enum:
+            - BUY
+            - SELL
+            - FLAT
+        instructionCount:
+          type: integer
+        batchId:
+          type: string
+          description: Batch identifier for this netting result
+        netAmount:
+          type: number
+          description: Net amount after netting
+        currency:
+          type: string
+          description: Currency for net amount
+        instructionIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: List of instruction IDs included in this netting
+        createdAt:
+          type: string
+          format: date-time
+          description: When this netting result was created
+    SettlementBatch:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        settlementDate:
+          type: string
+          format: date
+        batchNumber:
+          type: integer
+        instructionCount:
+          type: integer
+        status:
+          type: string
+          enum:
+            - PENDING
+            - PROCESSING
+            - COMPLETED
+            - FAILED
+        createdAt:
+          type: string
+          format: date-time
+        instructionIds:
+          type: array
+          items:
+            type: string
+          description: List of settlement instruction IDs in this batch
+        totalAmount:
+          type: number
+          description: Total amount for all instructions in this batch
+        currency:
+          type: string
+          description: Currency for the total amount
+        processedAt:
+          type: string
+          format: date-time
+          description: When this batch was processed
+    FailedTrade:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tradeId:
+          type: string
+          format: uuid
+        settlementInstructionId:
+          type: string
+          format: uuid
+        instructionId:
+          type: string
+          format: uuid
+          description: Alias for settlementInstructionId (for converter compatibility)
+        failureReason:
+          type: string
+        reason:
+          type: string
+          description: Alias for failureReason (for converter compatibility)
+        failureCode:
+          type: string
+          enum:
+            - INSUFFICIENT_ASSETS
+            - INSUFFICIENT_CASH
+            - ACCOUNT_SUSPENDED
+            - COUNTERPARTY_FAIL
+            - TECHNICAL_ERROR
+        status:
+          type: string
+          enum:
+            - PENDING_RESOLUTION
+            - RESOLVING
+            - RESOLVED
+            - CANCELLED
+        resolutionType:
+          type: string
+          enum:
+            - RETRY
+            - CANCEL
+            - MANUAL_SETTLE
+        failedAt:
+          type: string
+          format: date-time
+        resolvedAt:
+          type: string
+          format: date-time
+        resolution:
+          type: string
+          description: Resolution details for the failed trade
+    SettlementStatusRecord:
+      type: object
+      properties:
+        instructionId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+            - PENDING
+            - MATCHED
+            - AFFIRMED
+            - SETTLED
+            - FAILED
+            - CANCELLED
+        timestamp:
+          type: string
+          format: date-time
+        notes:
+          type: string
+      required:
+        - instructionId
+        - status
+        - timestamp
+    SettlementCalendar:
+      type: object
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/SettlementCalendarEntry"
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+      required:
+        - entries
+        - startDate
+        - endDate
+    SettlementCalendarEntry:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        isBusinessDay:
+          type: boolean
+        market:
+          type: string
+        holidays:
+          type: array
+          items:
+            type: string
+      required:
+        - date
+        - isBusinessDay
+        - market

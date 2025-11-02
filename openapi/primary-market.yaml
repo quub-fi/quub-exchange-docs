@@ -1,0 +1,1005 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Primary Market Service
+  version: "2.0.0"
+  license:
+    name: Proprietary
+    identifier: Proprietary
+  description: |
+    Primary market service for tokenized asset issuance:
+    - Project setup and governance
+    - Token class definitions
+    - Offerings and subscription flows
+    - Milestone certification and escrow release
+
+servers:
+  - url: https://api.sandbox.quub.exchange/v1
+    description: Sandbox environment
+  - url: https://api.quub.exchange/v1
+    description: Production environment
+
+tags:
+  - name: primary-market
+    description: Primary market operations (projects, offerings, subscriptions, milestones)
+
+paths:
+  # --------------------------------------------------------------------------
+  # PROJECTS
+  # --------------------------------------------------------------------------
+  /orgs/{orgId}/projects:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+
+    get:
+      tags: [primary]
+      summary: List projects
+      operationId: listProjects
+      security:
+        - oauth2: [read:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+        - name: type
+          in: query
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/ProjectType"
+        - name: spvId
+          in: query
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/OrgId"
+      responses:
+        "200":
+          description: Paginated list of projects
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "./common/pagination.yaml#/components/schemas/PageResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "./common/domain-models.yaml#/components/schemas/Project"
+                      meta:
+                        $ref: "./common/pagination.yaml#/components/schemas/PageMeta"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "429":
+          $ref: "./common/responses.yaml#/components/responses/TooManyRequests"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+    post:
+      tags: [primary]
+      summary: Create project
+      operationId: createProject
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, type, currency]
+              properties:
+                name: { type: string }
+                location: { type: string }
+                spvId:
+                  { $ref: "./common/primitives.yaml#/components/schemas/OrgId" }
+                type:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/ProjectType",
+                  }
+                currency:
+                  type: string
+                  pattern: "^[A-Z]{3}$"
+                metadata:
+                  type: object
+                  additionalProperties: true
+      responses:
+        "201":
+          description: Project created successfully
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "./common/domain-models.yaml#/components/schemas/Project"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/projects/{projectId}:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          $ref: "./common/primitives.yaml#/components/schemas/ProjectId"
+
+    get:
+      tags: [primary]
+      summary: Get project details
+      operationId: getProject
+      security:
+        - oauth2: [read:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/ProjectId"
+      responses:
+        "200":
+          description: Project details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "./common/domain-models.yaml#/components/schemas/Project"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+    patch:
+      tags: [primary]
+      summary: Update project
+      operationId: updateProject
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/ProjectId"
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                location: { type: string }
+                metadata:
+                  type: object
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "./common/domain-models.yaml#/components/schemas/Project"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  # --------------------------------------------------------------------------
+  # TOKEN CLASSES
+  # --------------------------------------------------------------------------
+  /orgs/{orgId}/token-classes:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+
+    get:
+      tags: [primary]
+      summary: List token classes
+      operationId: listTokenClasses
+      security:
+        - oauth2: [read:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+        - name: chainId
+          in: query
+          schema: { type: integer }
+        - name: rights
+          in: query
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/Rights"
+      responses:
+        "200":
+          description: Paginated list of token classes
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "./common/domain-models.yaml#/components/schemas/TokenClass"
+                      meta:
+                        $ref: "./common/pagination.yaml#/components/schemas/PageMeta"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+    post:
+      tags: [primary]
+      summary: Create token class
+      operationId: createTokenClass
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                [standard, rights, transferRestricted, decimals, chainId]
+              properties:
+                standard:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/TokenStandard",
+                  }
+                rights:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/Rights",
+                  }
+                transferRestricted: { type: boolean }
+                decimals: { type: integer, enum: [0, 6, 18] }
+                chainId: { type: integer }
+                contractAddr:
+                  type: string
+                  pattern: "^0x[a-fA-F0-9]{40}$"
+      responses:
+        "201":
+          description: Token class created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "./common/domain-models.yaml#/components/schemas/TokenClass"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/token-classes/{tokenClassId}:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+      - name: tokenClassId
+        in: path
+        required: true
+        schema:
+          $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+
+    get:
+      tags: [primary]
+      summary: Get token class details
+      operationId: getTokenClass
+      security:
+        - oauth2: [read:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: tokenClassId
+          in: path
+          required: true
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+      responses:
+        "200":
+          description: Token class details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "./common/domain-models.yaml#/components/schemas/TokenClass"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+    patch:
+      tags: [primary]
+      summary: Update token class
+      operationId: updateTokenClass
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: tokenClassId
+          in: path
+          required: true
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contractAddr:
+                  type: string
+                  pattern: "^0x[a-fA-F0-9]{40}$"
+      responses:
+        "200":
+          description: Token class updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "./common/domain-models.yaml#/components/schemas/TokenClass"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  # --------------------------------------------------------------------------
+  # OFFERINGS
+  # --------------------------------------------------------------------------
+  /orgs/{orgId}/offerings:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+
+    get:
+      tags: [primary]
+      summary: List offerings
+      operationId: listOfferings
+      security:
+        - oauth2: [read:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+        - name: projectId
+          in: query
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/ProjectId"
+        - name: tokenClassId
+          in: query
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+      responses:
+        "200":
+          description: List of offerings
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "./common/domain-models.yaml#/components/schemas/Offering"
+                      meta:
+                        $ref: "./common/pagination.yaml#/components/schemas/PageMeta"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+    post:
+      tags: [primary]
+      summary: Create offering
+      operationId: createOffering
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                [projectId, tokenClassId, tranche, price, minLot, hardCap]
+              properties:
+                projectId:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/ProjectId",
+                  }
+                tokenClassId:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/TokenClassId",
+                  }
+                tranche:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/Tranche",
+                  }
+                price: { type: number, format: double }
+                minLot: { type: integer, minimum: 1 }
+                softCap: { type: number, format: double }
+                hardCap: { type: number, format: double }
+                startAt: { type: string, format: date-time }
+                endAt: { type: string, format: date-time }
+                docs:
+                  type: array
+                  items: { type: string, format: uri }
+      responses:
+        "201":
+          description: Offering created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "./common/domain-models.yaml#/components/schemas/Offering"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  # --------------------------------------------------------------------------
+  # SUBSCRIPTIONS (create, fund, allocate, refund)
+  # --------------------------------------------------------------------------
+  /orgs/{orgId}/subscriptions:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+
+    post:
+      tags: [primary]
+      summary: Create subscription (idempotent)
+      operationId: createSubscription
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [accountId, offeringId, qty]
+              properties:
+                accountId:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/AccountId",
+                  }
+                offeringId:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/OfferingId",
+                  }
+                qty: { type: integer, minimum: 1 }
+      responses:
+        "201":
+          description: Subscription created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/subscriptions/{subscriptionId}/fund:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+      - name: subscriptionId
+        in: path
+        required: true
+        schema:
+          $ref: "./common/primitives.yaml#/components/schemas/SubscriptionId"
+
+    post:
+      tags: [primary]
+      summary: Attach payment to subscription
+      operationId: fundSubscription
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/SubscriptionId"
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [paymentRef]
+              properties:
+                paymentRef: { type: string }
+      responses:
+        "200":
+          description: Subscription funded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/subscriptions/{subscriptionId}/allocate:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+      - name: subscriptionId
+        in: path
+        required: true
+        schema:
+          $ref: "./common/primitives.yaml#/components/schemas/SubscriptionId"
+
+    post:
+      tags: [primary]
+      summary: Mint and allocate tokens to subscription
+      operationId: allocateSubscription
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/SubscriptionId"
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [walletId]
+              properties:
+                walletId:
+                  type: string
+                  pattern: "^wlt_[a-zA-Z0-9]{16,32}$"
+      responses:
+        "200":
+          description: Subscription allocated (tokens minted)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/subscriptions/{subscriptionId}/refund:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+      - name: subscriptionId
+        in: path
+        required: true
+        schema:
+          $ref: "./common/primitives.yaml#/components/schemas/SubscriptionId"
+
+    post:
+      tags: [primary]
+      summary: Refund subscription
+      operationId: refundSubscription
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/SubscriptionId"
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason: { type: string }
+      responses:
+        "200":
+          description: Subscription refunded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Subscription"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  # --------------------------------------------------------------------------
+  # MILESTONES & ESCROW
+  # --------------------------------------------------------------------------
+  /orgs/{orgId}/milestones:
+    parameters:
+      - $ref: "./common/components.yaml#/components/parameters/orgId"
+      - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+
+    get:
+      tags: [primary]
+      summary: List milestones
+      operationId: listMilestones
+      security:
+        - oauth2: [read:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/ProjectId"
+      responses:
+        "200":
+          description: List of milestones
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Milestone"
+                      meta:
+                        $ref: "./common/pagination.yaml#/components/schemas/PageMeta"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          { $ref: "./common/responses.yaml#/components/responses/NotFound" }
+
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+    post:
+      tags: [primary]
+      summary: Create milestone
+      operationId: createMilestone
+      security:
+        - oauth2: [write:primary-market]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [projectId, name, escrowReleasePct]
+              properties:
+                projectId:
+                  {
+                    $ref: "./common/primitives.yaml#/components/schemas/ProjectId",
+                  }
+                name: { type: string }
+                targetDay: { type: integer, minimum: 0 }
+                escrowReleasePct:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+      responses:
+        "201":
+          description: Milestone created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Milestone"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "429":
+          {
+            $ref: "./common/responses.yaml#/components/responses/TooManyRequests",
+          }
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+components:
+  schemas:
+    Subscription:
+      type: object
+      description: Investor subscription to an offering
+      required: [id, orgId, accountId, offeringId, qty, status]
+      properties:
+        id:
+          $ref: "./common/primitives.yaml#/components/schemas/SubscriptionId"
+        orgId:
+          $ref: "./common/primitives.yaml#/components/schemas/OrgId"
+        accountId:
+          $ref: "./common/primitives.yaml#/components/schemas/AccountId"
+        offeringId:
+          $ref: "./common/primitives.yaml#/components/schemas/OfferingId"
+        qty:
+          type: integer
+          minimum: 1
+          description: Number of tokens/shares subscribed
+        price:
+          type: number
+          format: double
+          description: Price per token/share
+        totalAmount:
+          type: number
+          format: double
+        currency:
+          type: string
+          example: "USD"
+        status:
+          type: string
+          enum: [PENDING, FUNDED, ALLOCATED, REFUNDED, CANCELLED]
+        subscribedAt:
+          type: string
+          format: date-time
+        fundedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: "null"
+        allocatedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: "null"
+        paymentRef:
+          type: string
+          description: Reference to payment transaction
+
+    Milestone:
+      type: object
+      description: Project milestone for fund release
+      required: [id, projectId, title, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          $ref: "./common/primitives.yaml#/components/schemas/ProjectId"
+        title:
+          type: string
+        description:
+          type: string
+        fundAmount:
+          type: number
+          format: double
+          description: Funds to be released upon completion
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED]
+        dueDate:
+          oneOf:
+            - type: string
+              format: date
+            - type: "null"
+        completedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: "null"
+        verificationDocs:
+          type: array
+          items:
+            type: string
+            format: uri
+        approver:
+          type: string
+          description: Account ID of approver
+
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.quub.exchange/oauth/authorize
+          tokenUrl: https://auth.quub.exchange/oauth/token
+          scopes:
+            read:projects: Read project information
+            write:projects: Create and modify projects
+            admin:*: Full administrative access
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key

@@ -1,0 +1,624 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Compliance Service
+  version: 2.0.0
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+  description:
+    "Compliance management service for KYC, accreditation, and whitelist operations.
+
+    Supports organizational segregation, audit logging, and multi-jurisdiction regimes.
+
+    "
+servers:
+  - url: https://api.quub.exchange/v2
+    description: Production API
+  - url: https://api.sandbox.quub.exchange/v2
+    description: Sandbox environment
+tags:
+  - name: KYC
+    description: Know-Your-Customer case creation and review.
+  - name: Accreditation
+    description: Investor accreditation under applicable regimes.
+  - name: Whitelist
+    description: Token whitelist enforcement and management.
+paths:
+  /orgs/{orgId}/kyc/cases:
+    get:
+      tags:
+        - KYC
+      summary: List KYC cases
+      operationId: listKycCases
+      security:
+        - oauth2:
+            - read:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+        - name: accountId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - APPROVED
+              - REJECTED
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of KYC cases
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/KycCase"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      tags:
+        - KYC
+      summary: Create new KYC case
+      operationId: createKycCase
+      security:
+        - oauth2:
+            - write:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accountId
+                - type
+              properties:
+                accountId:
+                  type: string
+                  format: uuid
+                type:
+                  type: string
+                  enum:
+                    - PERSON
+                    - ENTITY
+                evidenceUrls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: KYC case created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/KycCase"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/kyc/cases/{caseId}:
+    get:
+      tags:
+        - KYC
+      summary: Retrieve KYC case details
+      operationId: getKycCase
+      security:
+        - oauth2:
+            - read:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: kycId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: KYC case details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/KycCase"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    patch:
+      tags:
+        - KYC
+      summary: Update KYC case
+      operationId: updateKycCase
+      security:
+        - oauth2:
+            - write:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: kycId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - PENDING
+                    - APPROVED
+                    - REJECTED
+                riskScore:
+                  type: number
+                  format: float
+                  minimum: 0
+                  maximum: 100
+                reviewer:
+                  type: string
+                  description: Reviewer account ID or name
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: KYC case updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/KycCase"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/accreditations:
+    get:
+      tags:
+        - Accreditation
+      summary: List accreditations
+      operationId: listAccreditations
+      security:
+        - oauth2:
+            - read:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+        - name: accountId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: regime
+          in: query
+          schema:
+            type: string
+            enum:
+              - US_SEC_RULE501
+              - EU_PROF_INVESTOR
+              - UAE_FSRA
+              - VARA
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - APPROVED
+              - REVOKED
+              - EXPIRED
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of accreditations
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Accreditation"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      tags:
+        - Accreditation
+      summary: Create investor accreditation
+      operationId: createAccreditation
+      security:
+        - oauth2:
+            - write:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - accountId
+                - regime
+              properties:
+                accountId:
+                  type: string
+                  format: uuid
+                regime:
+                  type: string
+                  enum:
+                    - US_SEC_RULE501
+                    - EU_PROF_INVESTOR
+                    - UAE_FSRA
+                    - VARA
+                expiresAt:
+                  type: string
+                  format: date-time
+                docs:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Accreditation created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Accreditation"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/whitelist:
+    get:
+      tags:
+        - Whitelist
+      summary: List whitelist entries
+      operationId: listWhitelistEntries
+      security:
+        - oauth2:
+            - read:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+        - name: tokenClassId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: accountId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - APPROVED
+              - REVOKED
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of whitelist entries
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/WhitelistEntry"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      tags:
+        - Whitelist
+      summary: Add whitelist entry
+      operationId: createWhitelistEntry
+      security:
+        - oauth2:
+            - write:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/components.yaml#/components/parameters/idempotencyKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tokenClassId
+                - walletId
+              properties:
+                tokenClassId:
+                  type: string
+                  format: uuid
+                walletId:
+                  type: string
+                  format: uuid
+                accountId:
+                  type: string
+                  format: uuid
+                reasons:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Whitelist entry created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/WhitelistEntry"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/whitelist/{entryId}:
+    patch:
+      tags:
+        - Whitelist
+      summary: Update whitelist entry
+      operationId: updateWhitelistEntry
+      security:
+        - oauth2:
+            - write:compliance
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - APPROVED
+                    - REVOKED
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Whitelist entry updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/WhitelistEntry"
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey
+  schemas:
+    KycCase:
+      type: object
+      description: KYC verification record.
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+            - PERSON
+            - ENTITY
+        status:
+          type: string
+          enum:
+            - PENDING
+            - APPROVED
+            - REJECTED
+        riskScore:
+          type: number
+          format: float
+        evidenceUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Accreditation:
+      type: object
+      description: Investor accreditation.
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        regime:
+          type: string
+          enum:
+            - US_SEC_RULE501
+            - EU_PROF_INVESTOR
+            - UAE_FSRA
+            - VARA
+        status:
+          type: string
+          enum:
+            - PENDING
+            - APPROVED
+            - REVOKED
+            - EXPIRED
+        expiresAt:
+          type: string
+          format: date-time
+        docs:
+          type: array
+          items:
+            type: string
+            format: uri
+        createdAt:
+          type: string
+          format: date-time
+    WhitelistEntry:
+      type: object
+      description: Record linking wallets or accounts to approved tokens.
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        tokenClassId:
+          type: string
+          format: uuid
+        walletId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+            - APPROVED
+            - REVOKED
+        reasons:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time

@@ -1,0 +1,284 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Observability API
+  version: 2.0.0
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+  description: "Audit logs, system logs, metrics, and observability.
+
+
+    **Audit Logs:**
+
+    - WORM (Write-Once-Read-Many)
+
+    - Hash-chained for tamper detection
+
+    - Immutable after write
+
+    "
+servers:
+  - url: https://api.quub.exchange/v1
+    description: Production API
+paths:
+  /orgs/{orgId}/audit-logs:
+    get:
+      summary: Query audit logs
+      operationId: queryAuditLogs
+      tags:
+        - Audit Logs
+      description: Retrieve immutable audit log entries for an organization. Logs are hash-chained for tamper detection.
+      security:
+        - oauth2:
+            - read:observability
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: startTime
+          in: query
+          description: Filter logs created after this timestamp
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          description: Filter logs created before this timestamp
+          schema:
+            type: string
+            format: date-time
+        - name: eventType
+          in: query
+          description: Filter by event type
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Max number of logs to return
+          schema:
+            type: integer
+            default: 100
+        - name: cursor
+          in: query
+          description: Cursor for pagination
+          schema:
+            type: string
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of audit log entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AuditLogEntry"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /admin/system-logs:
+    get:
+      summary: Query system logs
+      operationId: querySystemLogs
+      tags:
+        - System Logs
+      description: Retrieve system-level runtime logs filtered by severity.
+      security:
+        - oauth2:
+            - read:observability
+        - apiKey: []
+      parameters:
+        - name: level
+          in: query
+          description: Filter by log severity level
+          schema:
+            type: string
+            enum:
+              - DEBUG
+              - INFO
+              - WARN
+              - ERROR
+        - name: service
+          in: query
+          description: Filter logs by service name
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Max number of logs to return
+          schema:
+            type: integer
+            default: 100
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of system log entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SystemLogEntry"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/metrics:
+    get:
+      summary: Get organization metrics
+      operationId: getMetrics
+      tags:
+        - Metrics
+      description: Retrieve performance and usage metrics for the organization.
+      security:
+        - oauth2:
+            - read:observability
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: range
+          in: query
+          description: Time range (e.g., 24h, 7d)
+          schema:
+            type: string
+            example: 24h
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Organization metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/MetricsResponse"
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey
+  schemas:
+    AuditLogEntry:
+      type: object
+      description: Immutable, hash-chained audit record.
+      properties:
+        id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        orgId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        eventType:
+          type: string
+          example: USER_LOGIN
+        action:
+          type: string
+          example: LOGIN_SUCCESS
+        resourceType:
+          type: string
+          example: ACCOUNT
+        resourceId:
+          type: string
+        changes:
+          type: object
+          description: JSON object describing state changes
+        ipAddress:
+          type: string
+        userAgent:
+          type: string
+        hashChain:
+          type: string
+          description: Hash of previous entry + current entry (WORM)
+      required:
+        - id
+        - timestamp
+        - orgId
+        - eventType
+        - hashChain
+    SystemLogEntry:
+      type: object
+      description: Application or system-level log entry.
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        level:
+          type: string
+          enum:
+            - DEBUG
+            - INFO
+            - WARN
+            - ERROR
+        service:
+          type: string
+          example: exchange-core
+        message:
+          type: string
+        traceId:
+          type: string
+          example: req_abc123
+        metadata:
+          type: object
+          description: Additional contextual data
+    MetricsResponse:
+      type: object
+      description: Aggregated telemetry metrics.
+      properties:
+        collectedAt:
+          type: string
+          format: date-time
+        metrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: request_rate
+              value:
+                type: number
+              unit:
+                type: string
+                example: requests/sec
+tags:
+  - name: Audit Logs
+    description: Audit Logs operations
+  - name: Metrics
+    description: Metrics operations
+  - name: System Logs
+    description: System Logs operations

@@ -1,0 +1,797 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Governance Service
+  version: "2.0.0"
+  description: |
+    Governance APIs for on-chain and off-chain corporate actions,
+    votes, conversions, and buyback windows.
+  license:
+    name: Proprietary
+    url: https://quub.exchange/legal/terms
+
+servers:
+  - url: https://api.sandbox.quub.exchange/v1
+    description: Sandbox
+  - url: https://api.quub.exchange/v1
+    description: Production
+
+tags:
+  - name: governance
+    description: Governance and corporate actions domain
+
+paths:
+  /orgs/{orgId}/corporate-actions:
+    get:
+      tags: [governance]
+      summary: List corporate actions
+      operationId: listCorporateActions
+      security:
+        - oauth2: [read:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+          description: Organization ID
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+        - $ref: "./common/components.yaml#/components/parameters/tokenClassIdQuery"
+        - name: type
+          in: query
+          schema:
+            $ref: "./common/primitives.yaml#/components/schemas/CorporateActionType"
+      responses:
+        "200":
+          description: Paginated list of corporate actions
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "./common/pagination.yaml#/components/schemas/PageResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CorporateAction"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+    post:
+      tags: [governance]
+      summary: Create corporate action
+      operationId: createCorporateAction
+      security:
+        - oauth2: [write:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: "./common/components.yaml#/components/parameters/orgIdHeader"
+          description: Organization ID
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, targetTokenClassId]
+              properties:
+                type:
+                  $ref: "./common/primitives.yaml#/components/schemas/CorporateActionType"
+                targetTokenClassId:
+                  $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+                recordDate: { type: string, format: date }
+                effectiveDate: { type: string, format: date }
+                params: { type: object }
+      responses:
+        "201":
+          description: Corporate action created
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/CorporateAction"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/corporate-actions/{caId}:
+    get:
+      tags: [governance]
+      summary: Get corporate action
+      operationId: getCorporateAction
+      security:
+        - oauth2: [read:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: caId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Corporate action details
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/CorporateAction"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+    patch:
+      tags: [governance]
+      summary: Update corporate action
+      operationId: updateCorporateAction
+      security:
+        - oauth2: [write:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: caId
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                effectiveDate: { type: string, format: date }
+                params: { type: object }
+      responses:
+        "200":
+          description: Corporate action updated
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/CorporateAction"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/voting-sessions:
+    get:
+      tags: [governance]
+      summary: List voting sessions
+      operationId: listVotingSessions
+      security:
+        - oauth2: [read:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+        - name: ca_id
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Paginated list of voting sessions
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "./common/pagination.yaml#/components/schemas/PageResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/VotingSession"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+    post:
+      tags: [governance]
+      summary: Create a new voting session
+      operationId: createVotingSession
+      security:
+        - oauth2: [write:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [caId, question, options, quorumPct, endAt]
+              properties:
+                caId: { type: string }
+                question: { type: string }
+                options: { type: array, items: { type: string } }
+                quorumPct: { type: number }
+                endAt: { type: string, format: date-time }
+      responses:
+        "201":
+          description: Voting session created
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/VotingSession"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/voting-sessions/{sessionId}/ballots:
+    post:
+      tags: [governance]
+      summary: Cast a ballot in a voting session
+      operationId: castBallot
+      security:
+        - oauth2: [write:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [accountId, choice]
+              properties:
+                accountId:
+                  $ref: "./common/primitives.yaml#/components/schemas/AccountId"
+                choice: { type: string, enum: [FOR, AGAINST, ABSTAIN] }
+                shares: { type: number }
+      responses:
+        "200":
+          description: Ballot cast successfully
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Ballot"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+    get:
+      tags: [governance]
+      summary: List ballots for a voting session
+      operationId: listBallots
+      security:
+        - oauth2: [read:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+      responses:
+        "200":
+          description: Paginated list of ballots
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "./common/pagination.yaml#/components/schemas/PageResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Ballot"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          $ref: "./common/responses.yaml#/components/responses/NotFound"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/conversion-events:
+    get:
+      tags: [governance]
+      summary: List conversion events
+      operationId: listConversionEvents
+      security:
+        - oauth2: [read:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+      responses:
+        "200":
+          description: Paginated list of conversion events
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "./common/pagination.yaml#/components/schemas/PageResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ConversionEvent"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+    post:
+      tags: [governance]
+      summary: Execute conversion event
+      operationId: createConversionEvent
+      security:
+        - oauth2: [write:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fromTokenClassId, toTokenClassId, ratio]
+              properties:
+                fromTokenClassId:
+                  $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+                toTokenClassId:
+                  $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+                ratio: { type: number }
+      responses:
+        "201":
+          description: Conversion event created
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/ConversionEvent"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+  /orgs/{orgId}/buyback-windows:
+    get:
+      tags: [governance]
+      summary: List buyback windows
+      operationId: listBuybackWindows
+      security:
+        - oauth2: [read:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/pagination.yaml#/components/parameters/cursor"
+        - $ref: "./common/pagination.yaml#/components/parameters/limit"
+        - $ref: "./common/components.yaml#/components/parameters/tokenClassIdQuery"
+      responses:
+        "200":
+          description: Paginated list of buyback windows
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "./common/pagination.yaml#/components/schemas/PageResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/BuybackWindow"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "404":
+          { $ref: "./common/responses.yaml#/components/responses/NotFound" }
+
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+    post:
+      tags: [governance]
+      summary: Create buyback window
+      operationId: createBuybackWindow
+      security:
+        - oauth2: [write:governance]
+        - apiKey: []
+      parameters:
+        - $ref: "./common/components.yaml#/components/parameters/orgId"
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: "./common/components.yaml#/components/parameters/idempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tokenClassId, startAt, endAt, capPct, bandPct]
+              properties:
+                tokenClassId:
+                  $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+                startAt: { type: string, format: date-time }
+                endAt: { type: string, format: date-time }
+                capPct: { type: number }
+                bandPct: { type: number }
+      responses:
+        "201":
+          description: Buyback window created
+          headers:
+            Request-Id:
+              $ref: "./common/components.yaml#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BuybackWindow"
+        "400":
+          $ref: "./common/responses.yaml#/components/responses/BadRequest"
+        "401":
+          $ref: "./common/responses.yaml#/components/responses/Unauthorized"
+        "403":
+          $ref: "./common/responses.yaml#/components/responses/Forbidden"
+        "409":
+          $ref: "./common/responses.yaml#/components/responses/Conflict"
+        "422":
+          $ref: "./common/responses.yaml#/components/responses/ValidationError"
+        "429":
+          {
+            $ref: "./common/responses.yaml#/components/responses/TooManyRequests",
+          }
+
+        "500":
+          $ref: "./common/responses.yaml#/components/responses/InternalServerError"
+
+components:
+  schemas:
+    VotingSession:
+      type: object
+      description: A governance voting session/proposal on a corporate action
+      required:
+        [
+          id,
+          corporateActionId,
+          question,
+          options,
+          quorumPct,
+          startAt,
+          endAt,
+          status,
+        ]
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        corporateActionId:
+          type: string
+          format: uuid
+          description: The corporate action being voted on
+        question:
+          type: string
+          description: The question or proposal being voted on
+          example: "Approve 2:1 stock split?"
+        options:
+          type: array
+          items: { type: string }
+          description: Available voting options
+          example: ["FOR", "AGAINST", "ABSTAIN"]
+        quorumPct:
+          type: number
+          description: Quorum percentage required (0-100)
+          example: 50
+        startAt:
+          type: string
+          format: date-time
+          description: When voting period begins
+        endAt:
+          type: string
+          format: date-time
+          description: When voting period ends
+        status:
+          type: string
+          enum: [SCHEDULED, OPEN, CLOSED, CANCELLED]
+          description: Current status of the voting session
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Ballot:
+      type: object
+      description: An individual shareholder's cast vote on a voting session
+      required: [id, votingSessionId, accountId, choice]
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "650e8400-e29b-41d4-a716-446655440001"
+        votingSessionId:
+          type: string
+          format: uuid
+          description: The voting session this ballot is for
+        accountId:
+          $ref: "./common/primitives.yaml#/components/schemas/AccountId"
+        choice:
+          type: string
+          enum: [FOR, AGAINST, ABSTAIN]
+          description: The vote choice
+        shares:
+          type: number
+          description: Number of shares voting
+        weight:
+          type: number
+          description: Voting weight (may differ from shares for weighted voting)
+        votedAt:
+          type: string
+          format: date-time
+          description: When the ballot was cast
+        createdAt:
+          type: string
+          format: date-time
+
+    CorporateAction:
+      type: object
+      description: Corporate action event (dividend, split, merger, etc.)
+      required: [id, type, tokenClassId, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "650e8400-e29b-41d4-a716-446655440001"
+        type:
+          $ref: "./common/primitives.yaml#/components/schemas/CorporateActionType"
+        tokenClassId:
+          $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+        targetTokenClassId:
+          $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+          description: For conversions/mergers
+        status:
+          type: string
+          enum: [ANNOUNCED, VOTING, APPROVED, REJECTED, EXECUTED, CANCELLED]
+        announcedAt:
+          type: string
+          format: date-time
+        recordDate:
+          type: string
+          format: date
+          description: Shareholder of record date
+        effectiveDate:
+          type: string
+          format: date
+        expiryDate:
+          oneOf:
+            - type: string
+              format: date
+            - type: "null"
+        details:
+          type: object
+          additionalProperties: true
+          description: Action-specific details (e.g., dividend amount, split ratio)
+
+    BuybackWindow:
+      type: object
+      description: Share buyback opportunity period
+      required: [id, tokenClassId, status, startAt, endAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tokenClassId:
+          $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+        status:
+          type: string
+          enum: [SCHEDULED, OPEN, CLOSED, CANCELLED]
+        price:
+          type: number
+          format: double
+          description: Buyback price per share
+        maxShares:
+          type: integer
+          description: Maximum shares to repurchase
+        sharesRepurchased:
+          type: integer
+          default: 0
+        startAt:
+          type: string
+          format: date-time
+        endAt:
+          type: string
+          format: date-time
+        terms:
+          type: string
+          description: Terms and conditions
+
+    ConversionEvent:
+      type: object
+      description: Token class conversion event
+      required: [id, fromTokenClassId, toTokenClassId, ratio]
+      properties:
+        id:
+          type: string
+          format: uuid
+        fromTokenClassId:
+          $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+        toTokenClassId:
+          $ref: "./common/primitives.yaml#/components/schemas/TokenClassId"
+        ratio:
+          type: number
+          format: double
+          description: Conversion ratio (from:to)
+        accountId:
+          $ref: "./common/primitives.yaml#/components/schemas/AccountId"
+        sharesConverted:
+          type: integer
+        convertedAt:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth2 authentication via Quub Identity Service
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.quub.exchange/oauth/authorize
+          tokenUrl: https://auth.quub.exchange/oauth/token
+          scopes:
+            read:projects: Read access to governance resources
+            write:projects: Write access to governance resources
+            admin:*: Full administrative access
+    apiKey:
+      type: apiKey
+      description: API key for service-to-service authentication
+      name: X-API-Key
+      in: header

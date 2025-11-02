@@ -1,0 +1,893 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Treasury & Reconciliation API
+  version: 1.3.0
+  description: |
+    The Treasury Service manages escrow accounts, payments, distributions,
+    ledger entries, and reconciliation between blockchain and banking systems.
+
+    Includes continuous proof-of-reserves streaming for real-time audit visibility.
+servers:
+  - url: https://api.sandbox.quub.exchange/v1
+    description: Sandbox environment
+    x-environment: sandbox
+  - url: https://api.quub.exchange/v1
+    description: Production REST API
+    x-environment: production
+  - url: wss://stream.quub.exchange/v1
+    description: WebSocket Streaming API for live reconciliation updates
+    x-protocol: wss
+    x-environment: production
+tags:
+  - name: treasury
+    description: Treasury and settlement operations
+  - name: reconciliation
+    description: Reconciliation and proof-of-reserve streams
+paths:
+  /orgs/{orgId}/escrows:
+    get:
+      tags:
+        - treasury
+      summary: List escrow accounts
+      operationId: listEscrows
+      security:
+        - oauth2:
+            - read:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/cursor'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/projectIdQuery'
+      responses:
+        '200':
+          description: List of escrow accounts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EscrowAccount'
+    post:
+      tags:
+        - treasury
+      summary: Open escrow account
+      operationId: createEscrow
+      security:
+        - oauth2:
+            - write:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/idempotencyKey'
+        - $ref: '#/components/parameters/signature'
+        - $ref: '#/components/parameters/timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - currency
+                - projectId
+              properties:
+                currency:
+                  type: string
+                  pattern: ^[A-Z]{3}$
+                  example: USD
+                projectId:
+                  $ref: '#/components/schemas/ProjectId'
+                bankRef:
+                  type: string
+                  example: CITI-ESCROW-12345
+      responses:
+        '201':
+          description: Escrow account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EscrowAccount'
+  /orgs/{orgId}/escrows/{escrowId}:
+    get:
+      tags:
+        - treasury
+      summary: Get escrow account
+      operationId: getEscrow
+      security:
+        - oauth2:
+            - read:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - name: escrowId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Escrow account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EscrowAccount'
+  /orgs/{orgId}/payments:
+    get:
+      tags:
+        - treasury
+      summary: List payments
+      operationId: listPayments
+      security:
+        - oauth2:
+            - read:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/cursor'
+        - $ref: '#/components/parameters/limit'
+        - name: direction
+          in: query
+          schema:
+            $ref: '#/components/schemas/PayDirection'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/PayStatus'
+      responses:
+        '200':
+          description: List of payments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payment'
+    post:
+      tags:
+        - treasury
+      summary: Create payment
+      operationId: createPayment
+      security:
+        - oauth2:
+            - write:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/idempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - direction
+                - method
+                - amount
+                - currency
+              properties:
+                direction:
+                  $ref: '#/components/schemas/PayDirection'
+                method:
+                  $ref: '#/components/schemas/PayMethod'
+                amount:
+                  type: number
+                  format: double
+                currency:
+                  type: string
+                  example: USD
+                from:
+                  type: string
+                to:
+                  type: string
+                valueDate:
+                  type: string
+                  format: date
+                refs:
+                  type: object
+      responses:
+        '201':
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+  /orgs/{orgId}/distributions:
+    get:
+      tags:
+        - treasury
+      summary: List distributions
+      operationId: listDistributions
+      security:
+        - oauth2:
+            - read:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/cursor'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: List of distributions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Distribution'
+    post:
+      tags:
+        - treasury
+      summary: Create distribution batch
+      operationId: createDistribution
+      security:
+        - oauth2:
+            - write:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/idempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tokenClassId
+                - period
+                - net
+              properties:
+                projectId:
+                  $ref: '#/components/schemas/ProjectId'
+                tokenClassId:
+                  $ref: '#/components/schemas/TokenClassId'
+                period:
+                  type: string
+                gross:
+                  type: number
+                fees:
+                  type: number
+                taxWithheld:
+                  type: number
+                net:
+                  type: number
+      responses:
+        '201':
+          description: Distribution created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Distribution'
+  /orgs/{orgId}/ledger:
+    get:
+      tags:
+        - treasury
+      summary: Query ledger entries
+      operationId: queryLedger
+      security:
+        - oauth2:
+            - read:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/cursor'
+        - $ref: '#/components/parameters/limit'
+        - name: accountId
+          in: query
+          schema:
+            $ref: '#/components/schemas/AccountId'
+      responses:
+        '200':
+          description: Ledger entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LedgerEntry'
+  /orgs/{orgId}/reconciliation:
+    get:
+      tags:
+        - reconciliation
+      summary: List reconciliation reports
+      operationId: listReconciliations
+      security:
+        - oauth2:
+            - read:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/cursor'
+        - $ref: '#/components/parameters/fromDate'
+        - $ref: '#/components/parameters/toDate'
+      responses:
+        '200':
+          description: List of daily reconciliation reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReconciliationReport'
+    post:
+      tags:
+        - reconciliation
+      summary: Trigger daily reconciliation
+      operationId: createReconciliation
+      security:
+        - oauth2:
+            - write:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+      responses:
+        '201':
+          description: Reconciliation initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReconciliationReport'
+  /orgs/{orgId}/reconciliation/{reportId}:
+    get:
+      tags:
+        - reconciliation
+      summary: Get reconciliation report
+      operationId: getReconciliation
+      security:
+        - oauth2:
+            - read:treasury
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detailed reconciliation report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReconciliationReport'
+  /orgs/{orgId}/reconciliation/{reportId}/attest:
+    post:
+      tags:
+        - reconciliation
+      summary: Upload attestation or proof file
+      operationId: attestReconciliation
+      security:
+        - oauth2:
+            - write:treasury
+            - admin:*
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                type:
+                  type: string
+                  enum:
+                    - bank_statement
+                    - onchain_proof
+                    - audit_certificate
+      responses:
+        '200':
+          description: Attestation received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReconciliationReport'
+  /orgs/{orgId}/reconciliation/live-status:
+    get:
+      tags:
+        - reconciliation
+      summary: Live reconciliation stream (WebSocket)
+      description: |
+        Establishes a WebSocket connection to stream real-time reconciliation deltas.
+
+        - Pushes balance changes, proof-hash updates, and discrepancy alerts.
+        - Enables external auditors and custodians to maintain continuous proof-of-reserves.
+        - Messages are HMAC-signed using the client's API key secret.
+      security:
+        - oauth2:
+            - read:treasury
+      x-protocol: wss
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+      responses:
+        '200':
+          description: WebSocket connection info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReconciliationStreamMessage'
+components:
+  schemas:
+    ReconciliationReport:
+      type: object
+      description: |
+        Represents reconciliation between escrow balances, ledger, and external confirmations.
+      properties:
+        id:
+          type: string
+          example: recon_2025_10_21
+        date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+            - PENDING
+            - MATCHED
+            - MISMATCHED
+            - VERIFIED
+        hashRoot:
+          type: string
+          description: Merkle root hash of all entries
+        discrepancies:
+          type: array
+          items:
+            type: object
+            properties:
+              accountRef:
+                type: string
+              ledgerBalance:
+                type: number
+              bankBalance:
+                type: number
+              variance:
+                type: number
+        proofs:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - bank_statement
+                  - onchain_proof
+                  - audit_certificate
+              fileUrl:
+                type: string
+                format: uri
+              uploadedAt:
+                type: string
+                format: date-time
+              verifiedBy:
+                type: string
+        generatedAt:
+          type: string
+          format: date-time
+        verifiedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+    ReconciliationStreamMessage:
+      type: object
+      description: Real-time event broadcast over the WebSocket stream.
+      properties:
+        sequence:
+          type: integer
+          example: 15823
+        timestamp:
+          type: string
+          format: date-time
+        type:
+          type: string
+          enum:
+            - BALANCE_UPDATE
+            - HASH_UPDATE
+            - DISCREPANCY_ALERT
+            - HEARTBEAT
+        orgId:
+          type: string
+          format: uuid
+        data:
+          oneOf:
+            - type: object
+              description: Balance delta
+              properties:
+                accountRef:
+                  type: string
+                oldBalance:
+                  type: number
+                newBalance:
+                  type: number
+            - type: object
+              description: Merkle hash update
+              properties:
+                oldRoot:
+                  type: string
+                newRoot:
+                  type: string
+            - type: object
+              description: Discrepancy alert
+              properties:
+                accountRef:
+                  type: string
+                ledgerBalance:
+                  type: number
+                bankBalance:
+                  type: number
+                variance:
+                  type: number
+            - type: object
+              description: Heartbeat
+              properties:
+                message:
+                  type: string
+                  example: alive
+        signature:
+          type: string
+          example: HMAC_SHA256(...)
+    Distribution:
+      type: object
+      description: Token holder distribution (dividend, interest, etc.)
+      required:
+        - id
+        - tokenClassId
+        - type
+        - totalAmount
+        - currency
+      properties:
+        id:
+          type: string
+          format: uuid
+        tokenClassId:
+          $ref: '#/components/schemas/TokenClassId'
+        projectId:
+          $ref: '#/components/schemas/ProjectId'
+        type:
+          type: string
+          enum:
+            - DIVIDEND
+            - INTEREST
+            - RETURN_OF_CAPITAL
+            - REDEMPTION
+        totalAmount:
+          type: number
+          format: double
+        currency:
+          type: string
+          example: USD
+        perShareAmount:
+          type: number
+          format: double
+        recordDate:
+          type: string
+          format: date
+        paymentDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+            - ANNOUNCED
+            - PROCESSING
+            - COMPLETED
+            - CANCELLED
+        recipientCount:
+          type: integer
+        paidAmount:
+          type: number
+          format: double
+          default: 0
+    EscrowAccount:
+      type: object
+      description: Escrow account for project funds
+      required:
+        - id
+        - projectId
+        - currency
+        - balance
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          $ref: '#/components/schemas/ProjectId'
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+        currency:
+          type: string
+          example: USD
+        balance:
+          type: number
+          format: double
+        holdBalance:
+          type: number
+          format: double
+          description: Funds on hold
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - FROZEN
+            - CLOSED
+        bankAccount:
+          type: object
+          properties:
+            bankName:
+              type: string
+            accountNumber:
+              type: string
+            routingNumber:
+              type: string
+            swift:
+              type: string
+        createdAt:
+          type: string
+          format: date-time
+    LedgerEntry:
+      type: object
+      description: General ledger entry for audit trail
+      required:
+        - id
+        - type
+        - amount
+        - currency
+        - accountRef
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+            - DEBIT
+            - CREDIT
+        accountRef:
+          type: string
+          description: Reference to account/wallet/escrow
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+        description:
+          type: string
+        relatedEntityType:
+          type: string
+          enum:
+            - PAYMENT
+            - DISTRIBUTION
+            - TRADE
+            - SUBSCRIPTION
+        relatedEntityId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+        accountId:
+          $ref: '#/components/schemas/AccountId'
+    OrgId:
+      type: string
+      description: Organization identifier
+      example: org_x1y2z3a4b5c6
+      pattern: ^org_[a-z0-9]{12}$
+    ProjectId:
+      type: string
+      description: Project identifier
+      example: prj_m1n2o3p4q5r6
+      pattern: ^prj_[a-z0-9]{12}$
+    PayDirection:
+      type: string
+      enum:
+        - INBOUND
+        - OUTBOUND
+      description: Payment direction (into or out of the platform)
+    PayStatus:
+      type: string
+      enum:
+        - PENDING
+        - PROCESSING
+        - COMPLETED
+        - FAILED
+        - CANCELLED
+        - REVERSED
+      description: Payment processing status
+    PayMethod:
+      type: string
+      enum:
+        - BANK_WIRE
+        - ACH
+        - SEPA
+        - CRYPTO
+        - CARD
+        - WALLET
+      description: Payment method/channel
+    Amount:
+      type: number
+      format: double
+      description: Monetary amount (use with Currency)
+      example: 1000.5
+    Currency:
+      type: string
+      description: ISO 4217 currency code
+      example: USD
+      pattern: ^[A-Z]{3}$
+    Timestamp:
+      type: string
+      format: date-time
+      description: RFC3339 timestamp in UTC (Zulu) unless explicitly stated otherwise
+      example: '2025-10-22T10:30:00Z'
+    Payment:
+      type: object
+      description: |
+        Payment transaction - used by Treasury, Banking, Settlements
+      required:
+        - id
+        - direction
+        - method
+        - amount
+        - currency
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: pay_abc123def456
+        orgId:
+          $ref: '#/components/schemas/OrgId'
+        direction:
+          $ref: '#/components/schemas/PayDirection'
+        method:
+          $ref: '#/components/schemas/PayMethod'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        from:
+          type: string
+          description: Sender identifier (account, wallet, etc.)
+        to:
+          type: string
+          description: Recipient identifier
+        status:
+          $ref: '#/components/schemas/PayStatus'
+        valueDate:
+          type: string
+          format: date
+          description: Value date for the payment
+        refs:
+          type: object
+          additionalProperties: true
+          description: Payment references and metadata
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+        updatedAt:
+          $ref: '#/components/schemas/Timestamp'
+    TokenClassId:
+      type: string
+      description: Token class identifier
+      example: tkc_s1t2u3v4w5x6
+      pattern: ^tkc_[a-z0-9]{12}$
+    AccountId:
+      type: string
+      description: Unique account identifier
+      example: acc_a1b2c3d4e5f6
+      pattern: ^acc_[a-z0-9]{12}$
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 authorization with scope-based access control
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.quub.exchange/oauth/authorize
+          tokenUrl: https://auth.quub.exchange/oauth/token
+          scopes:
+            read:projects: Read access to projects
+            write:projects: Write access to projects
+            read:treasury: Read access to treasury operations
+            write:treasury: Write access to treasury operations
+            admin:*: Administrative access to all resources
+        clientCredentials:
+          tokenUrl: https://auth.quub.exchange/oauth/token
+          scopes:
+            read:projects: Read access to projects
+            write:projects: Write access to projects
+            read:treasury: Read access to treasury operations
+            write:treasury: Write access to treasury operations
+            admin:*: Administrative access to all resources
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: Org-bound API key; include X-Signature and X-Timestamp on writes.
+  parameters:
+    orgId:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/OrgId'
+    cursor:
+      name: cursor
+      in: query
+      schema:
+        type: string
+      description: Opaque pagination cursor from previous response
+    limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 250
+        default: 50
+      description: Maximum number of items to return per page
+    projectIdQuery:
+      name: projectId
+      in: query
+      schema:
+        $ref: '#/components/schemas/ProjectId'
+    idempotencyKey:
+      name: Idempotency-Key
+      in: header
+      schema:
+        type: string
+        maxLength: 128
+    signature:
+      name: X-Signature
+      in: header
+      schema:
+        type: string
+      description: Base64(HMAC-SHA256) of (method|path|query|timestamp|body-sha256).
+    timestamp:
+      name: X-Timestamp
+      in: header
+      schema:
+        type: string
+        format: date-time
+      description: RFC3339; reject if skew > 5 minutes.
+    fromDate:
+      name: fromDate
+      in: query
+      schema:
+        type: string
+        format: date
+    toDate:
+      name: toDate
+      in: query
+      schema:
+        type: string
+        format: date

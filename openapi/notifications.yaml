@@ -1,0 +1,299 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Notifications API
+  version: 2.0.0
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+  description: "API for managing email, SMS, and push notifications.
+
+
+    Features:
+
+    - Manage organization-level notification preferences
+
+    - Retrieve delivery history
+
+    - Send notifications to users or accounts
+
+    "
+servers:
+  - url: https://api.quub.exchange/v1
+    description: Production API
+paths:
+  /orgs/{orgId}/notifications/preferences:
+    get:
+      summary: Get notification preferences
+      operationId: getNotificationPreferences
+      tags:
+        - Preferences
+      description: Retrieve organization-level notification preferences (channels, templates, and triggers).
+      security:
+        - oauth2:
+            - read:notifications
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Notification preferences
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/NotificationPreference"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    put:
+      summary: Update notification preferences
+      operationId: updateNotificationPreferences
+      tags:
+        - Preferences
+      description: Update notification preferences for an organization.
+      security:
+        - oauth2:
+            - write:notifications
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                preferences:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/NotificationPreference"
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Updated notification preferences
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/NotificationPreference"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/notifications/history:
+    get:
+      summary: Get notification history
+      operationId: getNotificationHistory
+      tags:
+        - History
+      description: Retrieve sent notifications for an organization.
+      security:
+        - oauth2:
+            - read:notifications
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: type
+          in: query
+          description: Filter by notification type
+          schema:
+            type: string
+            enum:
+              - EMAIL
+              - SMS
+              - PUSH
+        - name: status
+          in: query
+          description: Filter by delivery status
+          schema:
+            type: string
+            enum:
+              - PENDING
+              - SENT
+              - FAILED
+        - name: since
+          in: query
+          description: Return notifications sent after this timestamp
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Notification history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Notification"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/notifications/send:
+    post:
+      summary: Send notification
+      operationId: sendNotification
+      tags:
+        - Send
+      description: Send a notification (email, SMS, or push) to one or more recipients.
+      security:
+        - oauth2:
+            - write:notifications
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - recipients
+                - subject
+                - body
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - EMAIL
+                    - SMS
+                    - PUSH
+                recipients:
+                  type: array
+                  description: List of recipient account IDs or emails
+                  items:
+                    type: string
+                subject:
+                  type: string
+                  description: Message subject (for email or push)
+                body:
+                  type: string
+                  description: Message body content
+                metadata:
+                  type: object
+                  description: Additional delivery parameters (e.g., template ID, language)
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Notification sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Notification"
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey
+  schemas:
+    Notification:
+      type: object
+      description: Represents a single notification event.
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+            - EMAIL
+            - SMS
+            - PUSH
+        status:
+          type: string
+          enum:
+            - PENDING
+            - SENT
+            - FAILED
+        subject:
+          type: string
+        body:
+          type: string
+        sentAt:
+          type: string
+          format: date-time
+        recipients:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+    NotificationPreference:
+      type: object
+      description: Defines channel and template preferences for notifications.
+      properties:
+        channel:
+          type: string
+          enum:
+            - EMAIL
+            - SMS
+            - PUSH
+        enabled:
+          type: boolean
+        templateId:
+          type: string
+        trigger:
+          type: string
+          example: TRADE_EXECUTED
+tags:
+  - name: History
+    description: History operations
+  - name: Preferences
+    description: Preferences operations
+  - name: Send
+    description: Send operations

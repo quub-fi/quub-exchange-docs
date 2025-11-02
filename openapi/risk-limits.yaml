@@ -1,0 +1,258 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Risk & Limits API
+  version: 2.0.0
+  description:
+    "Provides endpoints for risk management and guardrails enforcement:
+
+    - Pre-trade checks
+
+    - Circuit breakers
+
+    - Exposure and limit controls
+
+    "
+servers:
+  - url: https://api.quub.exchange/v1
+    description: Production API
+paths:
+  /orgs/{orgId}/risk/limits:
+    get:
+      operationId: getRiskLimits
+      summary: Get risk limits
+      tags:
+        - Risk Limits
+      description: Retrieve the current risk limits configured for the organization.
+      security:
+        - oauth2:
+            - read:risk
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Current risk limits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RiskLimit"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    put:
+      operationId: updateRiskLimits
+      summary: Update risk limits
+      tags:
+        - Risk Limits
+      description: Update the maximum order size, exposure, or other quantitative limits for trading.
+      security:
+        - oauth2:
+            - write:risk
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limits:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/RiskLimit"
+      responses:
+        "200":
+          description: Limits updated successfully
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/risk/pre-trade-check:
+    post:
+      operationId: runPreTradeCheck
+      summary: Run pre-trade check
+      tags:
+        - Pre-Trade Checks
+      description: Validate an order or trade request against pre-defined risk limits before execution.
+      security:
+        - oauth2:
+            - write:risk
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - symbol
+                - side
+                - quantity
+                - price
+              properties:
+                symbol:
+                  type: string
+                  example: BTC-USD
+                side:
+                  type: string
+                  enum:
+                    - BUY
+                    - SELL
+                quantity:
+                  type: number
+                  format: double
+                  example: 5.0
+                price:
+                  type: number
+                  format: double
+                  example: 45000.0
+      responses:
+        "200":
+          description: Pre-trade check result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  approved:
+                    type: boolean
+                  reason:
+                    type: string
+                    nullable: true
+                  limitBreaches:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RiskLimit"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /orgs/{orgId}/risk/circuit-breakers:
+    get:
+      operationId: getCircuitBreakers
+      summary: Get circuit breaker status
+      tags:
+        - Circuit Breakers
+      description: Retrieve the current state of market circuit breakers for the organization.
+      security:
+        - oauth2:
+            - read:risk
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Circuit breaker status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CircuitBreaker"
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey
+  schemas:
+    RiskLimit:
+      type: object
+      description: Defines a specific quantitative risk limit.
+      properties:
+        id:
+          type: string
+          format: uuid
+        limitType:
+          type: string
+          enum:
+            - ORDER_SIZE
+            - POSITION_SIZE
+            - DAILY_VOLUME
+            - NOTIONAL_VALUE
+        maxValue:
+          type: number
+          format: double
+          example: 1000000
+        currency:
+          type: string
+          example: USD
+        updatedAt:
+          type: string
+          format: date-time
+    CircuitBreaker:
+      type: object
+      description: Circuit breaker rule and its trigger status.
+      properties:
+        symbol:
+          type: string
+          example: BTC-USD
+        triggerType:
+          type: string
+          enum:
+            - PRICE_DROP
+            - PRICE_SPIKE
+            - VOLUME_SURGE
+        threshold:
+          type: number
+          example: 10
+          description: Percentage threshold that activates the breaker
+        active:
+          type: boolean
+        triggeredAt:
+          type: string
+          format: date-time
+tags:
+  - name: Circuit Breakers
+    description: Circuit Breakers operations
+  - name: Pre-Trade Checks
+    description: Pre Trade Checks operations
+  - name: Risk Limits
+    description: Risk Limits operations

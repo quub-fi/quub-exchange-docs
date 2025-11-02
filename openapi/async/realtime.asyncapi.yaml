@@ -1,0 +1,108 @@
+asyncapi: 3.0.0
+info:
+  title: Quub Exchange - Reconciliation Stream
+  version: 1.0.0
+  description: |
+    Real-time proof-of-reserves and reconciliation stream for the Quub Treasury Service.
+
+    This AsyncAPI spec complements the REST Treasury API.
+    It describes the WebSocket channel that continuously emits reconciliation deltas,
+    Merkle hash updates, and discrepancy alerts.
+
+servers:
+  production:
+    host: stream.quub.exchange/v1
+    protocol: wss
+    description: Production WebSocket Stream
+  sandbox:
+    host: sandbox-stream.quub.exchange/v1
+    protocol: wss
+    description: Sandbox WebSocket Stream
+
+defaultContentType: application/json
+
+channels:
+  ReconciliationLiveStatus:
+    address: /Reconciliation/live-status
+    description: |
+      Stream of real-time reconciliation deltas, hash updates, and discrepancy alerts.
+      Messages are signed using HMAC for integrity and order-tracked via sequence number.
+
+      **Example Connection:**
+      ```js
+      const ws = new WebSocket("wss://stream.quub.exchange/v1/Reconciliation/live-status?orgId={orgId}");
+      ws.onmessage = (msg) => console.log(JSON.parse(msg.data));
+      ```
+    parameters:
+      orgId:
+        description: Organization UUID
+        location: $message.payload#/orgId
+    messages:
+      ReconciliationStreamMessage:
+        $ref: "#/components/messages/ReconciliationStreamMessage"
+
+operations:
+  onReconciliationEvent:
+    action: receive
+    channel:
+      $ref: "#/channels/ReconciliationLiveStatus"
+    summary: Receive reconciliation stream messages
+
+components:
+  messages:
+    ReconciliationStreamMessage:
+      name: ReconciliationStreamMessage
+      title: Reconciliation Stream Message
+      summary: Real-time reconciliation delta or system heartbeat
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/ReconciliationStreamMessage"
+
+  schemas:
+    ReconciliationStreamMessage:
+      type: object
+      description: Real-time event broadcast over the WebSocket stream.
+      properties:
+        sequence:
+          type: integer
+          description: Incremental sequence ID for stream ordering
+          example: 15823
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-10-21T12:34:56Z"
+        type:
+          type: string
+          enum: [BALANCE_UPDATE, HASH_UPDATE, DISCREPANCY_ALERT, HEARTBEAT]
+          example: BALANCE_UPDATE
+        orgId:
+          type: string
+          format: uuid
+        data:
+          oneOf:
+            - type: object
+              description: Balance delta event
+              properties:
+                accountRef: { type: string }
+                oldBalance: { type: number }
+                newBalance: { type: number }
+            - type: object
+              description: Merkle hash update
+              properties:
+                oldRoot: { type: string }
+                newRoot: { type: string }
+            - type: object
+              description: Discrepancy alert
+              properties:
+                accountRef: { type: string }
+                ledgerBalance: { type: number }
+                bankBalance: { type: number }
+                variance: { type: number }
+            - type: object
+              description: Heartbeat
+              properties:
+                message: { type: string, example: "alive" }
+        signature:
+          type: string
+          example: "HMAC_SHA256(...)"
+          description: Integrity signature computed using the client’s API key secret

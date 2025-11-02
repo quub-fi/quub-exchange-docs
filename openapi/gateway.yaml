@@ -1,0 +1,151 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Gateway API
+  version: 2.0.0
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+  description:
+    "Gateway health and heartbeat endpoints for monitoring and service discovery.
+
+    All business operations are handled by dedicated service APIs (tenancy-trust, exchange, compliance, etc.).
+
+    "
+servers:
+  - url: https://api.quub.com/v2
+    description: Production Gateway
+tags:
+  - name: Gateway
+    description: Gateway health monitoring and service status
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      tags:
+        - Gateway
+      summary: Aggregate health check of all registered services
+      description: "Returns aggregated health status from all backend services.
+
+        Used by load balancers and monitoring systems.
+
+        "
+      security: []
+      responses:
+        "200":
+          description: Health status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+  /heartbeat:
+    get:
+      operationId: getHeartbeat
+      tags:
+        - Gateway
+      summary: Simple heartbeat check
+      description: "Lightweight endpoint that returns immediately.
+
+        Used for basic availability checks.
+
+        "
+      security: []
+      responses:
+        "200":
+          description: Heartbeat response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - ok
+                  timestamp:
+                    type: string
+                    format: date-time
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - services
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum:
+            - healthy
+            - degraded
+            - unhealthy
+          description: Overall gateway health status
+        services:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceHealth"
+        totalServices:
+          type: integer
+          example: 12
+        healthyServices:
+          type: integer
+          example: 11
+        unhealthyServices:
+          type: integer
+          example: 1
+        timestamp:
+          type: string
+          format: date-time
+    ServiceHealth:
+      type: object
+      required:
+        - name
+        - status
+        - url
+      properties:
+        name:
+          type: string
+          example: exchange
+        status:
+          type: string
+          enum:
+            - healthy
+            - unhealthy
+            - unknown
+        url:
+          type: string
+          example: https://internal.quub.exchange
+        responseTime:
+          type: integer
+          description: Response time in milliseconds
+          example: 42
+        lastCheck:
+          type: string
+          format: date-time
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey

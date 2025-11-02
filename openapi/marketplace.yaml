@@ -1,0 +1,858 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Marketplace API
+  version: 2.0.0
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+  description: "Alternative trading mechanisms for private securities.
+
+
+    **Trading Models:**
+
+    - RFQ (Request for Quote) - Negotiated pricing
+
+    - OTC (Over-the-Counter) - Bilateral negotiation
+
+    - Dutch Auction - Descending price auction
+
+    - English Auction - Ascending price auction
+
+    - Dark Pool - Anonymous liquidity
+
+
+    **Use Cases:**
+
+    - Large block trades
+
+    - Pre-IPO secondary
+
+    - Illiquid securities
+
+    - Price discovery
+
+    "
+servers:
+  - url: https://api.quub.exchange/v1
+    description: Production API
+tags:
+  - name: RFQ
+    description: Request for Quote workflow
+  - name: OTC
+    description: OTC negotiation
+  - name: Auctions
+    description: Auction mechanisms
+  - name: Dark Pool
+    description: Anonymous liquidity
+paths:
+  /orgs/{orgId}/marketplace/rfqs:
+    get:
+      summary: List RFQs
+      operationId: listRfqs
+      tags:
+        - RFQ
+      security:
+        - oauth2:
+            - read:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+        - name: requesterId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: assetId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - OPEN
+              - QUOTED
+              - ACCEPTED
+              - EXPIRED
+              - CANCELLED
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Successfully retrieved list of RFQs
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/RFQ"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      summary: Create RFQ
+      operationId: createRfq
+      tags:
+        - RFQ
+      security:
+        - oauth2:
+            - write:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assetId
+                - quantity
+                - side
+              properties:
+                assetId:
+                  type: string
+                  format: uuid
+                quantity:
+                  type: string
+                side:
+                  type: string
+                  enum:
+                    - BUY
+                    - SELL
+                minPrice:
+                  type: string
+                maxPrice:
+                  type: string
+                expiresAt:
+                  type: string
+                  format: date-time
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: RFQ created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/RFQ"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/marketplace/rfqs/{rfqId}:
+    get:
+      summary: Get RFQ details
+      operationId: getRfq
+      tags:
+        - RFQ
+      security:
+        - oauth2:
+            - read:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: rfqId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Successfully retrieved RFQ details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/RFQ"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/marketplace/rfqs/{rfqId}/quotes:
+    post:
+      summary: Submit quote for RFQ
+      operationId: submitRfqQuote
+      tags:
+        - RFQ
+      security:
+        - oauth2:
+            - write:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: rfqId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - price
+                - quantity
+              properties:
+                price:
+                  type: string
+                quantity:
+                  type: string
+                expiresAt:
+                  type: string
+                  format: date-time
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Quote submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/RFQQuote"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/marketplace/otc/negotiations:
+    get:
+      summary: List OTC negotiations
+      operationId: listOtcNegotiations
+      tags:
+        - OTC
+      security:
+        - oauth2:
+            - read:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Successfully retrieved list of OTC negotiations
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/OTCNegotiation"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      summary: Create OTC negotiation
+      operationId: createOtcNegotiation
+      tags:
+        - OTC
+      security:
+        - oauth2:
+            - write:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assetId
+                - counterpartyOrgId
+                - side
+                - quantity
+              properties:
+                assetId:
+                  type: string
+                  format: uuid
+                counterpartyOrgId:
+                  type: string
+                  format: uuid
+                side:
+                  type: string
+                  enum:
+                    - BUY
+                    - SELL
+                quantity:
+                  type: string
+                proposedPrice:
+                  type: string
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: OTC negotiation created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/OTCNegotiation"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/marketplace/otc/{negotiationId}:
+    get:
+      summary: Get OTC negotiation details
+      operationId: getOtcNegotiation
+      tags:
+        - OTC
+      security:
+        - oauth2:
+            - read:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: negotiationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Successfully retrieved OTC negotiation details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/OTCNegotiation"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    patch:
+      summary: Update OTC negotiation
+      operationId: updateOtcNegotiation
+      tags:
+        - OTC
+      security:
+        - oauth2:
+            - write:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: negotiationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                proposedPrice:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                    - PENDING
+                    - ACCEPTED
+                    - REJECTED
+                    - EXPIRED
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: OTC negotiation updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/OTCNegotiation"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/marketplace/auctions:
+    get:
+      summary: List auctions
+      operationId: listAuctions
+      tags:
+        - Auctions
+      security:
+        - oauth2:
+            - read:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Successfully retrieved list of auctions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Auction"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      summary: Create auction
+      operationId: createAuction
+      tags:
+        - Auctions
+      security:
+        - oauth2:
+            - write:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assetId
+                - quantity
+                - auctionType
+                - startPrice
+              properties:
+                assetId:
+                  type: string
+                  format: uuid
+                quantity:
+                  type: string
+                auctionType:
+                  type: string
+                  enum:
+                    - ENGLISH
+                    - DUTCH
+                startPrice:
+                  type: string
+                reservePrice:
+                  type: string
+                startAt:
+                  type: string
+                  format: date-time
+                endAt:
+                  type: string
+                  format: date-time
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Auction created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Auction"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/marketplace/auctions/{auctionId}:
+    get:
+      summary: Get auction details
+      operationId: getAuction
+      tags:
+        - Auctions
+      security:
+        - oauth2:
+            - read:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: auctionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Successfully retrieved auction details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Auction"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/marketplace/auctions/{auctionId}/bids:
+    post:
+      summary: Place bid on auction
+      operationId: placeBid
+      tags:
+        - Auctions
+      security:
+        - oauth2:
+            - write:marketplace
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - name: auctionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bidPrice
+                - quantity
+              properties:
+                bidPrice:
+                  type: string
+                quantity:
+                  type: string
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Bid placed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/AuctionBid"
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey
+  schemas:
+    RFQ:
+      type: object
+      required:
+        - id
+        - orgId
+        - assetId
+        - quantity
+        - side
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        quantity:
+          type: string
+        side:
+          type: string
+          enum:
+            - BUY
+            - SELL
+        minPrice:
+          type: string
+        maxPrice:
+          type: string
+        status:
+          type: string
+          enum:
+            - OPEN
+            - QUOTED
+            - ACCEPTED
+            - EXPIRED
+            - CANCELLED
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+    RFQQuote:
+      type: object
+      required:
+        - id
+        - rfqId
+        - quoterOrgId
+        - price
+        - quantity
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        rfqId:
+          type: string
+          format: uuid
+        quoterOrgId:
+          type: string
+          format: uuid
+        price:
+          type: string
+        quantity:
+          type: string
+        status:
+          type: string
+          enum:
+            - PENDING
+            - ACCEPTED
+            - REJECTED
+            - EXPIRED
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+    OTCNegotiation:
+      type: object
+      required:
+        - id
+        - orgId
+        - assetId
+        - counterpartyOrgId
+        - side
+        - quantity
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        counterpartyOrgId:
+          type: string
+          format: uuid
+        side:
+          type: string
+          enum:
+            - BUY
+            - SELL
+        quantity:
+          type: string
+        proposedPrice:
+          type: string
+        agreedPrice:
+          type: string
+        status:
+          type: string
+          enum:
+            - INITIATED
+            - NEGOTIATING
+            - AGREED
+            - CANCELLED
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Auction:
+      type: object
+      required:
+        - id
+        - orgId
+        - assetId
+        - quantity
+        - auctionType
+        - startPrice
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          type: string
+          format: uuid
+        assetId:
+          type: string
+          format: uuid
+        quantity:
+          type: string
+        auctionType:
+          type: string
+          enum:
+            - ENGLISH
+            - DUTCH
+        startPrice:
+          type: string
+        currentPrice:
+          type: string
+        reservePrice:
+          type: string
+        status:
+          type: string
+          enum:
+            - SCHEDULED
+            - ACTIVE
+            - COMPLETED
+            - CANCELLED
+        startAt:
+          type: string
+          format: date-time
+        endAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+    AuctionBid:
+      type: object
+      required:
+        - id
+        - auctionId
+        - bidderOrgId
+        - bidPrice
+        - quantity
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        auctionId:
+          type: string
+          format: uuid
+        bidderOrgId:
+          type: string
+          format: uuid
+        bidPrice:
+          type: string
+        quantity:
+          type: string
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - OUTBID
+            - WINNING
+            - WON
+            - LOST
+        createdAt:
+          type: string
+          format: date-time

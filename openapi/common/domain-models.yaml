@@ -1,0 +1,714 @@
+openapi: 3.1.0
+# Canonical path: ./common/domain-models.yaml
+info:
+  title: Quub Exchange - Domain Models (Tier 2)
+  version: 1.0.0
+  description: |
+    Core business entities used across MULTIPLE services (2+).
+    These represent the shared domain model of the platform.
+
+    Includes: Account, Organization, Project, TokenClass, Payment, etc.
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+
+servers:
+  - url: https://api.quub.exchange
+    description: Placeholder (this file contains only reusable components)
+
+paths: {} # This file contains only reusable components
+
+components:
+  schemas:
+    # ============================================================================
+    # IDENTITY DOMAIN
+    # ============================================================================
+    Account:
+      type: object
+      description: User account in the identity system
+      required: [id, email, status, createdAt]
+      properties:
+        id:
+          $ref: "./primitives.yaml#/components/schemas/AccountId"
+        email:
+          type: string
+          format: email
+        status:
+          $ref: "./primitives.yaml#/components/schemas/AccountStatus"
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        lastLoginAt:
+          $ref: "./primitives.yaml#/components/schemas/NullableTimestamp"
+        mfaEnabled:
+          type: boolean
+        emailVerified:
+          type: boolean
+
+    ApiKey:
+      type: object
+      description: API key for programmatic access
+      required: [id, accountId, orgId, name, status, createdAt]
+      properties:
+        id:
+          type: string
+          pattern: "^key_[a-zA-Z0-9]{16,32}$"
+        accountId:
+          $ref: "./primitives.yaml#/components/schemas/AccountId"
+        orgId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+        name:
+          type: string
+          description: Human-readable name for the API key
+        keyPreview:
+          type: string
+          description: First 8 characters of the key (for identification)
+          example: "key_abcd"
+        status:
+          $ref: "./primitives.yaml#/components/schemas/ApiKeyStatus"
+        scopes:
+          type: array
+          items:
+            type: string
+          description: OAuth2 scopes granted to this API key
+        expiresAt:
+          $ref: "./primitives.yaml#/components/schemas/NullableTimestamp"
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        lastUsedAt:
+          $ref: "./primitives.yaml#/components/schemas/NullableTimestamp"
+
+    Org:
+      type: object
+      description: |
+        Organization entity - used by Identity, Compliance, all tenant-scoped services
+      required: [id, legalName, status]
+      properties:
+        id:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+        legalName:
+          type: string
+          description: Legal registered name
+          example: "Acme Investment Bank Ltd"
+        country:
+          type: string
+          description: ISO 3166-1 alpha-2 country code
+          example: "US"
+        type:
+          type: string
+          enum: [ISSUER, SPV, CUSTODIAN, INVESTOR, PLATFORM]
+          description: Organization classification
+        status:
+          $ref: "./primitives.yaml#/components/schemas/OrgStatus"
+        domain:
+          type: string
+          description: Verified domain name
+          example: "acme-bank.com"
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        updatedAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    Role:
+      type: object
+      description: |
+        User role within an organization - used by Identity, Compliance
+      required: [id, name, permissions]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          enum:
+            - ADMIN
+            - OPERATIONS
+            - COMPLIANCE
+            - FINANCE
+            - PROJECT_MANAGER
+            - INVESTOR
+            - VIEWER
+        permissions:
+          type: array
+          items:
+            type: string
+          description: List of permission strings
+          example: ["read:projects", "write:offerings", "approve:subscriptions"]
+        orgId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+
+    # ============================================================================
+    # PRIMARY MARKET DOMAIN
+    # ============================================================================
+    Project:
+      type: object
+      description: |
+        Investment project - used by Primary, Compliance, Treasury
+      required: [id, orgId, name, type, status]
+      properties:
+        id:
+          $ref: "./primitives.yaml#/components/schemas/ProjectId"
+        orgId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+        name:
+          type: string
+          description: Project name
+          example: "Oceanview Residences"
+        type:
+          $ref: "./primitives.yaml#/components/schemas/ProjectType"
+        status:
+          $ref: "./primitives.yaml#/components/schemas/ProjectStatus"
+        location:
+          type: string
+          description: Project location
+          example: "Dubai Marina"
+        spvId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+          description: Special Purpose Vehicle organization ID
+        currency:
+          type: string
+          pattern: "^[A-Z]{3}$"
+          example: "USD"
+        metadata:
+          type: object
+          additionalProperties: true
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        updatedAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    Offering:
+      type: object
+      description: |
+        Token offering - used by Primary, Exchange, Compliance
+      required:
+        [
+          id,
+          orgId,
+          projectId,
+          tokenClassId,
+          tranche,
+          price,
+          minLot,
+          hardCap,
+          status,
+        ]
+      properties:
+        id:
+          $ref: "./primitives.yaml#/components/schemas/OfferingId"
+        orgId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+        projectId:
+          $ref: "./primitives.yaml#/components/schemas/ProjectId"
+        tokenClassId:
+          $ref: "./primitives.yaml#/components/schemas/TokenClassId"
+        tranche:
+          $ref: "./primitives.yaml#/components/schemas/Tranche"
+        price:
+          type: number
+          format: double
+          description: Price per token
+        minLot:
+          type: integer
+          description: Minimum purchase quantity
+        softCap:
+          type: number
+          format: double
+          description: Soft cap target
+        hardCap:
+          type: number
+          format: double
+          description: Hard cap maximum
+        status:
+          $ref: "./primitives.yaml#/components/schemas/OfferingStatus"
+        startAt:
+          type: string
+          format: date-time
+          description: Offering start time
+        endAt:
+          type: string
+          format: date-time
+          description: Offering end time
+        docs:
+          type: array
+          items:
+            type: string
+          description: Document URLs
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        updatedAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    TokenClass:
+      type: object
+      description: |
+        Token class definition - used by Primary, Exchange, Treasury, Governance
+      required: [id, projectId, symbol, standard, rights]
+      properties:
+        id:
+          $ref: "./primitives.yaml#/components/schemas/TokenClassId"
+        projectId:
+          $ref: "./primitives.yaml#/components/schemas/ProjectId"
+        symbol:
+          type: string
+          description: Token ticker symbol
+          example: "ACME-RE-A"
+        name:
+          type: string
+          description: Human-readable token name
+          example: "Acme Real Estate Series A"
+        standard:
+          $ref: "./primitives.yaml#/components/schemas/TokenStandard"
+        rights:
+          $ref: "./primitives.yaml#/components/schemas/Rights"
+        tranche:
+          $ref: "./primitives.yaml#/components/schemas/Tranche"
+        totalSupply:
+          type: integer
+          description: Total token supply
+        circulatingSupply:
+          type: integer
+          description: Current circulating supply
+        contractAddress:
+          oneOf:
+            - type: string
+            - type: "null"
+          description: On-chain contract address
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    Subscription:
+      type: object
+      description: |
+        Investment subscription - used by Primary, Treasury, Compliance
+      required: [id, accountId, offeringId, qty, status]
+      properties:
+        id:
+          $ref: "./primitives.yaml#/components/schemas/SubscriptionId"
+        accountId:
+          $ref: "./primitives.yaml#/components/schemas/AccountId"
+        offeringId:
+          $ref: "./primitives.yaml#/components/schemas/OfferingId"
+        qty:
+          type: integer
+          minimum: 1
+          description: Quantity of tokens/shares subscribed
+        amount:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+        currency:
+          $ref: "./primitives.yaml#/components/schemas/Currency"
+        status:
+          $ref: "./primitives.yaml#/components/schemas/SubscriptionStatus"
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        updatedAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    Milestone:
+      type: object
+      description: |
+        Project milestone - used by Primary, Treasury
+      required: [id, projectId, name, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          $ref: "./primitives.yaml#/components/schemas/ProjectId"
+        name:
+          type: string
+          description: Milestone name
+          example: "Q1 Construction Completion"
+        description:
+          type: string
+        targetDate:
+          type: string
+          format: date
+        completedAt:
+          $ref: "./primitives.yaml#/components/schemas/NullableTimestamp"
+        status:
+          $ref: "./primitives.yaml#/components/schemas/MilestoneStatus"
+        fundsReleaseAmount:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+          description: Funds to be released upon completion
+
+    # ============================================================================
+    # TREASURY DOMAIN
+    # ============================================================================
+    Payment:
+      type: object
+      description: |
+        Payment transaction - used by Treasury, Banking, Settlements
+      required: [id, direction, method, amount, currency, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "pay_abc123def456"
+        orgId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+        direction:
+          $ref: "./primitives.yaml#/components/schemas/PayDirection"
+        method:
+          $ref: "./primitives.yaml#/components/schemas/PayMethod"
+        amount:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+        currency:
+          $ref: "./primitives.yaml#/components/schemas/Currency"
+        from:
+          type: string
+          description: Sender identifier (account, wallet, etc.)
+        to:
+          type: string
+          description: Recipient identifier
+        status:
+          $ref: "./primitives.yaml#/components/schemas/PayStatus"
+        valueDate:
+          type: string
+          format: date
+          description: Value date for the payment
+        refs:
+          type: object
+          additionalProperties: true
+          description: Payment references and metadata
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        updatedAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    Distribution:
+      type: object
+      description: |
+        Token holder distribution (dividend, etc.) - used by Treasury, Governance
+      required: [id, projectId, tokenClassId, totalAmount, currency, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+        projectId:
+          $ref: "./primitives.yaml#/components/schemas/ProjectId"
+        tokenClassId:
+          $ref: "./primitives.yaml#/components/schemas/TokenClassId"
+        type:
+          type: string
+          enum: [DIVIDEND, INTEREST, REDEMPTION, LIQUIDATION]
+        totalAmount:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+        currency:
+          $ref: "./primitives.yaml#/components/schemas/Currency"
+        perTokenAmount:
+          type: number
+          format: double
+          description: Amount per token
+        recordDate:
+          type: string
+          format: date
+          description: Record date for eligibility
+        paymentDate:
+          type: string
+          format: date
+          description: Scheduled payment date
+        status:
+          $ref: "./primitives.yaml#/components/schemas/DistributionStatus"
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    EscrowAccount:
+      type: object
+      description: |
+        Escrow account for holding funds - used by Treasury, Primary
+      required: [id, projectId, currency, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+        projectId:
+          $ref: "./primitives.yaml#/components/schemas/ProjectId"
+        currency:
+          $ref: "./primitives.yaml#/components/schemas/Currency"
+        balance:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+        holdBalance:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+          description: Amount on hold
+        status:
+          type: string
+          enum: [ACTIVE, FROZEN, CLOSED]
+        releaseConditions:
+          type: array
+          items:
+            type: string
+          description: Conditions for fund release
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    LedgerEntry:
+      type: object
+      description: |
+        Double-entry ledger record - used by Treasury
+      required: [id, accountId, debit, credit, currency]
+      properties:
+        id:
+          type: string
+          format: uuid
+        orgId:
+          $ref: "./primitives.yaml#/components/schemas/OrgId"
+        accountId:
+          $ref: "./primitives.yaml#/components/schemas/AccountId"
+        debit:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+        credit:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+        currency:
+          $ref: "./primitives.yaml#/components/schemas/Currency"
+        balance:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+          description: Running balance after this entry
+        txType:
+          type: string
+          description: Transaction type
+          example: "SUBSCRIPTION_PAYMENT"
+        refs:
+          type: object
+          additionalProperties: true
+          description: Reference IDs (subscriptionId, paymentId, etc.)
+        timestamp:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    # ============================================================================
+    # GOVERNANCE DOMAIN
+    # ============================================================================
+    Vote:
+      type: object
+      description: |
+        Shareholder vote record - used by Governance, Compliance
+      required: [id, corporateActionId, accountId, choice, weight]
+      properties:
+        id:
+          type: string
+          format: uuid
+        corporateActionId:
+          type: string
+          format: uuid
+        accountId:
+          $ref: "./primitives.yaml#/components/schemas/AccountId"
+        choice:
+          type: string
+          enum: [FOR, AGAINST, ABSTAIN]
+        weight:
+          type: number
+          format: double
+          description: Voting power (based on token holdings)
+        castAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    CorporateAction:
+      type: object
+      description: |
+        Corporate action event - used by Governance, Treasury
+      required: [id, type, tokenClassId, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: "./primitives.yaml#/components/schemas/CorporateActionType"
+        tokenClassId:
+          $ref: "./primitives.yaml#/components/schemas/TokenClassId"
+        targetTokenClassId:
+          $ref: "./primitives.yaml#/components/schemas/TokenClassId"
+          nullable: true
+          description: Target token class (for conversions, splits)
+        title:
+          type: string
+          example: "Annual Dividend Distribution"
+        description:
+          type: string
+        recordDate:
+          type: string
+          format: date
+          description: Record date for eligibility
+        effectiveDate:
+          type: string
+          format: date
+          description: Date action takes effect
+        votingDeadline:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+          nullable: true
+        status:
+          type: string
+          enum: [ANNOUNCED, VOTING, APPROVED, REJECTED, EXECUTED, CANCELLED]
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    BuybackWindow:
+      type: object
+      description: |
+        Token buyback period - used by Governance, Treasury
+      required: [id, tokenClassId, startAt, endAt, price, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tokenClassId:
+          $ref: "./primitives.yaml#/components/schemas/TokenClassId"
+        startAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        endAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        price:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+        currency:
+          $ref: "./primitives.yaml#/components/schemas/Currency"
+        maxQty:
+          type: integer
+          description: Maximum tokens to buy back
+        status:
+          type: string
+          enum: [SCHEDULED, ACTIVE, CLOSED, CANCELLED]
+
+    ConversionEvent:
+      type: object
+      description: |
+        Token conversion event - used by Governance, Transfer Agent
+      required: [id, fromTokenClassId, toTokenClassId, conversionRatio]
+      properties:
+        id:
+          type: string
+          format: uuid
+        fromTokenClassId:
+          $ref: "./primitives.yaml#/components/schemas/TokenClassId"
+        toTokenClassId:
+          $ref: "./primitives.yaml#/components/schemas/TokenClassId"
+        conversionRatio:
+          type: number
+          format: double
+          description: Conversion ratio (from:to)
+          example: 1.5
+        effectiveDate:
+          type: string
+          format: date
+        deadline:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        status:
+          type: string
+          enum: [ANNOUNCED, ACTIVE, COMPLETED, EXPIRED]
+
+    # ============================================================================
+    # DATA & REPORTING DOMAIN
+    # ============================================================================
+    ValuationReport:
+      type: object
+      description: |
+        Asset valuation report - used by Data, Primary, Compliance
+      required: [id, projectId, valuationDate, value, currency]
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          $ref: "./primitives.yaml#/components/schemas/ProjectId"
+        valuationDate:
+          type: string
+          format: date
+        value:
+          $ref: "./primitives.yaml#/components/schemas/Amount"
+        currency:
+          $ref: "./primitives.yaml#/components/schemas/Currency"
+        method:
+          type: string
+          enum: [DCF, COMPARABLE, COST, MARKET]
+          description: Valuation methodology
+        valuerId:
+          type: string
+          description: Identifier of valuation firm/agent
+        reportUri:
+          type: string
+          format: uri
+          description: Link to full valuation report
+        createdAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+
+    PriceTick:
+      type: object
+      description: |
+        Market price data point - used by Data, Exchange, Pricing
+      required: [id, instrumentId, timestamp, price]
+      properties:
+        id:
+          type: string
+          format: uuid
+        instrumentId:
+          type: string
+          description: Market or instrument identifier
+        timestamp:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        price:
+          type: number
+          format: double
+        volume:
+          oneOf:
+            - type: number
+            - type: "null"
+          format: double
+        source:
+          type: string
+          description: Data source
+          example: "EXCHANGE"
+
+    OracleAttestation:
+      type: object
+      description: |
+        Third-party oracle attestation - used by Data, Compliance
+      required: [id, dataType, value, oracleId, timestamp]
+      properties:
+        id:
+          type: string
+          format: uuid
+        dataType:
+          type: string
+          enum: [PRICE, VALUATION, KYC_STATUS, CREDIT_RATING, ESG_SCORE]
+        value:
+          type: string
+          description: Attested value (format depends on dataType)
+        oracleId:
+          type: string
+          description: Oracle provider identifier
+        signature:
+          type: string
+          description: Cryptographic signature of attestation
+        timestamp:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        expiresAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+          nullable: true
+
+    Disclosure:
+      type: object
+      description: |
+        Regulatory disclosure document - used by Data, Compliance, Primary
+      required: [id, projectId, type, documentUri]
+      properties:
+        id:
+          type: string
+          format: uuid
+        projectId:
+          $ref: "./primitives.yaml#/components/schemas/ProjectId"
+        type:
+          type: string
+          enum:
+            - OFFERING_MEMORANDUM
+            - FINANCIAL_STATEMENT
+            - AUDIT_REPORT
+            - REGULATORY_FILING
+            - MATERIAL_CHANGE
+        documentUri:
+          type: string
+          format: uri
+        filedAt:
+          $ref: "./primitives.yaml#/components/schemas/Timestamp"
+        locale:
+          $ref: "./primitives.yaml#/components/schemas/Locale"

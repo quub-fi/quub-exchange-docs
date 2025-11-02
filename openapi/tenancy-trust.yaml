@@ -1,0 +1,540 @@
+openapi: 3.1.0
+info:
+  title: Quub Exchange - Tenancy & Trust API
+  version: 2.0.0
+  license:
+    name: Proprietary
+    url: https://quub.exchange/license
+  description:
+    "Multi-tenancy management for organizations, domain verification, API keys,
+
+    mTLS certificates, and webhook configuration.
+
+
+    **Trust Levels**
+
+    - **T0:** Unverified (email-only)
+
+    - **T1:** Domain Verified (DNS TXT)
+
+    - **T2:** DNSSEC Verified (TXT + DNSSEC + CAA)
+
+    - **T3:** Institutional (T2 + mTLS certificate)
+
+    "
+servers:
+  - url: https://api.quub.exchange/v1
+    description: Production API
+paths:
+  /orgs:
+    get:
+      operationId: listOrganizations
+      summary: List organizations
+      tags:
+        - Organizations
+      security:
+        - oauth2:
+            - read:tenancy
+        - apiKey: []
+      parameters:
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Organization"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      operationId: createOrganization
+      summary: Create organization
+      tags:
+        - Organizations
+      security:
+        - oauth2:
+            - write:tenancy
+        - apiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - domain
+              properties:
+                name:
+                  type: string
+                  example: Quub Capital Ltd.
+                domain:
+                  type: string
+                  example: quub.exchange
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Organization created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Organization"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}:
+    parameters:
+      - $ref: ./common/components.yaml#/components/parameters/orgId
+      - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+    get:
+      operationId: getOrganization
+      summary: Get organization details
+      tags:
+        - Organizations
+      security:
+        - oauth2:
+            - read:tenancy
+        - apiKey: []
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: Organization details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Organization"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/verify-domain:
+    post:
+      operationId: initiateDomainVerification
+      summary: Initiate domain verification
+      tags:
+        - Domain Verification
+      description: "Issues a DNS TXT challenge for verifying domain ownership.
+
+        Once verified, the organization’s trust level upgrades automatically.
+
+        "
+      security:
+        - oauth2:
+            - write:tenancy
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Domain verification initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Organization"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/api-keys:
+    get:
+      operationId: listApiKeys
+      summary: List API keys
+      tags:
+        - API Keys
+      description: Retrieve all API keys for the organization.
+      security:
+        - oauth2:
+            - read:tenancy
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of API keys
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ApiKey"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      operationId: createApiKey
+      summary: Create API key
+      tags:
+        - API Keys
+      description: Create a new API key scoped to this organization.
+      security:
+        - oauth2:
+            - write:tenancy
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - scopes
+              properties:
+                name:
+                  type: string
+                  example: Treasury Automation Key
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                    example: treasury:read
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: API key created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/ApiKey"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/mtls-certificates:
+    get:
+      operationId: listMtlsCertificates
+      summary: List mTLS certificates
+      tags:
+        - mTLS Certificates
+      description: Retrieve uploaded mutual TLS certificates.
+      security:
+        - oauth2:
+            - read:tenancy
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of mTLS certificates
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/MtlsCertificate"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      operationId: uploadMtlsCertificate
+      summary: Upload mTLS certificate
+      tags:
+        - mTLS Certificates
+      description: Upload a new PEM-encoded mutual TLS certificate for trusted institutional communication.
+      security:
+        - oauth2:
+            - write:tenancy
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - certificatePem
+              properties:
+                certificatePem:
+                  type: string
+                  description: PEM-formatted x509 certificate
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: mTLS certificate uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/MtlsCertificate"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+  /orgs/{orgId}/webhooks:
+    get:
+      operationId: listWebhooks
+      summary: List webhook endpoints
+      tags:
+        - Webhooks
+      description: Retrieve configured webhook endpoints for the organization.
+      security:
+        - oauth2:
+            - read:tenancy
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+        - $ref: ./common/pagination.yaml#/components/parameters/cursor
+        - $ref: ./common/pagination.yaml#/components/parameters/limit
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "404":
+          $ref: ./common/responses.yaml#/components/responses/NotFound
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "200":
+          description: List of webhook endpoints
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ./common/pagination.yaml#/components/schemas/PageResponse
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/WebhookEndpoint"
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+    post:
+      operationId: createWebhook
+      summary: Create webhook endpoint
+      tags:
+        - Webhooks
+      description: Register a new webhook endpoint with event subscriptions.
+      security:
+        - oauth2:
+            - write:tenancy
+        - apiKey: []
+      parameters:
+        - $ref: ./common/components.yaml#/components/parameters/orgId
+        - $ref: ./common/components.yaml#/components/parameters/orgIdHeader
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - url
+                - events
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  example: https://webhooks.quub.exchange/receive
+                events:
+                  type: array
+                  items:
+                    type: string
+                    example: trade.executed
+      responses:
+        "400":
+          $ref: ./common/responses.yaml#/components/responses/BadRequest
+        "401":
+          $ref: ./common/responses.yaml#/components/responses/Unauthorized
+        "403":
+          $ref: ./common/responses.yaml#/components/responses/Forbidden
+        "409":
+          $ref: ./common/responses.yaml#/components/responses/Conflict
+        "422":
+          $ref: ./common/responses.yaml#/components/responses/ValidationError
+        "429":
+          $ref: ./common/responses.yaml#/components/responses/TooManyRequests
+        "500":
+          $ref: ./common/responses.yaml#/components/responses/InternalServerError
+        "201":
+          description: Webhook endpoint created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/WebhookEndpoint"
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: ./common/components.yaml#/components/securitySchemes/bearerAuth
+    oauth2:
+      $ref: ./common/components.yaml#/components/securitySchemes/oauth2
+    apiKey:
+      $ref: ./common/components.yaml#/components/securitySchemes/apiKey
+  schemas:
+    Organization:
+      type: object
+      description: Represents a Quub tenant organization.
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        domain:
+          type: string
+        trustLevel:
+          type: string
+          enum:
+            - T0
+            - T1
+            - T2
+            - T3
+        verified:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+    ApiKey:
+      type: object
+      description: API key resource associated with an organization.
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        keyPrefix:
+          type: string
+          example: qbk_1234
+        scopes:
+          type: array
+          items:
+            type: string
+            example: treasury:read
+        createdAt:
+          type: string
+          format: date-time
+    MtlsCertificate:
+      type: object
+      description: Mutual TLS certificate uploaded by an organization.
+      properties:
+        id:
+          type: string
+          format: uuid
+        subjectCN:
+          type: string
+          example: "*.quub.exchange"
+        issuedBy:
+          type: string
+          example: Quub Root CA
+        validFrom:
+          type: string
+          format: date-time
+        validTo:
+          type: string
+          format: date-time
+    WebhookEndpoint:
+      type: object
+      description: Webhook endpoint and its configuration.
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+        signingSecret:
+          type: string
+          example: whsec_abc123xyz
+        createdAt:
+          type: string
+          format: date-time
+tags:
+  - name: API Keys
+    description: Api Keys operations
+  - name: Domain Verification
+    description: Domain Verification operations
+  - name: Organizations
+    description: Organizations operations
+  - name: Webhooks
+    description: Webhooks operations
+  - name: mTLS Certificates
+    description: Mtls Certificates operations
