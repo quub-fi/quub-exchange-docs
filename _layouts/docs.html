@@ -27,12 +27,86 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-  </head>
+
+    <!-- Mobile Navigation Styles -->
+    <style>
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 8px;
+        color: var(--text-primary);
+      }
+
+      .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .mobile-overlay.active {
+        opacity: 1;
+      }
+
+      @media (max-width: 1024px) {
+        .mobile-menu-btn {
+          display: block;
+        }
+
+        .nav-center {
+          display: none;
+        }
+
+        .sidebar {
+          position: fixed;
+          left: -300px;
+          top: 60px;
+          height: calc(100vh - 60px);
+          width: 280px;
+          z-index: 999;
+          transition: left 0.3s;
+          background: var(--bg-primary);
+          box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.active {
+          left: 0;
+        }
+
+        .mobile-overlay {
+          display: block;
+        }
+
+        .docs-content {
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        .toc {
+          display: none;
+        }
+      }
+    </style>
   <body>
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
     <!-- Top Navigation Bar -->
     <nav class="top-nav">
       <div class="nav-container">
         <div class="nav-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+          </button>
           <a href="{{ '/' | relative_url }}" class="logo">
             <i class="fas fa-cube"></i>
             <span>Quub Exchange</span>
@@ -340,5 +414,58 @@
 
     <!-- Scripts -->
     <script src="{{ '/assets/js/docs.js' | relative_url }}"></script>
+
+    <!-- Mobile Navigation Script -->
+    <script>
+      (function() {
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.querySelector('.sidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleMobileMenu() {
+          sidebar.classList.toggle('active');
+          mobileOverlay.classList.toggle('active');
+          if (sidebar.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+          } else {
+            document.body.style.overflow = '';
+          }
+        }
+
+        function closeMobileMenu() {
+          sidebar.classList.remove('active');
+          mobileOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        if (mobileMenuBtn) {
+          mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        }
+
+        if (mobileOverlay) {
+          mobileOverlay.addEventListener('click', closeMobileMenu);
+        }
+
+        // Close menu on navigation
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+          link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+            closeMobileMenu();
+          }
+        });
+
+        // Close menu on window resize if > 1024px
+        window.addEventListener('resize', function() {
+          if (window.innerWidth > 1024) {
+            closeMobileMenu();
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

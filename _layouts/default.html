@@ -108,8 +108,160 @@
 
     <!-- Additional SEO Tags -->
     {% include seo-tags.html %}
+
+    <!-- Mobile Navigation Styles -->
+    <style>
+      .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-color, #333);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 8px;
+        z-index: 1001;
+      }
+
+      .mobile-menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .mobile-menu-overlay.active {
+        opacity: 1;
+      }
+
+      .mobile-nav {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 280px;
+        height: 100vh;
+        background: var(--bg-color, #fff);
+        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        transition: right 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .mobile-nav.active {
+        right: 0;
+      }
+
+      .mobile-nav-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-color, #e2e8f0);
+      }
+
+      .mobile-nav-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: var(--text-color, #333);
+        padding: 0;
+        line-height: 1;
+      }
+
+      .mobile-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .mobile-nav ul li {
+        border-bottom: 1px solid var(--border-color, #e2e8f0);
+      }
+
+      .mobile-nav ul li a {
+        display: block;
+        padding: 16px 20px;
+        color: var(--text-color, #333);
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+
+      .mobile-nav ul li a:hover {
+        background: var(--hover-bg, #f7fafc);
+      }
+
+      @media (max-width: 768px) {
+        .mobile-menu-toggle {
+          display: block;
+        }
+
+        .main-nav {
+          display: none;
+        }
+
+        .mobile-nav,
+        .mobile-menu-overlay {
+          display: block;
+        }
+      }
+
+      /* Dark mode support */
+      @media (prefers-color-scheme: dark) {
+        .mobile-nav {
+          --bg-color: #1a202c;
+          --text-color: #e2e8f0;
+          --border-color: #2d3748;
+          --hover-bg: #2d3748;
+        }
+
+        .mobile-menu-toggle {
+          color: #e2e8f0;
+        }
+      }
+    </style>
   </head>
   <body>
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+      <div class="mobile-nav-header">
+        <strong>Menu</strong>
+        <button
+          class="mobile-nav-close"
+          id="mobileNavClose"
+          aria-label="Close menu"
+        >
+          ×
+        </button>
+      </div>
+      <ul>
+        <li><a href="{{ '/' | relative_url }}">🏠 Home</a></li>
+        <li><a href="{{ '/docs/' | relative_url }}">📚 Documentation</a></li>
+        <li>
+          <a href="{{ '/capabilities/' | relative_url }}">🔌 API Reference</a>
+        </li>
+        <li><a href="{{ '/guides/' | relative_url }}">🎓 Guides</a></li>
+        <li><a href="{{ '/openapi/' | relative_url }}">📋 OpenAPI Specs</a></li>
+        <li><a href="{{ '/changelog/' | relative_url }}">📝 Changelog</a></li>
+        <li>
+          <a href="{{ site.repository | prepend: 'https://github.com/' }}"
+            >💻 GitHub</a
+          >
+        </li>
+      </ul>
+    </nav>
+
     <header class="site-header">
       <div class="container">
         <div class="header-content">
@@ -118,6 +270,13 @@
               <h1>{{ site.title }}</h1>
             </a>
           </div>
+          <button
+            class="mobile-menu-toggle"
+            id="mobileMenuToggle"
+            aria-label="Open menu"
+          >
+            ☰
+          </button>
           <nav class="main-nav">
             <ul>
               <li><a href="{{ '/' | relative_url }}">Home</a></li>
@@ -152,5 +311,52 @@
     </footer>
 
     <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+
+    <!-- Mobile Navigation Script -->
+    <script>
+      (function () {
+        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+        const mobileNav = document.getElementById("mobileNav");
+        const mobileNavClose = document.getElementById("mobileNavClose");
+        const mobileMenuOverlay = document.getElementById("mobileMenuOverlay");
+
+        function openMobileMenu() {
+          mobileNav.classList.add("active");
+          mobileMenuOverlay.classList.add("active");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeMobileMenu() {
+          mobileNav.classList.remove("active");
+          mobileMenuOverlay.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+
+        if (mobileMenuToggle) {
+          mobileMenuToggle.addEventListener("click", openMobileMenu);
+        }
+
+        if (mobileNavClose) {
+          mobileNavClose.addEventListener("click", closeMobileMenu);
+        }
+
+        if (mobileMenuOverlay) {
+          mobileMenuOverlay.addEventListener("click", closeMobileMenu);
+        }
+
+        // Close menu on link click
+        const mobileNavLinks = mobileNav.querySelectorAll("a");
+        mobileNavLinks.forEach((link) => {
+          link.addEventListener("click", closeMobileMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && mobileNav.classList.contains("active")) {
+            closeMobileMenu();
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
