@@ -25,9 +25,13 @@ include:
 
 defaults:
   - scope:
+      path: "api-reference"
+    values:
+      layout: "api-reference"
+  - scope:
       path: "use-cases"
     values:
-      layout: "api_doc"
+      layout: "docs"
   - scope:
       path: ""
     values:

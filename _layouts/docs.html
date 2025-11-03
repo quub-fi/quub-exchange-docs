@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}
+    </title>
+    <meta
+      name="description"
+      content="{{ page.description | default: site.description }}"
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ '/assets/css/docs.css' | relative_url }}" />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+      <div class="nav-container">
+        <div class="nav-left">
+          <a href="{{ '/' | relative_url }}" class="logo">
+            <i class="fas fa-cube"></i>
+            <span>Quub Exchange</span>
+          </a>
+        </div>
+        <div class="nav-center">
+          <a
+            href="{{ '/docs/' | relative_url }}"
+            class="nav-link {% if page.url contains '/docs/' %}active{% endif %}"
+            >Documentation</a
+          >
+          <a
+            href="{{ '/api-reference/' | relative_url }}"
+            class="nav-link {% if page.url contains '/api-reference/' %}active{% endif %}"
+            >API Reference</a
+          >
+          <a
+            href="{{ '/guides/' | relative_url }}"
+            class="nav-link {% if page.url contains '/guides/' %}active{% endif %}"
+            >Guides</a
+          >
+          <a href="{{ '/changelog/' | relative_url }}" class="nav-link"
+            >Changelog</a
+          >
+        </div>
+        <div class="nav-right">
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle theme"
+          >
+            <i class="fas fa-moon"></i>
+          </button>
+          <a
+            href="https://github.com/{{ site.repository }}"
+            class="github-link"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Layout: Sidebar + Content + TOC -->
+    <div class="docs-layout">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              id="docSearch"
+              placeholder="Search documentation..."
+            />
+            <kbd>Ctrl K</kbd>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebarNav">
+          <!-- Getting Started -->
+          <div class="nav-section">
+            <div class="nav-section-title">Getting Started</div>
+            <a
+              href="{{ '/docs/introduction/' | relative_url }}"
+              class="nav-item"
+            >
+              <i class="fas fa-rocket"></i>
+              <span>Introduction</span>
+            </a>
+            <a href="{{ '/docs/quickstart/' | relative_url }}" class="nav-item">
+              <i class="fas fa-bolt"></i>
+              <span>Quick Start</span>
+            </a>
+            <a
+              href="{{ '/docs/authentication/' | relative_url }}"
+              class="nav-item"
+            >
+              <i class="fas fa-key"></i>
+              <span>Authentication</span>
+            </a>
+          </div>
+
+          <!-- Core Platform -->
+          <div class="nav-section">
+            <div class="nav-section-title">
+              <i class="fas fa-shield-alt"></i>
+              Core Platform
+            </div>
+            <a
+              href="{{ '/api-reference/auth/' | relative_url }}"
+              class="nav-item"
+              >Auth Service</a
+            >
+            <a
+              href="{{ '/api-reference/identity/' | relative_url }}"
+              class="nav-item"
+              >Identity Service</a
+            >
+            <a
+              href="{{ '/api-reference/tenancy-trust/' | relative_url }}"
+              class="nav-item"
+              >Tenancy & Trust</a
+            >
+          </div>
+
+          <!-- Trading & Markets -->
+          <div class="nav-section">
+            <div class="nav-section-title">
+              <i class="fas fa-chart-line"></i>
+              Trading & Markets
+            </div>
+            <a
+              href="{{ '/api-reference/exchange/' | relative_url }}"
+              class="nav-item"
+              >Exchange</a
+            >
+            <a
+              href="{{ '/api-reference/marketplace/' | relative_url }}"
+              class="nav-item"
+              >Marketplace</a
+            >
+            <a
+              href="{{ '/api-reference/gateway/' | relative_url }}"
+              class="nav-item"
+              >Gateway</a
+            >
+            <a
+              href="{{ '/api-reference/market-oracles/' | relative_url }}"
+              class="nav-item"
+              >Market Oracles</a
+            >
+            <a
+              href="{{ '/api-reference/pricing-refdata/' | relative_url }}"
+              class="nav-item"
+              >Pricing & RefData</a
+            >
+          </div>
+
+          <!-- Financial Services -->
+          <div class="nav-section">
+            <div class="nav-section-title">
+              <i class="fas fa-university"></i>
+              Financial Services
+            </div>
+            <a
+              href="{{ '/api-reference/custodian/' | relative_url }}"
+              class="nav-item"
+              >Custodian</a
+            >
+            <a
+              href="{{ '/api-reference/treasury/' | relative_url }}"
+              class="nav-item"
+              >Treasury</a
+            >
+            <a
+              href="{{ '/api-reference/fiat-banking/' | relative_url }}"
+              class="nav-item"
+              >Fiat Banking</a
+            >
+            <a
+              href="{{ '/api-reference/settlements/' | relative_url }}"
+              class="nav-item"
+              >Settlements</a
+            >
+            <a
+              href="{{ '/api-reference/escrow/' | relative_url }}"
+              class="nav-item"
+              >Escrow</a
+            >
+            <a
+              href="{{ '/api-reference/fees-billing/' | relative_url }}"
+              class="nav-item"
+              >Fees & Billing</a
+            >
+          </div>
+
+          <!-- Capital Markets -->
+          <div class="nav-section">
+            <div class="nav-section-title">
+              <i class="fas fa-building"></i>
+              Capital Markets
+            </div>
+            <a
+              href="{{ '/api-reference/primary-market/' | relative_url }}"
+              class="nav-item"
+              >Primary Market</a
+            >
+            <a
+              href="{{ '/api-reference/transfer-agent/' | relative_url }}"
+              class="nav-item"
+              >Transfer Agent</a
+            >
+            <a
+              href="{{ '/api-reference/documents/' | relative_url }}"
+              class="nav-item"
+              >Documents</a
+            >
+          </div>
+
+          <!-- Operations & Compliance -->
+          <div class="nav-section">
+            <div class="nav-section-title">
+              <i class="fas fa-clipboard-check"></i>
+              Operations & Compliance
+            </div>
+            <a
+              href="{{ '/api-reference/compliance/' | relative_url }}"
+              class="nav-item"
+              >Compliance</a
+            >
+            <a
+              href="{{ '/api-reference/risk-limits/' | relative_url }}"
+              class="nav-item"
+              >Risk & Limits</a
+            >
+            <a
+              href="{{ '/api-reference/governance/' | relative_url }}"
+              class="nav-item"
+              >Governance</a
+            >
+            <a
+              href="{{ '/api-reference/analytics-reports/' | relative_url }}"
+              class="nav-item"
+              >Analytics & Reports</a
+            >
+          </div>
+
+          <!-- Infrastructure -->
+          <div class="nav-section">
+            <div class="nav-section-title">
+              <i class="fas fa-cogs"></i>
+              Infrastructure
+            </div>
+            <a
+              href="{{ '/api-reference/chain/' | relative_url }}"
+              class="nav-item"
+              >Chain Integration</a
+            >
+            <a
+              href="{{ '/api-reference/events/' | relative_url }}"
+              class="nav-item"
+              >Events</a
+            >
+            <a
+              href="{{ '/api-reference/notifications/' | relative_url }}"
+              class="nav-item"
+              >Notifications</a
+            >
+            <a
+              href="{{ '/api-reference/observability/' | relative_url }}"
+              class="nav-item"
+              >Observability</a
+            >
+            <a
+              href="{{ '/api-reference/sandbox/' | relative_url }}"
+              class="nav-item"
+              >Sandbox</a
+            >
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="content">
+        <article class="doc-content">{{ content }}</article>
+
+        <!-- Feedback Section -->
+        <div class="doc-feedback">
+          <div class="feedback-question">Was this page helpful?</div>
+          <div class="feedback-buttons">
+            <button class="feedback-btn" data-helpful="yes">
+              <i class="fas fa-thumbs-up"></i> Yes
+            </button>
+            <button class="feedback-btn" data-helpful="no">
+              <i class="fas fa-thumbs-down"></i> No
+            </button>
+          </div>
+        </div>
+
+        <!-- Edit on GitHub -->
+        {% if page.path %}
+        <div class="edit-github">
+          <a
+            href="https://github.com/{{ site.repository }}/edit/main/{{ page.path }}"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fab fa-github"></i> Edit this page on GitHub
+          </a>
+        </div>
+        {% endif %}
+      </main>
+
+      <!-- Table of Contents -->
+      <aside class="toc">
+        <div class="toc-header">On this page</div>
+        <nav class="toc-nav" id="tableOfContents">
+          <!-- Generated by JavaScript -->
+        </nav>
+      </aside>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ '/assets/js/docs.js' | relative_url }}"></script>
+  </body>
+</html>
