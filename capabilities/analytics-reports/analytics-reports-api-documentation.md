@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 permalink: /capabilities/analytics-reports/analytics-reports-api-documentation/
 ---
 
