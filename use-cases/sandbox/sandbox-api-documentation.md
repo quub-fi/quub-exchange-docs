@@ -1,3 +1,11 @@
+---
+layout: docs
+title: sandbox API Documentation
+service: sandbox
+---
+
+{% include api-nav-banner.html %}
+
 # Sandbox & Test Harness API Documentation
 
 _Based on OpenAPI specification: sandbox.yaml_

@@ -1,3 +1,11 @@
+---
+layout: docs
+title: market-oracles API Documentation
+service: market-oracles
+---
+
+{% include api-nav-banner.html %}
+
 # Market Oracles API Documentation
 
 _Based on OpenAPI specification: market-oracles.yaml_

@@ -1,3 +1,11 @@
+---
+layout: docs
+title: transfer-agent API Documentation
+service: transfer-agent
+---
+
+{% include api-nav-banner.html %}
+
 # Transfer Agent API Documentation
 
 _Based on OpenAPI specification: transfer-agent.yaml_

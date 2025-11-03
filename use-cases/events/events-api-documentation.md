@@ -1,3 +1,11 @@
+---
+layout: docs
+title: events API Documentation
+service: events
+---
+
+{% include api-nav-banner.html %}
+
 # Events API Documentation
 
 _Based on OpenAPI specification: events.yaml_

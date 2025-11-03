@@ -1,3 +1,11 @@
+---
+layout: docs
+title: primary-market API Documentation
+service: primary-market
+---
+
+{% include api-nav-banner.html %}
+
 # Primary Market API Documentation
 
 _Based on OpenAPI specification: primary-market.yaml_

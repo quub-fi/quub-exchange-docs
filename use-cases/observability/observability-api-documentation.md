@@ -1,3 +1,11 @@
+---
+layout: docs
+title: observability API Documentation
+service: observability
+---
+
+{% include api-nav-banner.html %}
+
 # Observability API Documentation
 
 _Based on OpenAPI specification: observability.yaml_

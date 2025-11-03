@@ -1,3 +1,11 @@
+---
+layout: docs
+title: Settlement & Clearing API Documentation
+service: settlements
+---
+
+{% include api-nav-banner.html %}
+
 # Settlement & Clearing API Documentation
 
 _Based on OpenAPI specification: settlements.yaml_

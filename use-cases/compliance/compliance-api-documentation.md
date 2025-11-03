@@ -1,3 +1,11 @@
+---
+layout: docs
+title: compliance API Documentation
+service: compliance
+---
+
+{% include api-nav-banner.html %}
+
 # Compliance API Documentation
 
 _Based on OpenAPI specification: compliance.yaml_

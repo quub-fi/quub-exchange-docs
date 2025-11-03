@@ -1,3 +1,11 @@
+---
+layout: docs
+title: notifications API Documentation
+service: notifications
+---
+
+{% include api-nav-banner.html %}
+
 # Notifications API Documentation
 
 _Based on OpenAPI specification: notifications.yaml_

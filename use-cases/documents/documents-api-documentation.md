@@ -1,3 +1,11 @@
+---
+layout: docs
+title: documents API Documentation
+service: documents
+---
+
+{% include api-nav-banner.html %}
+
 # Documents API Documentation
 
 _Based on OpenAPI specification: documents.yaml_

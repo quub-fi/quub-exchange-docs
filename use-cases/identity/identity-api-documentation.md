@@ -1,3 +1,11 @@
+---
+layout: docs
+title: identity API Documentation
+service: identity
+---
+
+{% include api-nav-banner.html %}
+
 # Identity API Documentation
 
 _Based on OpenAPI specification: identity.yaml_

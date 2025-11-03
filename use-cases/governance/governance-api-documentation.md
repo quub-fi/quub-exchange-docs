@@ -1,3 +1,11 @@
+---
+layout: docs
+title: governance API Documentation
+service: governance
+---
+
+{% include api-nav-banner.html %}
+
 # Governance API Documentation
 
 _Based on OpenAPI specification: governance.yaml_

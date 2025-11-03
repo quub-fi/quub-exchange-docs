@@ -1,3 +1,11 @@
+---
+layout: docs
+title: custodian API Documentation
+service: custodian
+---
+
+{% include api-nav-banner.html %}
+
 # Custodian API Documentation
 
 _Based on OpenAPI specification: custodian.yaml_

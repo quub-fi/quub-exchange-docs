@@ -1,3 +1,11 @@
+---
+layout: docs
+title: fees-billing API Documentation
+service: fees-billing
+---
+
+{% include api-nav-banner.html %}
+
 # Fees & Billing API Documentation
 
 _Based on OpenAPI specification: fees-billing.yaml_

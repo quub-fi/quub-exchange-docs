@@ -1,3 +1,11 @@
+---
+layout: docs
+title: risk-limits API Documentation
+service: risk-limits
+---
+
+{% include api-nav-banner.html %}
+
 # Risk & Limits API Documentation
 
 _Based on OpenAPI specification: risk-limits.yaml_

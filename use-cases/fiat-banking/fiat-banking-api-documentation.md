@@ -1,3 +1,11 @@
+---
+layout: docs
+title: fiat-banking API Documentation
+service: fiat-banking
+---
+
+{% include api-nav-banner.html %}
+
 # Fiat Banking API Documentation
 
 _Based on OpenAPI specification: fiat-banking.yaml_

@@ -1,3 +1,11 @@
+---
+layout: docs
+title: marketplace API Documentation
+service: marketplace
+---
+
+{% include api-nav-banner.html %}
+
 # Marketplace API Documentation
 
 _Based on OpenAPI specification: marketplace.yaml_

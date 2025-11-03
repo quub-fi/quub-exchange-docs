@@ -1,3 +1,11 @@
+---
+layout: docs
+title: tenancy-trust API Documentation
+service: tenancy-trust
+---
+
+{% include api-nav-banner.html %}
+
 # Tenancy & Trust API Documentation
 
 _Based on OpenAPI specification: tenancy-trust.yaml_

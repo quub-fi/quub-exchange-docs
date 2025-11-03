@@ -1,3 +1,11 @@
+---
+layout: docs
+title: pricing-refdata API Documentation
+service: pricing-refdata
+---
+
+{% include api-nav-banner.html %}
+
 # Pricing & Reference Data API Documentation
 
 _Based on OpenAPI specification: pricing-refdata.yaml_

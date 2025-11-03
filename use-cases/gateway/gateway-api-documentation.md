@@ -1,3 +1,11 @@
+---
+layout: docs
+title: gateway API Documentation
+service: gateway
+---
+
+{% include api-nav-banner.html %}
+
 # Gateway API Documentation
 
 _Based on OpenAPI specification: gateway.yaml_

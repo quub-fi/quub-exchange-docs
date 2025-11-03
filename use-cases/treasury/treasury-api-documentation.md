@@ -1,3 +1,11 @@
+---
+layout: docs
+title: treasury API Documentation
+service: treasury
+---
+
+{% include api-nav-banner.html %}
+
 # Treasury & Reconciliation API Documentation
 
 _Based on OpenAPI specification: treasury.yaml_

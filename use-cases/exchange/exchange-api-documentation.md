@@ -1,3 +1,11 @@
+---
+layout: docs
+title: exchange API Documentation
+service: exchange
+---
+
+{% include api-nav-banner.html %}
+
 # Exchange API Documentation
 
 _Based on OpenAPI specification: exchange.yaml_

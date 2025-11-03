@@ -1,3 +1,11 @@
+---
+layout: docs
+title: auth API Documentation
+service: auth
+---
+
+{% include api-nav-banner.html %}
+
 # Authentication & Authorization API Documentation
 
 _Based on OpenAPI specification: `auth.yaml`_
