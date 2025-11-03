@@ -89,6 +89,9 @@ security:
 
 ---
 
+
+{% include api-nav-banner.html %}
+
 ### Wallet Operations
 
 #### Create Wallet

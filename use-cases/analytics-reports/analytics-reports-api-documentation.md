@@ -66,6 +66,9 @@ security:
 
 ---
 
+
+{% include api-nav-banner.html %}
+
 ## 🚀 Core Endpoints
 
 ### Reports Management

@@ -117,7 +117,43 @@
     </nav>
 
     <!-- API Documentation Container -->
-    <div class="api-container" style="position: fixed; top: 60px; left: 0; right: 0; bottom: 0; overflow: auto;">
+    <div class="api-container" style="position: fixed; top: 60px; left: 0; right: 0; bottom: 0; overflow-y: auto;">
+        {% if page.service %}
+        <div class="api-documentation-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; margin-bottom: 0;">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <h2 style="margin: 0 0 10px 0; font-size: 24px;">{{ page.title }}</h2>
+                <p style="margin: 0 0 15px 0; opacity: 0.9;">{{ page.description }}</p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <a href="{{ site.baseurl }}/use-cases/{{ page.service }}/"
+                       style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; transition: all 0.2s;"
+                       onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+                       onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                        📖 Use Case Overview
+                    </a>
+                    <a href="{{ site.baseurl }}/use-cases/{{ page.service }}/{{ page.service }}-api-documentation/"
+                       style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; transition: all 0.2s;"
+                       onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+                       onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                        📚 Implementation Guide
+                    </a>
+                    <a href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.json"
+                       target="_blank"
+                       style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; transition: all 0.2s;"
+                       onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+                       onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                        ⬇️ Download OpenAPI Spec
+                    </a>
+                    <a href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.yaml"
+                       target="_blank"
+                       style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; transition: all 0.2s;"
+                       onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+                       onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                        📄 Download YAML Spec
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <div id="redoc-container"></div>
     </div>
 

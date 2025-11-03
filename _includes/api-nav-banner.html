@@ -1,0 +1,85 @@
+{% if page.service %}
+<div
+  class="api-nav-banner"
+  style="
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px;
+    margin: -20px -20px 30px -20px;
+    border-radius: 8px 8px 0 0;
+  "
+>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center">
+    <strong style="margin-right: 10px">📚 Related Documentation:</strong>
+    <a
+      href="{{ site.baseurl }}/api-reference/{{ page.service }}/"
+      style="
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+      "
+      onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+      onmouseout="this.style.background='rgba(255,255,255,0.2)'"
+    >
+      🔌 Interactive API Reference
+    </a>
+    <a
+      href="{{ site.baseurl }}/use-cases/{{ page.service }}/"
+      style="
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+      "
+      onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+      onmouseout="this.style.background='rgba(255,255,255,0.2)'"
+    >
+      📖 Use Case Overview
+    </a>
+    <a
+      href="{{ site.baseurl }}/use-cases/{{ page.service }}/{{ page.service }}-api-documentation/"
+      style="
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+      "
+      onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+      onmouseout="this.style.background='rgba(255,255,255,0.2)'"
+    >
+      📚 Implementation Guide
+    </a>
+    <a
+      href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.json"
+      target="_blank"
+      style="
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+      "
+      onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+      onmouseout="this.style.background='rgba(255,255,255,0.2)'"
+    >
+      ⬇️ OpenAPI Spec
+    </a>
+  </div>
+</div>
+{% endif %}
