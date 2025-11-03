@@ -1,9 +1,8 @@
-he ---
+---
 layout: docs
 title: Developer Guides
 description: Step-by-step guides for common integration scenarios
 permalink: /guides/
-
 ---
 
 # Developer Guides
@@ -14,32 +13,32 @@ Comprehensive guides to help you integrate Quub Exchange services into your appl
 
 Detailed guides for each Quub Exchange capability:
 
-- [Analytics & Reports](/capabilities/analytics-reports/guides/) - Business intelligence and reporting
-- [Authentication](/capabilities/auth/guides/) - User authentication and authorization
-- [Blockchain Integration](/capabilities/chain/guides/) - Multi-chain integration and DeFi
-- [Compliance](/capabilities/compliance/guides/) - Regulatory compliance and reporting
-- [Custodian](/capabilities/custodian/guides/) - Digital asset custody and security
-- [Documents](/capabilities/documents/guides/) - Document management and storage
-- [Escrow](/capabilities/escrow/guides/) - Smart contract escrow services
-- [Events](/capabilities/events/guides/) - Event-driven architecture
-- [Exchange](/capabilities/exchange/guides/) - Core trading operations
-- [Fees & Billing](/capabilities/fees-billing/guides/) - Fee management and billing
-- [Fiat Banking](/capabilities/fiat-banking/guides/) - Fiat currency operations
-- [Gateway](/capabilities/gateway/guides/) - Payment gateway integration
-- [Governance](/capabilities/governance/guides/) - Platform governance
-- [Identity](/capabilities/identity/guides/) - KYC/AML and identity verification
-- [Market Oracles](/capabilities/market-oracles/guides/) - Price feeds and market data
-- [Marketplace](/capabilities/marketplace/guides/) - Secondary market operations
-- [Notifications](/capabilities/notifications/guides/) - Multi-channel notifications
-- [Observability](/capabilities/observability/guides/) - Monitoring and logging
-- [Pricing & RefData](/capabilities/pricing-refdata/guides/) - Pricing and reference data
-- [Primary Market](/capabilities/primary-market/guides/) - Primary issuance operations
-- [Risk & Limits](/capabilities/risk-limits/guides/) - Risk management
-- [Sandbox](/capabilities/sandbox/guides/) - Testing and development
-- [Settlements](/capabilities/settlements/guides/) - Settlement and clearing
-- [Tenancy & Trust](/capabilities/tenancy-trust/guides/) - Multi-tenant architecture
-- [Transfer Agent](/capabilities/transfer-agent/guides/) - Transfer agent services
-- [Treasury](/capabilities/treasury/guides/) - Treasury management
+- [Analytics & Reports]({{ '/capabilities/analytics-reports/guides/' | relative_url }}) - Business intelligence and reporting
+- [Authentication]({{ '/capabilities/auth/guides/' | relative_url }}) - User authentication and authorization
+- [Blockchain Integration]({{ '/capabilities/chain/guides/' | relative_url }}) - Multi-chain integration and DeFi
+- [Compliance]({{ '/capabilities/compliance/guides/' | relative_url }}) - Regulatory compliance and reporting
+- [Custodian]({{ '/capabilities/custodian/guides/' | relative_url }}) - Digital asset custody and security
+- [Documents]({{ '/capabilities/documents/guides/' | relative_url }}) - Document management and storage
+- [Escrow]({{ '/capabilities/escrow/guides/' | relative_url }}) - Smart contract escrow services
+- [Events]({{ '/capabilities/events/guides/' | relative_url }}) - Event-driven architecture
+- [Exchange]({{ '/capabilities/exchange/guides/' | relative_url }}) - Core trading operations
+- [Fees & Billing]({{ '/capabilities/fees-billing/guides/' | relative_url }}) - Fee management and billing
+- [Fiat Banking]({{ '/capabilities/fiat-banking/guides/' | relative_url }}) - Fiat currency operations
+- [Gateway]({{ '/capabilities/gateway/guides/' | relative_url }}) - Payment gateway integration
+- [Governance]({{ '/capabilities/governance/guides/' | relative_url }}) - Platform governance
+- [Identity]({{ '/capabilities/identity/guides/' | relative_url }}) - KYC/AML and identity verification
+- [Market Oracles]({{ '/capabilities/market-oracles/guides/' | relative_url }}) - Price feeds and market data
+- [Marketplace]({{ '/capabilities/marketplace/guides/' | relative_url }}) - Secondary market operations
+- [Notifications]({{ '/capabilities/notifications/guides/' | relative_url }}) - Multi-channel notifications
+- [Observability]({{ '/capabilities/observability/guides/' | relative_url }}) - Monitoring and logging
+- [Pricing & RefData]({{ '/capabilities/pricing-refdata/guides/' | relative_url }}) - Pricing and reference data
+- [Primary Market]({{ '/capabilities/primary-market/guides/' | relative_url }}) - Primary issuance operations
+- [Risk & Limits]({{ '/capabilities/risk-limits/guides/' | relative_url }}) - Risk management
+- [Sandbox]({{ '/capabilities/sandbox/guides/' | relative_url }}) - Testing and development
+- [Settlements]({{ '/capabilities/settlements/guides/' | relative_url }}) - Settlement and clearing
+- [Tenancy & Trust]({{ '/capabilities/tenancy-trust/guides/' | relative_url }}) - Multi-tenant architecture
+- [Transfer Agent]({{ '/capabilities/transfer-agent/guides/' | relative_url }}) - Transfer agent services
+- [Treasury]({{ '/capabilities/treasury/guides/' | relative_url }}) - Treasury management
 
 ---
 
