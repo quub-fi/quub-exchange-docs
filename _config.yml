@@ -35,7 +35,7 @@ defaults:
   - scope:
       path: "use-cases"
     values:
-      layout: "docs"
+      layout: "use-case"
   - scope:
       path: ""
     values:
