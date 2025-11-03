@@ -223,6 +223,74 @@ tr:last-child td {
   text-decoration: none;
 }
 
+/* Service Categories */
+.main-content h2 {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+}
+
+.main-content h3 {
+  color: var(--text-color);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.main-content h3 a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.main-content h3 a:hover {
+  color: var(--primary-color);
+}
+
+.main-content h3 + p {
+  color: var(--secondary-color);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.main-content ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.main-content ul li {
+  padding: 0.25rem 0;
+}
+
+.main-content ul li a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+}
+
+.main-content ul li a:hover {
+  color: #1d4ed8;
+  transform: translateX(4px);
+}
+
+.main-content ul li a::before {
+  content: "→";
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.main-content hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 2rem 0;
+}
+
 /* Footer */
 .site-footer {
   background-color: var(--bg-secondary);
