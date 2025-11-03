@@ -1,12 +1,47 @@
----
+he ---
 layout: docs
 title: Developer Guides
 description: Step-by-step guides for common integration scenarios
+permalink: /guides/
+
 ---
 
 # Developer Guides
 
 Comprehensive guides to help you integrate Quub Exchange services into your application.
+
+## 📚 Capability-Specific Guides
+
+Detailed guides for each Quub Exchange capability:
+
+- [Analytics & Reports](/capabilities/analytics-reports/guides/) - Business intelligence and reporting
+- [Authentication](/capabilities/auth/guides/) - User authentication and authorization
+- [Blockchain Integration](/capabilities/chain/guides/) - Multi-chain integration and DeFi
+- [Compliance](/capabilities/compliance/guides/) - Regulatory compliance and reporting
+- [Custodian](/capabilities/custodian/guides/) - Digital asset custody and security
+- [Documents](/capabilities/documents/guides/) - Document management and storage
+- [Escrow](/capabilities/escrow/guides/) - Smart contract escrow services
+- [Events](/capabilities/events/guides/) - Event-driven architecture
+- [Exchange](/capabilities/exchange/guides/) - Core trading operations
+- [Fees & Billing](/capabilities/fees-billing/guides/) - Fee management and billing
+- [Fiat Banking](/capabilities/fiat-banking/guides/) - Fiat currency operations
+- [Gateway](/capabilities/gateway/guides/) - Payment gateway integration
+- [Governance](/capabilities/governance/guides/) - Platform governance
+- [Identity](/capabilities/identity/guides/) - KYC/AML and identity verification
+- [Market Oracles](/capabilities/market-oracles/guides/) - Price feeds and market data
+- [Marketplace](/capabilities/marketplace/guides/) - Secondary market operations
+- [Notifications](/capabilities/notifications/guides/) - Multi-channel notifications
+- [Observability](/capabilities/observability/guides/) - Monitoring and logging
+- [Pricing & RefData](/capabilities/pricing-refdata/guides/) - Pricing and reference data
+- [Primary Market](/capabilities/primary-market/guides/) - Primary issuance operations
+- [Risk & Limits](/capabilities/risk-limits/guides/) - Risk management
+- [Sandbox](/capabilities/sandbox/guides/) - Testing and development
+- [Settlements](/capabilities/settlements/guides/) - Settlement and clearing
+- [Tenancy & Trust](/capabilities/tenancy-trust/guides/) - Multi-tenant architecture
+- [Transfer Agent](/capabilities/transfer-agent/guides/) - Transfer agent services
+- [Treasury](/capabilities/treasury/guides/) - Treasury management
+
+---
 
 ## 🎯 Integration Guides
 
