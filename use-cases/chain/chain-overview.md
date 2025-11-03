@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 permalink: /use-cases/chain/chain-overview/
 ---
 

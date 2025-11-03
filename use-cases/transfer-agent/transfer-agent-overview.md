@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 permalink: /use-cases/transfer-agent/transfer-agent-overview/
 ---
 

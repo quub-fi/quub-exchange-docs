@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 permalink: /use-cases/market-oracles/market-oracles-overview/
 ---
 

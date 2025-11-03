@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 permalink: /use-cases/tenancy-trust/tenancy-trust-overview/
 ---
 

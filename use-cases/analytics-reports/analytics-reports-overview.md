@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 permalink: /use-cases/analytics-reports/analytics-reports-overview/
 ---
 
