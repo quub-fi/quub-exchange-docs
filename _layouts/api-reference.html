@@ -117,7 +117,7 @@
     </nav>
 
     <!-- API Documentation Container -->
-    <div class="api-container">
+    <div class="api-container" style="position: fixed; top: 60px; left: 0; right: 0; bottom: 0; overflow: auto;">
         <div id="redoc-container"></div>
     </div>
 
@@ -132,7 +132,7 @@
         Redoc.init(
             specUrl,
             {
-                scrollYOffset: 60,
+                scrollYOffset: 0,
                 hideDownloadButton: false,
                 theme: {
                     typography: {
