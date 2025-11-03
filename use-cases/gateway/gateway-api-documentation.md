@@ -1,5 +1,6 @@
 ---
 layout: docs
+permalink: /use-cases/gateway/
 title: gateway API Documentation
 service: gateway
 ---

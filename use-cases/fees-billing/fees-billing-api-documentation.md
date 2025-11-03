@@ -1,5 +1,6 @@
 ---
 layout: docs
+permalink: /use-cases/fees-billing/
 title: fees-billing API Documentation
 service: fees-billing
 ---

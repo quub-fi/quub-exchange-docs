@@ -1,5 +1,6 @@
 ---
 layout: docs
+permalink: /use-cases/observability/
 title: observability API Documentation
 service: observability
 ---

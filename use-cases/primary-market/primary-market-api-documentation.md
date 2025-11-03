@@ -1,5 +1,6 @@
 ---
 layout: docs
+permalink: /use-cases/primary-market/
 title: primary-market API Documentation
 service: primary-market
 ---

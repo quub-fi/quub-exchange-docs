@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/analytics-reports/
+---
+
 # Analytics & Reports API Documentation
 
 _Based on OpenAPI specification: `analytics-reports.yaml`_

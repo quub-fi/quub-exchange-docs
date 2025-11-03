@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/chain/
+---
+
 # Blockchain Integration API Documentation
 
 _Based on OpenAPI specification: `chain.yaml`_

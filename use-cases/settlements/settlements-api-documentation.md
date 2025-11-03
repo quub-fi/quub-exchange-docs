@@ -1,5 +1,6 @@
 ---
 layout: docs
+permalink: /use-cases/settlements/
 title: Settlement & Clearing API Documentation
 service: settlements
 ---

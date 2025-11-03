@@ -1,5 +1,6 @@
 ---
 layout: docs
+permalink: /use-cases/pricing-refdata/
 title: pricing-refdata API Documentation
 service: pricing-refdata
 ---
