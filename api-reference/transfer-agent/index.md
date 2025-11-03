@@ -9,12 +9,12 @@ service: transfer-agent
 Securities transfer agent services
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/transfer-agent.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/transfer-agent.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/transfer-agent.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/transfer-agent.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/transfer-agent/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/transfer-agent/transfer-agent-api-documentation.html)
 

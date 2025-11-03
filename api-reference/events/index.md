@@ -9,12 +9,12 @@ service: events
 Event streaming and management
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/events.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/events.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/events.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/events.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/events/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/events/events-api-documentation.html)
 

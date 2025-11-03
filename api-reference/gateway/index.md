@@ -9,12 +9,12 @@ service: gateway
 API gateway and routing
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/gateway.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/gateway.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/gateway.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/gateway.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/gateway/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/gateway/gateway-api-documentation.html)
 

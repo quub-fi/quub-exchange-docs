@@ -9,12 +9,12 @@ service: auth
 Secure authentication and authorization services
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/auth.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/auth.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/auth.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/auth.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/auth/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/auth/auth-api-documentation.html)
 

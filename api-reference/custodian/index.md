@@ -9,12 +9,12 @@ service: custodian
 Asset custody and safekeeping
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/custodian.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/custodian.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/custodian.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/custodian.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/custodian/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/custodian/custodian-api-documentation.html)
 

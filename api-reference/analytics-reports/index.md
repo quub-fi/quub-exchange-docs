@@ -9,12 +9,12 @@ service: analytics-reports
 Analytics and reporting services
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/analytics-reports.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/analytics-reports.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/analytics-reports.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/analytics-reports.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/analytics-reports/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/analytics-reports/analytics-reports-api-documentation.html)
 

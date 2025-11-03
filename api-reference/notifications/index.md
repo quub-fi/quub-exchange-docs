@@ -9,12 +9,12 @@ service: notifications
 Notification delivery services
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/notifications.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/notifications.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/notifications.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/notifications.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/notifications/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/notifications/notifications-api-documentation.html)
 

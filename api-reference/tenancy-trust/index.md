@@ -9,12 +9,12 @@ service: tenancy-trust
 Organization and tenant management
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/tenancy-trust.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/tenancy-trust.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/tenancy-trust.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/tenancy-trust.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/tenancy-trust/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/tenancy-trust/tenancy-trust-api-documentation.html)
 

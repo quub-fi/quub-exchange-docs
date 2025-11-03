@@ -1,0 +1,1507 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - ATS / Matching Engine Service",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://quub.exchange/license"
+    },
+    "description": "Core matching engine, markets, orders, trades, positions, and halts.\nSupports multi-tenant orchestration, chain-agnostic execution, and\nmarket maker integration under regulated ATS/MTF frameworks.\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.quub.exchange/v2",
+      "description": "Production API"
+    },
+    {
+      "url": "https://api.sandbox.quub.exchange/v2",
+      "description": "Sandbox API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Markets",
+      "description": "Market creation, configuration, and lifecycle management."
+    },
+    {
+      "name": "Orders",
+      "description": "Order placement, modification, and cancellation."
+    },
+    {
+      "name": "Trades",
+      "description": "Trade execution and retrieval."
+    },
+    {
+      "name": "Positions",
+      "description": "Realized and unrealized P/L and balances."
+    },
+    {
+      "name": "MarketMakerQuotes",
+      "description": "Continuous liquidity provision and spread management."
+    },
+    {
+      "name": "Halts",
+      "description": "Market halts and circuit breaker events."
+    }
+  ],
+  "paths": {
+    "/orgs/{orgId}/markets": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "summary": "List markets for organization",
+        "operationId": "listMarkets",
+        "security": [
+          {
+            "oauth2": [
+              "read:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OPEN",
+                "HALTED",
+                "CLOSED",
+                "SETTLED"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Successfully retrieved list of markets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Market"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Markets"
+        ],
+        "summary": "Create a new market",
+        "operationId": "createMarket",
+        "security": [
+          {
+            "oauth2": [
+              "write:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "instrumentId",
+                  "quoteCcy",
+                  "lotSize"
+                ],
+                "properties": {
+                  "instrumentId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "quoteCcy": {
+                    "type": "string"
+                  },
+                  "chainId": {
+                    "type": "integer",
+                    "description": "Blockchain chain reference"
+                  },
+                  "priceBandPct": {
+                    "type": "number"
+                  },
+                  "lotSize": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "marketType": {
+                    "type": "string",
+                    "enum": [
+                      "SPOT",
+                      "TOKENIZED_RWA",
+                      "DERIVATIVE"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Market created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Market"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/markets/{marketId}": {
+      "get": {
+        "tags": [
+          "Markets"
+        ],
+        "summary": "Get market details",
+        "operationId": "getMarket",
+        "security": [
+          {
+            "oauth2": [
+              "read:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Successfully retrieved market details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Market"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Markets"
+        ],
+        "summary": "Update market state or parameters",
+        "operationId": "updateMarket",
+        "security": [
+          {
+            "oauth2": [
+              "write:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "OPEN",
+                      "HALTED",
+                      "CLOSED",
+                      "SETTLED"
+                    ]
+                  },
+                  "priceBandPct": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Market updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Market"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/orders": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "List orders",
+        "operationId": "listOrders",
+        "security": [
+          {
+            "oauth2": [
+              "read:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "instrumentId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OPEN",
+                "FILLED",
+                "PARTIAL",
+                "CANCELLED"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Successfully retrieved list of orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Order"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Place a new order",
+        "operationId": "createOrder",
+        "security": [
+          {
+            "oauth2": [
+              "write:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "accountId",
+                  "instrumentId",
+                  "side",
+                  "type",
+                  "qty",
+                  "tif"
+                ],
+                "properties": {
+                  "accountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "instrumentId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "side": {
+                    "type": "string",
+                    "enum": [
+                      "BUY",
+                      "SELL"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "LIMIT",
+                      "MARKET",
+                      "STOP_LIMIT",
+                      "IOC"
+                    ]
+                  },
+                  "qty": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "px": {
+                    "type": "number",
+                    "description": "Required for LIMIT orders"
+                  },
+                  "tif": {
+                    "type": "string",
+                    "enum": [
+                      "GTC",
+                      "FOK",
+                      "IOC"
+                    ]
+                  },
+                  "clientRef": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Order created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Order"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/orders/{orderId}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get order details",
+        "operationId": "getOrder",
+        "security": [
+          {
+            "oauth2": [
+              "read:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Successfully retrieved order details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Order"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Cancel order",
+        "operationId": "cancelOrder",
+        "security": [
+          {
+            "oauth2": [
+              "admin:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "204": {
+            "$ref": "./common/responses.yaml#/components/responses/NoContentResponse"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/trades": {
+      "get": {
+        "tags": [
+          "Trades"
+        ],
+        "summary": "List trades",
+        "operationId": "listTrades",
+        "security": [
+          {
+            "oauth2": [
+              "read:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "marketId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Successfully retrieved list of trades",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Trade"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/positions": {
+      "get": {
+        "tags": [
+          "Positions"
+        ],
+        "summary": "List positions",
+        "operationId": "listPositions",
+        "security": [
+          {
+            "oauth2": [
+              "read:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Successfully retrieved list of positions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Position"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/mm-quotes": {
+      "get": {
+        "tags": [
+          "MarketMakerQuotes"
+        ],
+        "summary": "List market maker quotes",
+        "operationId": "listMMQuotes",
+        "security": [
+          {
+            "oauth2": [
+              "read:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Successfully retrieved list of market maker quotes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/MMQuote"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MarketMakerQuotes"
+        ],
+        "summary": "Upsert market maker quote",
+        "operationId": "upsertMMQuote",
+        "security": [
+          {
+            "oauth2": [
+              "write:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "marketId",
+                  "bidPx",
+                  "bidQty",
+                  "askPx",
+                  "askQty",
+                  "validUntil"
+                ],
+                "properties": {
+                  "marketId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "bidPx": {
+                    "type": "number"
+                  },
+                  "bidQty": {
+                    "type": "number"
+                  },
+                  "askPx": {
+                    "type": "number"
+                  },
+                  "askQty": {
+                    "type": "number"
+                  },
+                  "validUntil": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Market maker quote created/updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MMQuote"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/halts": {
+      "get": {
+        "tags": [
+          "Halts"
+        ],
+        "summary": "List halts",
+        "operationId": "listHalts",
+        "security": [
+          {
+            "oauth2": [
+              "read:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "marketId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Successfully retrieved list of halts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Halt"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Halts"
+        ],
+        "summary": "Trigger market halt",
+        "operationId": "createHalt",
+        "security": [
+          {
+            "oauth2": [
+              "write:exchange"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "marketId",
+                  "reason"
+                ],
+                "properties": {
+                  "marketId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "MANUAL",
+                      "PRICE_COLLAR",
+                      "VOLATILITY",
+                      "REGULATORY",
+                      "OTHER"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Halt created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Halt"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      }
+    },
+    "schemas": {
+      "Market": {
+        "type": "object",
+        "description": "Market metadata and configuration.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instrumentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quoteCcy": {
+            "type": "string"
+          },
+          "chainId": {
+            "type": "integer"
+          },
+          "priceBandPct": {
+            "type": "number"
+          },
+          "lotSize": {
+            "type": "integer"
+          },
+          "marketType": {
+            "type": "string",
+            "enum": [
+              "SPOT",
+              "TOKENIZED_RWA",
+              "DERIVATIVE"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "HALTED",
+              "CLOSED",
+              "SETTLED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "description": "Order entity in the matching engine.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instrumentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "side": {
+            "type": "string",
+            "enum": [
+              "BUY",
+              "SELL"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "LIMIT",
+              "MARKET",
+              "STOP_LIMIT",
+              "IOC"
+            ]
+          },
+          "qty": {
+            "type": "number"
+          },
+          "px": {
+            "type": "number"
+          },
+          "tif": {
+            "type": "string",
+            "enum": [
+              "GTC",
+              "FOK",
+              "IOC"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "FILLED",
+              "PARTIAL",
+              "CANCELLED"
+            ]
+          },
+          "filledQty": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Trade": {
+        "type": "object",
+        "description": "Trade execution record.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "marketId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "buyOrderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sellOrderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "qty": {
+            "type": "number"
+          },
+          "px": {
+            "type": "number"
+          },
+          "executedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Position": {
+        "type": "object",
+        "description": "Account position and P/L summary.",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instrumentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "qty": {
+            "type": "number"
+          },
+          "avgPx": {
+            "type": "number"
+          },
+          "realizedPnL": {
+            "type": "number"
+          },
+          "unrealizedPnL": {
+            "type": "number"
+          }
+        }
+      },
+      "MMQuote": {
+        "type": "object",
+        "description": "Market maker quote object.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "marketId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bidPx": {
+            "type": "number"
+          },
+          "bidQty": {
+            "type": "number"
+          },
+          "askPx": {
+            "type": "number"
+          },
+          "askQty": {
+            "type": "number"
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Halt": {
+        "type": "object",
+        "description": "Market halt event record.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "marketId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "MANUAL",
+              "PRICE_COLLAR",
+              "VOLATILITY",
+              "REGULATORY",
+              "OTHER"
+            ]
+          },
+          "triggeredBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

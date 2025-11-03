@@ -1,0 +1,1627 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - Identity Service",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "identifier": "Proprietary"
+    },
+    "description": "Core Identity and Access Management (IAM) layer for Quub Exchange.\nHandles account lifecycle, organization management, roles, and API key issuance.\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.quub.exchange/v1",
+      "description": "Production"
+    },
+    {
+      "url": "https://api.sandbox.quub.exchange/v1",
+      "description": "Sandbox"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "identity",
+      "description": "Identity, accounts, organizations, and access controls"
+    },
+    {
+      "name": "Authentication",
+      "description": "Login, registration, and session management"
+    }
+  ],
+  "paths": {
+    "/Accounts": {
+      "get": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "List accounts",
+        "operationId": "listAccounts",
+        "description": "Retrieve paginated list of user and org accounts.",
+        "parameters": [
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/sort"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/AccountStatus"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/AccountType"
+            }
+          },
+          {
+            "name": "orgId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/OrgId"
+            },
+            "description": "Filter accounts by organization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of accounts",
+            "headers": {
+              "Request-Id": {
+                "$ref": "./common/components.yaml#/components/headers/Request-Id"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "./common/domain-models.yaml#/components/schemas/Account"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Create a new account",
+        "operationId": "createAccount",
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "email"
+                ],
+                "properties": {
+                  "type": {
+                    "$ref": "./common/primitives.yaml#/components/schemas/AccountType"
+                  },
+                  "orgId": {
+                    "$ref": "./common/primitives.yaml#/components/schemas/OrgId"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^\\+[1-9]\\d{1,14}$"
+                  }
+                }
+              },
+              "example": {
+                "type": "INDIVIDUAL",
+                "email": "alice@example.com",
+                "phone": "+14155551234"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "./common/domain-models.yaml#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/Accounts/{accountId}": {
+      "get": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Retrieve account by ID",
+        "operationId": "getAccount",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/AccountId"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Account details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "./common/domain-models.yaml#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Update an existing account",
+        "operationId": "updateAccount",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/AccountId"
+            }
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "pattern": "^\\+[1-9]\\d{1,14}$"
+                  },
+                  "status": {
+                    "$ref": "./common/primitives.yaml#/components/schemas/AccountStatus"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "./common/domain-models.yaml#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/Orgs": {
+      "get": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "List organizations",
+        "operationId": "listOrgs",
+        "parameters": [
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of organizations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "./common/domain-models.yaml#/components/schemas/Org"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Create organization",
+        "operationId": "createOrg",
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "legalName",
+                  "country"
+                ],
+                "properties": {
+                  "legalName": {
+                    "type": "string"
+                  },
+                  "regNo": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{2}$"
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Organization created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Org"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/Orgs/{orgId}": {
+      "get": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Retrieve organization by ID",
+        "operationId": "getOrg",
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Organization details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Org"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Update organization",
+        "operationId": "updateOrg",
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "legalName": {
+                    "type": "string"
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Organization updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Org"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/Roles": {
+      "get": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "List available roles",
+        "operationId": "listRoles",
+        "responses": {
+          "200": {
+            "description": "List of roles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Role"
+                          }
+                        },
+                        "meta": {
+                          "$ref": "./common/pagination.yaml#/components/schemas/PageMeta"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/ApiKeys": {
+      "get": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "List API keys for account",
+        "operationId": "listApiKeys",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/AccountId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of API keys (masked)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "./common/domain-models.yaml#/components/schemas/ApiKey"
+                          }
+                        },
+                        "meta": {
+                          "$ref": "./common/pagination.yaml#/components/schemas/PageMeta"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Create new API key",
+        "operationId": "createApiKey",
+        "description": "The full secret key is returned only once — store it securely.\n",
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "accountId",
+                  "scopes"
+                ],
+                "properties": {
+                  "accountId": {
+                    "$ref": "./common/primitives.yaml#/components/schemas/AccountId"
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "API key created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "./common/domain-models.yaml#/components/schemas/ApiKey"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "secretKey": {
+                              "type": "string",
+                              "description": "Secret key (visible once)",
+                              "example": "your_secret_key_here"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/ApiKeys/{apiKeyId}": {
+      "delete": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Revoke API key",
+        "operationId": "deleteApiKey",
+        "parameters": [
+          {
+            "name": "apiKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^apik_[a-zA-Z0-9]{16,32}$"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "API key revoked successfully"
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/Accounts/{accountId}/mfa": {
+      "post": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Enable MFA for account",
+        "operationId": "enableMfa",
+        "description": "Enable multi-factor authentication. Returns QR code and secret for TOTP setup.\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/AccountId"
+            }
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "method"
+                ],
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "TOTP",
+                      "SMS",
+                      "EMAIL"
+                    ],
+                    "description": "MFA method to enable"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "pattern": "^\\+[1-9]\\d{1,14}$",
+                    "description": "Required if method is SMS"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "MFA enabled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MfaSetup"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Disable MFA for account",
+        "operationId": "disableMfa",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/AccountId"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "Current MFA code to confirm disable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "MFA disabled successfully"
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/Accounts/{accountId}/mfa/verify": {
+      "post": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Verify MFA setup",
+        "operationId": "verifyMfaSetup",
+        "description": "Verify TOTP code during initial MFA setup. Activates MFA after successful verification.\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "./common/primitives.yaml#/components/schemas/AccountId"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "TOTP code from authenticator app",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MFA verified and activated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "backupCodes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "One-time backup codes (shown once)",
+                          "example": [
+                            "a1b2c3d4",
+                            "e5f6g7h8"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/Auth/mfa/challenge": {
+      "post": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Complete MFA challenge",
+        "operationId": "completeMfaChallenge",
+        "description": "Complete MFA challenge after successful password authentication.\nReturns access token on success.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "challengeId",
+                  "code"
+                ],
+                "properties": {
+                  "challengeId": {
+                    "type": "string",
+                    "description": "Challenge ID from login response"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "TOTP code or backup code",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MFA challenge completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "accessToken",
+                        "expiresIn"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token after successful MFA",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "expiresIn": {
+                          "type": "integer",
+                          "description": "Token expiration time in seconds (RFC 6749)",
+                          "example": 3600
+                        },
+                        "tokenType": {
+                          "type": "string",
+                          "description": "Token type per OAuth2 spec",
+                          "enum": [
+                            "Bearer"
+                          ],
+                          "default": "Bearer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login with email and password",
+        "operationId": "login",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "accessToken",
+                        "refreshToken",
+                        "expiresIn"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "description": "Refresh token for obtaining new access tokens",
+                          "example": "refresh_abc123def456..."
+                        },
+                        "expiresIn": {
+                          "type": "integer",
+                          "description": "Token expiration time in seconds (RFC 6749)",
+                          "example": 3600
+                        },
+                        "tokenType": {
+                          "type": "string",
+                          "description": "Token type per OAuth2 spec",
+                          "enum": [
+                            "Bearer"
+                          ],
+                          "default": "Bearer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "MFA required - complete challenge to obtain tokens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MfaChallenge"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register a new account",
+        "operationId": "register",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "accessToken",
+                        "expiresIn",
+                        "accountId"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "expiresIn": {
+                          "type": "integer",
+                          "description": "Token expiration time in seconds (RFC 6749)",
+                          "example": 3600
+                        },
+                        "tokenType": {
+                          "type": "string",
+                          "description": "Token type per OAuth2 spec",
+                          "enum": [
+                            "Bearer"
+                          ],
+                          "default": "Bearer"
+                        },
+                        "accountId": {
+                          "$ref": "./common/primitives.yaml#/components/schemas/AccountId",
+                          "description": "ID of the newly created account"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Logout and invalidate session",
+        "operationId": "logout",
+        "responses": {
+          "204": {
+            "description": "Logout successful"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get current authenticated user",
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "Current user retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "./common/domain-models.yaml#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/auth/change-password": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Change account password",
+        "operationId": "changePassword",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "currentPassword",
+                  "newPassword"
+                ],
+                "properties": {
+                  "currentPassword": {
+                    "type": "string",
+                    "format": "password"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Password changed successfully"
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Role": {
+        "type": "object",
+        "description": "Account role within an organization",
+        "required": [
+          "id",
+          "accountId",
+          "orgId",
+          "role"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "$ref": "./common/primitives.yaml#/components/schemas/AccountId"
+          },
+          "orgId": {
+            "$ref": "./common/primitives.yaml#/components/schemas/OrgId"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "OPERATIONS",
+              "COMPLIANCE",
+              "FINANCE",
+              "PROJECT_MANAGER",
+              "INVESTOR"
+            ]
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Granular permissions assigned to this role"
+          },
+          "assignedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assignedBy": {
+            "type": "string",
+            "description": "Account ID of assigner"
+          }
+        }
+      },
+      "Org": {
+        "type": "object",
+        "description": "Simplified organization reference (alias for Organization from domain-models)",
+        "required": [
+          "id",
+          "legalName",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "./common/primitives.yaml#/components/schemas/OrgId"
+          },
+          "legalName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "CLOSED"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "ISSUER",
+              "SPV",
+              "CUSTODIAN",
+              "INVESTOR"
+            ]
+          },
+          "country": {
+            "type": "string",
+            "example": "US"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MfaSetup": {
+        "type": "object",
+        "description": "MFA setup response with TOTP configuration",
+        "required": [
+          "method",
+          "status"
+        ],
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": [
+              "TOTP",
+              "SMS",
+              "EMAIL"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING_VERIFICATION",
+              "ACTIVE"
+            ]
+          },
+          "totpSecret": {
+            "type": "string",
+            "description": "Base32-encoded TOTP secret (only for TOTP method)",
+            "example": "JBSWY3DPEHPK3PXP"
+          },
+          "qrCodeUri": {
+            "type": "string",
+            "description": "otpauth:// URI for QR code generation",
+            "example": "otpauth://totp/QuubExchange:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=QuubExchange"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Masked phone number (only for SMS method)",
+            "example": "+1***555**34"
+          }
+        }
+      },
+      "MfaChallenge": {
+        "type": "object",
+        "description": "MFA challenge issued after password login",
+        "required": [
+          "challengeId",
+          "methods",
+          "expiresAt"
+        ],
+        "properties": {
+          "challengeId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique challenge identifier"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "TOTP",
+                "SMS",
+                "EMAIL",
+                "BACKUP_CODE"
+              ]
+            },
+            "description": "Available MFA methods for this account"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Challenge expiration timestamp"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      }
+    }
+  }
+}

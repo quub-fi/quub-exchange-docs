@@ -9,12 +9,12 @@ service: documents
 Document management and storage
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/documents.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/documents.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/documents.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/documents.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/documents/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/documents/documents-api-documentation.html)
 

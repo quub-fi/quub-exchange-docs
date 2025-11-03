@@ -9,12 +9,12 @@ service: chain
 Blockchain integration services
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/chain.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/chain.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/chain.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/chain.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/chain/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/chain/chain-api-documentation.html)
 

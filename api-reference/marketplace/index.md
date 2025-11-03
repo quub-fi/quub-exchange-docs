@@ -9,12 +9,12 @@ service: marketplace
 Asset marketplace and listings
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/marketplace.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/marketplace.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/marketplace.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/marketplace.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/marketplace/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/marketplace/marketplace-api-documentation.html)
 

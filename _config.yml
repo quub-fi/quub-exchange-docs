@@ -19,9 +19,13 @@ exclude:
   - .sass-cache/
   - .jekyll-cache/
   - gemfiles/
+  - "*.sh"
+  - node_modules/
 
 include:
   - _pages
+  - "*.yaml"
+  - "*.yml"
 
 defaults:
   - scope:

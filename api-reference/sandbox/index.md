@@ -9,12 +9,12 @@ service: sandbox
 Development and testing sandbox
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/sandbox.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/sandbox.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/sandbox.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/sandbox.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/sandbox/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/sandbox/sandbox-api-documentation.html)
 

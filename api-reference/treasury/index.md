@@ -9,12 +9,12 @@ service: treasury
 Treasury management and operations
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/treasury.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/treasury.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/treasury.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/treasury.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/treasury/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/treasury/treasury-api-documentation.html)
 

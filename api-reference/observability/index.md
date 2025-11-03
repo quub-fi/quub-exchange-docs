@@ -9,12 +9,12 @@ service: observability
 Monitoring and observability
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/observability.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/observability.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/observability.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/observability.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/observability/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/observability/observability-api-documentation.html)
 

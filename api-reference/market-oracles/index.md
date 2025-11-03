@@ -9,12 +9,12 @@ service: market-oracles
 Real-time market data and price feeds
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/market-oracles.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/market-oracles.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/market-oracles.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/market-oracles.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/market-oracles/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/market-oracles/market-oracles-api-documentation.html)
 

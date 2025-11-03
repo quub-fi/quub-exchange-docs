@@ -9,12 +9,12 @@ service: fees-billing
 Fee calculation and billing
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/fees-billing.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/fees-billing.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/fees-billing.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/fees-billing.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/fees-billing/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/fees-billing/fees-billing-api-documentation.html)
 

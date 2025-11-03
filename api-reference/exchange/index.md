@@ -9,12 +9,12 @@ service: exchange
 Core trading and order management
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/exchange.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/exchange.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/exchange.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/exchange.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/exchange/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/exchange/exchange-api-documentation.html)
 

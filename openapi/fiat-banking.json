@@ -1,0 +1,702 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - Fiat Banking API",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://quub.exchange/license"
+    },
+    "description": "Fiat banking connectors, wire transfers, ACH, SEPA, settlements, and fiat balance management.\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.quub.exchange/v2",
+      "description": "Production API"
+    },
+    {
+      "url": "https://sandbox.quub.exchange/v2",
+      "description": "Sandbox API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Banking Accounts",
+      "description": "Fiat accounts linked to organizations."
+    },
+    {
+      "name": "Deposits",
+      "description": "Incoming fiat deposits."
+    },
+    {
+      "name": "Withdrawals",
+      "description": "Outgoing fiat withdrawals."
+    },
+    {
+      "name": "Settlements",
+      "description": "Settlement runs and clearing batches."
+    }
+  ],
+  "paths": {
+    "/orgs/{orgId}/banking/accounts": {
+      "get": {
+        "summary": "List fiat accounts",
+        "tags": [
+          "Banking Accounts"
+        ],
+        "operationId": "listFiatAccounts",
+        "security": [
+          {
+            "oauth2": [
+              "read:fiat-banking"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of fiat accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/BankAccount"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/banking/deposits": {
+      "get": {
+        "summary": "List fiat deposits",
+        "tags": [
+          "Deposits"
+        ],
+        "operationId": "listFiatDeposits",
+        "security": [
+          {
+            "oauth2": [
+              "read:fiat-banking"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of fiat deposits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Deposit"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "summary": "Initiate fiat deposit",
+        "tags": [
+          "Deposits"
+        ],
+        "operationId": "createFiatDeposit",
+        "security": [
+          {
+            "oauth2": [
+              "write:fiat-banking"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "accountId",
+                  "amount",
+                  "currency"
+                ],
+                "properties": {
+                  "accountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "minimum": 0.01
+                  },
+                  "currency": {
+                    "type": "string",
+                    "example": "USD"
+                  },
+                  "reference": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Deposit created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Deposit"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/banking/withdrawals": {
+      "get": {
+        "summary": "List fiat withdrawals",
+        "tags": [
+          "Withdrawals"
+        ],
+        "operationId": "listFiatWithdrawals",
+        "security": [
+          {
+            "oauth2": [
+              "read:fiat-banking"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of fiat withdrawals",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Withdrawal"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "summary": "Initiate fiat withdrawal",
+        "tags": [
+          "Withdrawals"
+        ],
+        "operationId": "createFiatWithdrawal",
+        "security": [
+          {
+            "oauth2": [
+              "write:fiat-banking"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "accountId",
+                  "amount",
+                  "currency"
+                ],
+                "properties": {
+                  "accountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "minimum": 0.01
+                  },
+                  "currency": {
+                    "type": "string",
+                    "example": "USD"
+                  },
+                  "reference": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Withdrawal created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Withdrawal"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/banking/settlements": {
+      "get": {
+        "summary": "List settlement batches",
+        "tags": [
+          "Settlements"
+        ],
+        "operationId": "listSettlements",
+        "security": [
+          {
+            "oauth2": [
+              "read:fiat-banking"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of settlement batches",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Settlement"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      }
+    },
+    "schemas": {
+      "BankAccount": {
+        "type": "object",
+        "description": "Linked fiat account or wallet.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bankName": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "routingNumber": {
+            "type": "string"
+          },
+          "iban": {
+            "type": "string",
+            "nullable": true
+          },
+          "swift": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountType": {
+            "type": "string",
+            "enum": [
+              "CHECKING",
+              "SAVINGS"
+            ]
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "CLOSED"
+            ]
+          }
+        }
+      },
+      "Deposit": {
+        "type": "object",
+        "description": "Fiat deposit transaction.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "reference": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Withdrawal": {
+        "type": "object",
+        "description": "Fiat withdrawal transaction.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "PROCESSING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "reference": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Settlement": {
+        "type": "object",
+        "description": "Net settlement record between Quub and an organization.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "period": {
+            "type": "string",
+            "example": "2025-10-20"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "totalCredits": {
+            "type": "number"
+          },
+          "totalDebits": {
+            "type": "number"
+          },
+          "netAmount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "CONFIRMED",
+              "FAILED"
+            ]
+          },
+          "settledAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,675 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - Custody API",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://quub.exchange/license"
+    },
+    "description": "Digital asset custody services for institutional and retail clients.\n\n**Custody Models:**\n- Self-custody (user-controlled wallets)\n- Qualified custody (licensed custodian)\n- Omnibus accounts (pooled custody)\n- Segregated accounts (individual custody)\n\n**Security:**\n- Multi-signature wallets\n- HSM-backed key storage\n- Proof of reserves\n- Insurance and bonding\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.quub.exchange/v1",
+      "description": "Production API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Custody Accounts",
+      "description": "Custody account management"
+    },
+    {
+      "name": "Deposits",
+      "description": "Asset deposits"
+    },
+    {
+      "name": "Withdrawals",
+      "description": "Asset withdrawals"
+    },
+    {
+      "name": "Transfers",
+      "description": "Inter-account transfers"
+    },
+    {
+      "name": "Proof of Custody",
+      "description": "Attestations and proofs"
+    }
+  ],
+  "paths": {
+    "/orgs/{orgId}/custody/accounts": {
+      "get": {
+        "operationId": "listCustodyAccounts",
+        "summary": "List custody accounts",
+        "tags": [
+          "Custody Accounts"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:custody"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of custody accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CustodyAccount"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createCustodyAccount",
+        "summary": "Create custody account",
+        "tags": [
+          "Custody Accounts"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "write:custody"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "accountType",
+                  "assetType"
+                ],
+                "properties": {
+                  "accountType": {
+                    "type": "string",
+                    "enum": [
+                      "SELF_CUSTODY",
+                      "QUALIFIED_CUSTODY",
+                      "OMNIBUS",
+                      "SEGREGATED"
+                    ]
+                  },
+                  "assetType": {
+                    "type": "string",
+                    "enum": [
+                      "CRYPTO",
+                      "SECURITIES",
+                      "FIAT"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Custody account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustodyAccount"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/custody/balances/{accountId}": {
+      "get": {
+        "operationId": "getCustodyBalances",
+        "summary": "Get custody account balances",
+        "tags": [
+          "Custody Accounts"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:custody"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custody balances",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CustodyBalance"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/custody/deposits": {
+      "post": {
+        "operationId": "initiateDeposit",
+        "summary": "Initiate deposit",
+        "tags": [
+          "Deposits"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "write:custody"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "accountId",
+                  "asset",
+                  "amount"
+                ],
+                "properties": {
+                  "accountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "asset": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Deposit initiated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustodyTransaction"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/custody/withdrawals": {
+      "post": {
+        "operationId": "requestWithdrawal",
+        "summary": "Request withdrawal",
+        "tags": [
+          "Withdrawals"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "write:custody"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "accountId",
+                  "asset",
+                  "amount",
+                  "destination"
+                ],
+                "properties": {
+                  "accountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "asset": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "string"
+                  },
+                  "destination": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Withdrawal requested successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustodyTransaction"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/custody/proof-of-custody": {
+      "get": {
+        "operationId": "getProofOfCustody",
+        "summary": "Get proof of custody attestation",
+        "tags": [
+          "Proof of Custody"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:custody"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Proof of custody attestation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProofOfCustody"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      }
+    },
+    "schemas": {
+      "CustodyAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountType": {
+            "type": "string",
+            "enum": [
+              "SELF_CUSTODY",
+              "QUALIFIED_CUSTODY",
+              "OMNIBUS",
+              "SEGREGATED"
+            ]
+          },
+          "assetType": {
+            "type": "string",
+            "enum": [
+              "CRYPTO",
+              "SECURITIES",
+              "FIAT"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "CLOSED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CustodyBalance": {
+        "type": "object",
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "available": {
+            "type": "string"
+          },
+          "reserved": {
+            "type": "string"
+          },
+          "total": {
+            "type": "string"
+          }
+        }
+      },
+      "CustodyTransaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "DEPOSIT",
+              "WITHDRAWAL"
+            ]
+          },
+          "asset": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "COMPLETED",
+              "FAILED",
+              "CANCELLED"
+            ]
+          },
+          "destination": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "ProofOfCustody": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attestation": {
+            "type": "string"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "asset": {
+                  "type": "string"
+                },
+                "balance": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signature": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

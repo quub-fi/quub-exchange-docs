@@ -1,0 +1,904 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - Market Oracles Service",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://quub.exchange/license"
+    },
+    "description": "Provides valuations, oracle attestations, price ticks, and disclosure feeds.\nEnables asset transparency, audit traceability, and verified oracles for institutional-grade RWA markets.\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.quub.exchange/v2",
+      "description": "Production API"
+    },
+    {
+      "url": "https://api.sandbox.quub.exchange/v2",
+      "description": "Sandbox API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Valuations",
+      "description": "Net Asset Value (NAV) and valuation reports."
+    },
+    {
+      "name": "OracleAttestations",
+      "description": "Oracle attestations for verified data (e.g., NAV, price, reserves)."
+    },
+    {
+      "name": "PriceTicks",
+      "description": "Price updates for tradable instruments."
+    },
+    {
+      "name": "Disclosures",
+      "description": "Public and investor disclosures."
+    }
+  ],
+  "paths": {
+    "/orgs/{orgId}/valuations": {
+      "get": {
+        "tags": [
+          "Valuations"
+        ],
+        "summary": "List valuation reports",
+        "operationId": "listValuations",
+        "security": [
+          {
+            "oauth2": [
+              "read:market-oracles"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of valuation reports",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ValuationReport"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Valuations"
+        ],
+        "summary": "Submit new valuation report",
+        "operationId": "createValuation",
+        "security": [
+          {
+            "oauth2": [
+              "write:market-oracles"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "projectId",
+                  "basis",
+                  "navTotal",
+                  "asOfDate"
+                ],
+                "properties": {
+                  "projectId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "basis": {
+                    "type": "string",
+                    "enum": [
+                      "MARKET",
+                      "COST",
+                      "INCOME",
+                      "APPRAISAL"
+                    ]
+                  },
+                  "navTotal": {
+                    "type": "number"
+                  },
+                  "navPerToken": {
+                    "type": "number"
+                  },
+                  "asOfDate": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "attachments": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  },
+                  "signerOrgId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Valuation report created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ValuationReport"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/market-oracles/oracle": {
+      "get": {
+        "tags": [
+          "OracleAttestations"
+        ],
+        "summary": "List oracle attestations",
+        "operationId": "listOracleAttestations",
+        "security": [
+          {
+            "oauth2": [
+              "read:market-oracles"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "NAV",
+                "PRICE",
+                "COLLATERAL",
+                "SUPPLY",
+                "CUSTOM"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of oracle attestations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/OracleAttestation"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "OracleAttestations"
+        ],
+        "summary": "Submit oracle attestation",
+        "operationId": "createOracleAttestation",
+        "security": [
+          {
+            "oauth2": [
+              "write:market-oracles"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OracleAttestation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Oracle attestation created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OracleAttestation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/data/price-ticks": {
+      "get": {
+        "tags": [
+          "PriceTicks"
+        ],
+        "summary": "List price ticks",
+        "operationId": "listPriceTicks",
+        "security": [
+          {
+            "oauth2": [
+              "read:market-oracles"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "instrumentId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of price ticks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PriceTick"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PriceTicks"
+        ],
+        "summary": "Submit new price tick",
+        "operationId": "createPriceTick",
+        "security": [
+          {
+            "oauth2": [
+              "write:market-oracles"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PriceTick"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Price tick created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PriceTick"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/disclosures": {
+      "get": {
+        "tags": [
+          "Disclosures"
+        ],
+        "summary": "List disclosures",
+        "operationId": "listDisclosures",
+        "security": [
+          {
+            "oauth2": [
+              "read:market-oracles"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "RISK",
+                "UPDATE",
+                "FINANCIAL",
+                "LEGAL"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of disclosures",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Disclosure"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Disclosures"
+        ],
+        "summary": "Publish disclosure",
+        "operationId": "createDisclosure",
+        "security": [
+          {
+            "oauth2": [
+              "write:market-oracles"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/idempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "projectId",
+                  "type",
+                  "contentUrl"
+                ],
+                "properties": {
+                  "projectId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "RISK",
+                      "UPDATE",
+                      "FINANCIAL",
+                      "LEGAL"
+                    ]
+                  },
+                  "contentUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Disclosure created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Disclosure"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      }
+    },
+    "schemas": {
+      "ValuationReport": {
+        "type": "object",
+        "description": "Net asset value and valuation details.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "basis": {
+            "type": "string",
+            "enum": [
+              "MARKET",
+              "COST",
+              "INCOME",
+              "APPRAISAL"
+            ]
+          },
+          "navTotal": {
+            "type": "number"
+          },
+          "navPerToken": {
+            "type": "number"
+          },
+          "asOfDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "signerOrgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OracleAttestation": {
+        "type": "object",
+        "description": "Oracle attestation from a trusted data provider.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "NAV",
+              "PRICE",
+              "COLLATERAL",
+              "SUPPLY",
+              "CUSTOM"
+            ]
+          },
+          "referenceId": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "source": {
+            "type": "string",
+            "example": "Chainlink"
+          },
+          "signature": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PriceTick": {
+        "type": "object",
+        "description": "Individual instrument price tick.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instrumentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "price": {
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source": {
+            "type": "string",
+            "example": "oracle.quub.exchange"
+          }
+        }
+      },
+      "Disclosure": {
+        "type": "object",
+        "description": "Public or investor disclosure document.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "RISK",
+              "UPDATE",
+              "FINANCIAL",
+              "LEGAL"
+            ]
+          },
+          "contentUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

@@ -9,12 +9,12 @@ service: governance
 Platform governance and voting
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/governance.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/governance.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/governance.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/governance.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/governance/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/governance/governance-api-documentation.html)
 

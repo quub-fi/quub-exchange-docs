@@ -9,12 +9,12 @@ service: settlements
 Trade settlement and clearing
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/settlements.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/settlements.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/settlements.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/settlements.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/settlements/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/settlements/settlements-api-documentation.html)
 

@@ -9,12 +9,12 @@ service: pricing-refdata
 Market pricing and reference data
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/pricing-refdata.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/pricing-refdata.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/pricing-refdata.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/pricing-refdata.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/pricing-refdata/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/pricing-refdata/pricing-refdata-api-documentation.html)
 

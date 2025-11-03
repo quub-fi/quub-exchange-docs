@@ -1,0 +1,1308 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - Events API",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://quub.exchange/license"
+    },
+    "description": "Domain events catalog and event-driven architecture support.\n\n**Event Categories:**\n- Account events (registration, verification, suspension)\n- Trading events (order placed, trade executed, settlement)\n- Compliance events (KYC approved, sanctions match)\n- Primary market events (offering created, subscription confirmed)\n- Treasury events (deposit, withdrawal, transfer)\n- Governance events (vote cast, proposal approved)\n\n**Event Delivery:**\n- Webhooks (push to registered endpoints)\n- Event subscriptions (pull via API)\n- Event replay for recovery\n\n**Event Schema:**\nAll events follow CloudEvents 1.0 specification\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.quub.exchange/v1",
+      "description": "Production API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Event Schema",
+      "description": "Event type definitions and schemas"
+    },
+    {
+      "name": "Event Subscriptions",
+      "description": "Subscribe to event streams"
+    },
+    {
+      "name": "Event History",
+      "description": "Query historical events"
+    },
+    {
+      "name": "Event Replay",
+      "description": "Event replay for recovery"
+    }
+  ],
+  "paths": {
+    "/events/schemas": {
+      "get": {
+        "operationId": "listEventSchemas",
+        "summary": "List event schemas",
+        "tags": [
+          "Event Schema"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACCOUNT",
+                "TRADING",
+                "COMPLIANCE",
+                "PRIMARY",
+                "TREASURY",
+                "GOVERNANCE",
+                "SYSTEM"
+              ]
+            }
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of event schemas retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/EventSchema"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/events/schemas/{eventType}": {
+      "get": {
+        "operationId": "getEventSchema",
+        "summary": "Get event schema",
+        "tags": [
+          "Event Schema"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "eventType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "com.quub.trading.order.placed.v1"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Event schema retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EventSchema"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/events/subscriptions": {
+      "get": {
+        "operationId": "listEventSubscriptions",
+        "summary": "List event subscriptions",
+        "tags": [
+          "Event Subscriptions"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of subscriptions retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/EventSubscription"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createEventSubscription",
+        "summary": "Create event subscription",
+        "tags": [
+          "Event Subscriptions"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "write:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubscriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Subscription created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EventSubscription"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/events/subscriptions/{subscriptionId}": {
+      "get": {
+        "operationId": "getEventSubscription",
+        "summary": "Get subscription details",
+        "tags": [
+          "Event Subscriptions"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Subscription retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EventSubscription"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateEventSubscription",
+        "summary": "Update subscription",
+        "tags": [
+          "Event Subscriptions"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "write:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "eventTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Subscription updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EventSubscription"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteEventSubscription",
+        "summary": "Delete subscription",
+        "tags": [
+          "Event Subscriptions"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "admin:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "204": {
+            "$ref": "./common/responses.yaml#/components/responses/NoContentResponse"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/events": {
+      "get": {
+        "operationId": "queryEvents",
+        "summary": "Query events",
+        "tags": [
+          "Event History"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "eventType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by event type (supports wildcards)",
+            "example": "com.quub.trading.*"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "resourceId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by specific resource ID"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Events retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/DomainEvent"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/events/{eventId}": {
+      "get": {
+        "operationId": "getEvent",
+        "summary": "Get event details",
+        "tags": [
+          "Event History"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Event retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DomainEvent"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/events/replay": {
+      "post": {
+        "operationId": "replayEvents",
+        "summary": "Request event replay",
+        "tags": [
+          "Event Replay"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "write:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Replay events to a subscription endpoint. Useful for recovery scenarios\nor backfilling data after a new subscription is created.\n",
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "subscriptionId",
+                  "startTime",
+                  "endTime"
+                ],
+                "properties": {
+                  "subscriptionId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "startTime": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "endTime": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "eventTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Replay job created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ReplayJob"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/events/replay/{jobId}": {
+      "get": {
+        "summary": "Get replay job status",
+        "tags": [
+          "Event Replay"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Replay job status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ReplayJob"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        },
+        "operationId": "getReplayStatus"
+      }
+    },
+    "/orgs/{orgId}/events/deliveries": {
+      "get": {
+        "summary": "List event deliveries",
+        "tags": [
+          "Event Subscriptions"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "read:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "subscriptionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "DELIVERED",
+                "FAILED",
+                "RETRYING"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Event deliveries retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/EventDelivery"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        },
+        "operationId": "listEventDeliveries"
+      }
+    },
+    "/orgs/{orgId}/events/deliveries/{deliveryId}/retry": {
+      "post": {
+        "summary": "Retry failed delivery",
+        "tags": [
+          "Event Subscriptions"
+        ],
+        "security": [
+          {
+            "oauth2": [
+              "write:events"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "deliveryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Delivery retry initiated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EventDelivery"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "retryEventDelivery"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      }
+    },
+    "schemas": {
+      "EventSchema": {
+        "type": "object",
+        "properties": {
+          "eventType": {
+            "type": "string",
+            "example": "com.quub.trading.order.placed.v1"
+          },
+          "version": {
+            "type": "string",
+            "example": "1.0"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "ACCOUNT",
+              "TRADING",
+              "COMPLIANCE",
+              "PRIMARY",
+              "TREASURY",
+              "GOVERNANCE",
+              "SYSTEM"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "dataSchema": {
+            "type": "object",
+            "description": "JSON Schema for event data payload"
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "EventSubscription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "eventTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "com.quub.trading.*",
+              "com.quub.compliance.kyc.approved.v1"
+            ]
+          },
+          "deliveryType": {
+            "type": "string",
+            "enum": [
+              "WEBHOOK",
+              "POLLING"
+            ]
+          },
+          "webhookUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "webhookSecret": {
+            "type": "string",
+            "description": "Secret for HMAC signature verification"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateSubscriptionRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "eventTypes",
+          "deliveryType"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "eventTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deliveryType": {
+            "type": "string",
+            "enum": [
+              "WEBHOOK",
+              "POLLING"
+            ]
+          },
+          "webhookUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "DomainEvent": {
+        "type": "object",
+        "description": "CloudEvents 1.0 compliant event",
+        "required": [
+          "id",
+          "source",
+          "specversion",
+          "type",
+          "datacontenttype",
+          "time"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique event identifier"
+          },
+          "source": {
+            "type": "string",
+            "description": "Event source (service)",
+            "example": "/services/trading"
+          },
+          "specversion": {
+            "type": "string",
+            "enum": [
+              "1.0"
+            ],
+            "description": "CloudEvents version"
+          },
+          "type": {
+            "type": "string",
+            "description": "Event type",
+            "example": "com.quub.trading.order.placed.v1"
+          },
+          "datacontenttype": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Event timestamp"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject/resource the event is about",
+            "example": "/orders/123e4567-e89b-12d3-a456-426614174000"
+          },
+          "orgId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Organization ID (for multi-tenancy)"
+          },
+          "data": {
+            "type": "object",
+            "description": "Event payload (schema depends on event type)"
+          }
+        }
+      },
+      "EventDelivery": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subscriptionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "DELIVERED",
+              "FAILED",
+              "RETRYING"
+            ]
+          },
+          "attempts": {
+            "type": "integer"
+          },
+          "lastAttemptAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nextRetryAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "responseCode": {
+            "type": "integer"
+          },
+          "responseBody": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "ReplayJob": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subscriptionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "QUEUED",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "eventsTotal": {
+            "type": "integer"
+          },
+          "eventsProcessed": {
+            "type": "integer"
+          },
+          "eventsFailed": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

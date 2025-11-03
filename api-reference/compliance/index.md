@@ -9,12 +9,12 @@ service: compliance
 Compliance and regulatory services
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/compliance.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/compliance.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/compliance.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/compliance.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/compliance/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/compliance/compliance-api-documentation.html)
 

@@ -1,0 +1,565 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - Sandbox & Test Harness API",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://quub.exchange/license"
+    },
+    "description": "Provides an isolated test harness for developers and integrators.\n\n**Features**\n- Create multiple sandbox environments\n- Generate mock data for projects, orders, or accounts\n- Travel through simulated time\n- Reset or delete entire environments safely\n"
+  },
+  "servers": [
+    {
+      "url": "https://sandbox-api.quub.exchange/v1",
+      "description": "Sandbox API (Isolated Environment)"
+    }
+  ],
+  "paths": {
+    "/sandbox/envs": {
+      "get": {
+        "operationId": "listSandboxEnvironments",
+        "summary": "List sandbox environments",
+        "tags": [
+          "Sandbox"
+        ],
+        "description": "Retrieve all sandbox environments accessible to the authenticated user.",
+        "security": [
+          {
+            "oauth2": [
+              "read:sandbox"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of sandbox environments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SandboxEnvironment"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createSandboxEnvironment",
+        "summary": "Create sandbox environment",
+        "tags": [
+          "Sandbox"
+        ],
+        "description": "Create a new isolated sandbox environment for testing purposes.\nEach environment has its own ledger, accounts, and tokens.\n",
+        "security": [
+          {
+            "oauth2": [
+              "write:sandbox"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "My Project Test Env"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Sandbox environment created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SandboxEnvironment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/sandbox/envs/{envId}": {
+      "parameters": [
+        {
+          "name": "envId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "getSandboxEnvironment",
+        "summary": "Get sandbox environment details",
+        "tags": [
+          "Sandbox"
+        ],
+        "description": "Retrieve metadata about a specific sandbox environment.",
+        "security": [
+          {
+            "oauth2": [
+              "read:sandbox"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Sandbox environment details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SandboxEnvironment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteSandboxEnvironment",
+        "summary": "Delete sandbox environment",
+        "tags": [
+          "Sandbox"
+        ],
+        "description": "Permanently delete a sandbox environment and all contained test data.",
+        "security": [
+          {
+            "oauth2": [
+              "admin:sandbox"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "204": {
+            "$ref": "./common/responses.yaml#/components/responses/NoContentResponse"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/sandbox/envs/{envId}/generate-data": {
+      "post": {
+        "operationId": "generateTestData",
+        "summary": "Generate test data",
+        "tags": [
+          "Test Data"
+        ],
+        "description": "Populate the sandbox environment with mock users, projects, and trades.",
+        "security": [
+          {
+            "oauth2": [
+              "write:sandbox"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "envId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "accounts",
+                        "projects",
+                        "tokens",
+                        "orders"
+                      ]
+                    }
+                  },
+                  "count": {
+                    "type": "integer",
+                    "example": 50
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "201": {
+            "description": "Mock data generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SandboxEnvironment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/sandbox/envs/{envId}/time-travel": {
+      "post": {
+        "operationId": "setSandboxTime",
+        "summary": "Set sandbox time",
+        "tags": [
+          "Time Travel"
+        ],
+        "description": "Move forward or backward in simulated sandbox time for testing time-dependent logic.",
+        "security": [
+          {
+            "oauth2": [
+              "write:sandbox"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "envId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "timestamp"
+                ],
+                "properties": {
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-11-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Sandbox time updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SandboxEnvironment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/sandbox/envs/{envId}/reset": {
+      "post": {
+        "operationId": "resetSandboxEnvironment",
+        "summary": "Reset sandbox environment",
+        "tags": [
+          "Reset"
+        ],
+        "description": "Reset the sandbox to its initial clean state (clears all generated data).",
+        "security": [
+          {
+            "oauth2": [
+              "write:sandbox"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "envId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "./common/responses.yaml#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "./common/responses.yaml#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Sandbox environment reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SandboxEnvironment"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      }
+    },
+    "schemas": {
+      "SandboxEnvironment": {
+        "type": "object",
+        "description": "Represents an isolated sandbox environment instance.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "9d2a5a64-7e10-4a7f-b213-7e0bfc6b5e5f"
+          },
+          "name": {
+            "type": "string",
+            "example": "Dev Team Sandbox"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "PAUSED",
+              "RESETTING",
+              "DELETED"
+            ],
+            "example": "ACTIVE"
+          },
+          "currentTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-10-21T17:00:00Z"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-10-01T08:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "example": {
+              "network": "sandbox-chain",
+              "version": "v1.0.0"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Reset",
+      "description": "Reset operations"
+    },
+    {
+      "name": "Sandbox",
+      "description": "Sandbox operations"
+    },
+    {
+      "name": "Test Data",
+      "description": "Test Data operations"
+    },
+    {
+      "name": "Time Travel",
+      "description": "Time Travel operations"
+    }
+  ]
+}

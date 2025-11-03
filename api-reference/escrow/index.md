@@ -9,12 +9,12 @@ service: escrow
 Escrow and settlement services
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/escrow.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/escrow.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/escrow.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/escrow.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/escrow/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/escrow/escrow-api-documentation.html)
 

@@ -9,12 +9,12 @@ service: risk-limits
 Risk management and limit controls
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/risk-limits.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/risk-limits.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/risk-limits.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/risk-limits.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/risk-limits/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/risk-limits/risk-limits-api-documentation.html)
 

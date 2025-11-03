@@ -9,12 +9,12 @@ service: identity
 User and organization identity management
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/identity.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/identity.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/identity.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/identity.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/identity/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/identity/identity-api-documentation.html)
 

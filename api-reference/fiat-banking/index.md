@@ -9,12 +9,12 @@ service: fiat-banking
 Fiat currency banking operations
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/fiat-banking.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/fiat-banking.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/fiat-banking.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/fiat-banking.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/fiat-banking/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/fiat-banking/fiat-banking-api-documentation.html)
 

@@ -9,12 +9,12 @@ service: primary-market
 Primary market operations and issuance
 
 <div class="api-explorer">
-  <redoc spec-url="{{ site.baseurl }}/openapi/primary-market.yaml"></redoc>
+  <redoc spec-url="{{ site.baseurl }}/openapi/primary-market.json"></redoc>
 </div>
 
 ## Quick Links
 
-- [OpenAPI Specification]({{ site.baseurl }}/openapi/primary-market.yaml)
+- [OpenAPI Specification]({{ site.baseurl }}/openapi/primary-market.json)
 - [Use Cases Documentation]({{ site.baseurl }}/use-cases/primary-market/)
 - [Integration Guide]({{ site.baseurl }}/use-cases/primary-market/primary-market-api-documentation.html)
 

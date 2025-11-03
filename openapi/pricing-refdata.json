@@ -1,0 +1,463 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - Pricing & Reference Data API",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://quub.exchange/license"
+    },
+    "description": "Provides access to reference and pricing data used across the Quub Exchange ecosystem,\nincluding symbols, indices, and foreign exchange rates.\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.quub.exchange/v1",
+      "description": "Production API"
+    }
+  ],
+  "paths": {
+    "/refdata/symbols": {
+      "get": {
+        "summary": "List symbols",
+        "operationId": "listSymbols",
+        "tags": [
+          "Symbols"
+        ],
+        "description": "Retrieve a list of all supported trading symbols and their metadata.",
+        "security": [
+          {
+            "oauth2": [
+              "read:pricing"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "assetClass",
+            "in": "query",
+            "description": "Filter by asset class (e.g., EQUITY, CRYPTO, COMMODITY)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "baseAsset",
+            "in": "query",
+            "description": "Filter by base asset code",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "quoteAsset",
+            "in": "query",
+            "description": "Filter by quote asset code",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of symbols",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Symbol"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/refdata/symbols/{symbol}": {
+      "get": {
+        "summary": "Get symbol details",
+        "operationId": "getSymbol",
+        "tags": [
+          "Symbols"
+        ],
+        "description": "Retrieve metadata and reference information for a specific symbol.",
+        "security": [
+          {
+            "oauth2": [
+              "read:pricing"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "description": "Trading symbol code (e.g., BTC-USD)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "Symbol details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Symbol"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/refdata/fx-rates": {
+      "get": {
+        "summary": "Get FX rates",
+        "operationId": "getFxRates",
+        "tags": [
+          "FX Rates"
+        ],
+        "description": "Retrieve current and recent historical foreign exchange rates.",
+        "security": [
+          {
+            "oauth2": [
+              "read:pricing"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "base",
+            "in": "query",
+            "description": "Base currency code (e.g., USD)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "quote",
+            "in": "query",
+            "description": "Quote currency code (e.g., EUR)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "description": "Optional start timestamp for historical retrieval",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "FX rates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/FxRate"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/refdata/indices": {
+      "get": {
+        "summary": "List indices",
+        "operationId": "listIndices",
+        "tags": [
+          "Indices"
+        ],
+        "description": "Retrieve reference information for supported indices (e.g., market or crypto indices).",
+        "security": [
+          {
+            "oauth2": [
+              "read:pricing"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter by index type (e.g., MARKET, CRYPTO, DEFI)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          },
+          "200": {
+            "description": "List of indices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Index"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      }
+    },
+    "schemas": {
+      "Symbol": {
+        "type": "object",
+        "description": "Reference data for a tradable symbol.",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "example": "BTC-USD"
+          },
+          "name": {
+            "type": "string",
+            "example": "Bitcoin / US Dollar"
+          },
+          "baseAsset": {
+            "type": "string",
+            "example": "BTC"
+          },
+          "quoteAsset": {
+            "type": "string",
+            "example": "USD"
+          },
+          "assetClass": {
+            "type": "string",
+            "example": "CRYPTO"
+          },
+          "tradingHours": {
+            "type": "string",
+            "example": "24/7"
+          },
+          "tickSize": {
+            "type": "number",
+            "example": 0.01
+          },
+          "precision": {
+            "type": "integer",
+            "example": 2
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FxRate": {
+        "type": "object",
+        "description": "Real-time or historical FX rate entry.",
+        "properties": {
+          "baseCurrency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "quoteCurrency": {
+            "type": "string",
+            "example": "EUR"
+          },
+          "rate": {
+            "type": "number",
+            "format": "float",
+            "example": 0.9213
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source": {
+            "type": "string",
+            "example": "ECB"
+          }
+        }
+      },
+      "Index": {
+        "type": "object",
+        "description": "Reference data for a market or composite index.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "Quub Global Digita"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "FX Rates",
+      "description": "Fx Rates operations"
+    },
+    {
+      "name": "Indices",
+      "description": "Indices operations"
+    },
+    {
+      "name": "Symbols",
+      "description": "Symbols operations"
+    }
+  ]
+}

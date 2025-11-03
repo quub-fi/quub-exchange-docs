@@ -1,0 +1,504 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Quub Exchange - Analytics & Reports API",
+    "version": "2.0.0",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://quub.exchange/license"
+    },
+    "description": "Provides account statements, tax reports, regulatory disclosures, and\naggregated analytics dashboards for organizations and investors.\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.quub.exchange/v2",
+      "description": "Production API"
+    },
+    {
+      "url": "https://sandbox.quub.exchange/v2",
+      "description": "Sandbox API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Statements",
+      "description": "Account and distribution statements."
+    },
+    {
+      "name": "Tax Reports",
+      "description": "Tax filings and downloadable forms."
+    },
+    {
+      "name": "Regulatory Reports",
+      "description": "Compliance and audit disclosures."
+    },
+    {
+      "name": "Analytics",
+      "description": "KPIs and financial dashboards."
+    }
+  ],
+  "paths": {
+    "/orgs/{orgId}/reports/statements": {
+      "get": {
+        "summary": "List account statements",
+        "tags": [
+          "Statements"
+        ],
+        "operationId": "listStatements",
+        "security": [
+          {
+            "oauth2": [
+              "read:analytics"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of statements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Statement"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/reports/tax": {
+      "get": {
+        "summary": "Generate or retrieve tax reports",
+        "tags": [
+          "Tax Reports"
+        ],
+        "operationId": "getTaxReport",
+        "security": [
+          {
+            "oauth2": [
+              "read:analytics"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "en",
+                "ar",
+                "fr"
+              ]
+            },
+            "description": "Localized report language."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tax report data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaxReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/reports/regulatory": {
+      "get": {
+        "summary": "List regulatory reports",
+        "tags": [
+          "Regulatory Reports"
+        ],
+        "operationId": "listRegulatoryReports",
+        "security": [
+          {
+            "oauth2": [
+              "read:analytics"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/cursor"
+          },
+          {
+            "$ref": "./common/pagination.yaml#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of regulatory reports",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "./common/pagination.yaml#/components/schemas/PageResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/RegulatoryReport"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/orgs/{orgId}/analytics/dashboard": {
+      "get": {
+        "summary": "Get analytics dashboard KPIs",
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getAnalyticsDashboard",
+        "security": [
+          {
+            "oauth2": [
+              "read:analytics"
+            ]
+          },
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgId"
+          },
+          {
+            "$ref": "./common/components.yaml#/components/parameters/orgIdHeader"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DAILY",
+                "WEEKLY",
+                "MONTHLY",
+                "QUARTERLY",
+                "YEARLY"
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analytics dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsDashboard"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./common/responses.yaml#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./common/responses.yaml#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./common/responses.yaml#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./common/responses.yaml#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "./common/responses.yaml#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "./common/responses.yaml#/components/responses/InternalServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/bearerAuth"
+      },
+      "oauth2": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/oauth2"
+      },
+      "apiKey": {
+        "$ref": "./common/components.yaml#/components/securitySchemes/apiKey"
+      }
+    },
+    "schemas": {
+      "Statement": {
+        "type": "object",
+        "description": "Account statement record.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "period": {
+            "type": "string",
+            "example": "2025-Q1"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "PDF",
+              "CSV",
+              "JSON"
+            ]
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "TaxReport": {
+        "type": "object",
+        "description": "Tax report for a specific year.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "jurisdiction": {
+            "type": "string",
+            "example": "US"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "PDF",
+              "XML",
+              "JSON"
+            ]
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "RegulatoryReport": {
+        "type": "object",
+        "description": "Regulatory disclosure or filing.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "AML",
+              "KYC",
+              "AUDIT",
+              "COMPLIANCE"
+            ]
+          },
+          "issuedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "AnalyticsDashboard": {
+        "type": "object",
+        "description": "Aggregated KPIs and metrics.",
+        "properties": {
+          "totalInvested": {
+            "type": "number",
+            "example": 15893200.25
+          },
+          "activeInvestors": {
+            "type": "integer",
+            "example": 1275
+          },
+          "distributionsYTD": {
+            "type": "number",
+            "example": 1835000
+          },
+          "roiYTD": {
+            "type": "number",
+            "format": "float",
+            "example": 7.8
+          },
+          "projectsByStatus": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "example": {
+                "ACTIVE": 12,
+                "CLOSED": 4
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
