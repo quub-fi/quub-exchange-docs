@@ -108,7 +108,8 @@
 
     <script>
         // Initialize Redoc with the OpenAPI spec
-        const specUrl = '{{ "/openapi/" | relative_url }}{{ page.api }}.json';
+        const baseUrl = window.location.origin;
+        const specUrl = baseUrl + '/quub-exchange-docs/openapi/{{ page.api }}.json';
         console.log('Loading OpenAPI spec from:', specUrl);
 
         Redoc.init(
@@ -142,7 +143,7 @@
                     <h2 style="color: #ef4444;">Failed to Load API Specification</h2>
                     <p>Could not load: <code>${specUrl}</code></p>
                     <p style="color: #6b7280;">Please check the console for more details.</p>
-                    <a href="{{ "/openapi/" | relative_url }}{{ page.api }}.json" target="_blank" style="color: #6366f1;">View Raw Specification</a>
+                    <a href="/quub-exchange-docs/openapi/{{ page.api }}.json" target="_blank" style="color: #6366f1;">View Raw Specification</a>
                 </div>
             `;
         });
