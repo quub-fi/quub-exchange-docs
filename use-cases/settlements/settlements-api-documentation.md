@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: Settlement & Clearing API Documentation
 service: settlements
 ---

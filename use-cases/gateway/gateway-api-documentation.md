@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: gateway API Documentation
 service: gateway
 ---

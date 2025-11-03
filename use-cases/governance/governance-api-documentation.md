@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: governance API Documentation
 service: governance
 ---

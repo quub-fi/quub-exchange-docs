@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: risk-limits API Documentation
 service: risk-limits
 ---

@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: notifications API Documentation
 service: notifications
 ---

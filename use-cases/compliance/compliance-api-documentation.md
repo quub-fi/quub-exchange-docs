@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: compliance API Documentation
 service: compliance
 ---

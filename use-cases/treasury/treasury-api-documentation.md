@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: treasury API Documentation
 service: treasury
 ---

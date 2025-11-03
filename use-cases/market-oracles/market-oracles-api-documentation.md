@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: market-oracles API Documentation
 service: market-oracles
 ---

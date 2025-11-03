@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: escrow API Documentation
 service: escrow
 ---

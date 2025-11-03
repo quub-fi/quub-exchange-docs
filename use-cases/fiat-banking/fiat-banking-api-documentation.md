@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: fiat-banking API Documentation
 service: fiat-banking
 ---

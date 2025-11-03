@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: custodian API Documentation
 service: custodian
 ---

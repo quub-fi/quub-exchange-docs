@@ -1,5 +1,5 @@
 ---
-layout: use-case
+layout: docs
 title: transfer-agent API Documentation
 service: transfer-agent
 ---
