@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/transfer-agent/
+permalink: /use-cases/transfer-agent/transfer-agent-api-documentation/
 title: transfer-agent API Documentation
 service: transfer-agent
 ---

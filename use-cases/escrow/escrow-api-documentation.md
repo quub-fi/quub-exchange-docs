@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/escrow/
+permalink: /use-cases/escrow/escrow-api-documentation/
 title: escrow API Documentation
 service: escrow
 ---

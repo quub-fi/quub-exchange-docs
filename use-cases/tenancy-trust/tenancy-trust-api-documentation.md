@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/tenancy-trust/
+permalink: /use-cases/tenancy-trust/tenancy-trust-api-documentation/
 title: tenancy-trust API Documentation
 service: tenancy-trust
 ---

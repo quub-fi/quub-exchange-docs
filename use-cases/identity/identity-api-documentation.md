@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/identity/
+permalink: /use-cases/identity/identity-api-documentation/
 title: identity API Documentation
 service: identity
 ---

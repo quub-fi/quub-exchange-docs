@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/treasury/
+permalink: /use-cases/treasury/treasury-api-documentation/
 title: treasury API Documentation
 service: treasury
 ---

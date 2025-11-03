@@ -1,6 +1,6 @@
 ---
 layout: use-case
-permalink: /use-cases/chain/
+permalink: /use-cases/chain/chain-api-documentation/
 ---
 
 # Blockchain Integration API Documentation

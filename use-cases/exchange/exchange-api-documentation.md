@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/exchange/
+permalink: /use-cases/exchange/exchange-api-documentation/
 title: exchange API Documentation
 service: exchange
 ---

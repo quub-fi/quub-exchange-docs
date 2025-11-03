@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/settlements/
+permalink: /use-cases/settlements/settlements-api-documentation/
 title: Settlement & Clearing API Documentation
 service: settlements
 ---
