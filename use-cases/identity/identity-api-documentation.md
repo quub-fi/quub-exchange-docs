@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: identity API Documentation
 service: identity
 ---

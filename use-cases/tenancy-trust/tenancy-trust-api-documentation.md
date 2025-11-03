@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: tenancy-trust API Documentation
 service: tenancy-trust
 ---

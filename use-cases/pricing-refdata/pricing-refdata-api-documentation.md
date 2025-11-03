@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: pricing-refdata API Documentation
 service: pricing-refdata
 ---

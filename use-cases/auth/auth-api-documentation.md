@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: auth API Documentation
 service: auth
 ---

@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: documents API Documentation
 service: documents
 ---

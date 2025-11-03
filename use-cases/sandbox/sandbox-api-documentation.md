@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: sandbox API Documentation
 service: sandbox
 ---

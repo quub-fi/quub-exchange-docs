@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: events API Documentation
 service: events
 ---

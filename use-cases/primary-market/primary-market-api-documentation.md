@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: primary-market API Documentation
 service: primary-market
 ---

@@ -1,0 +1,129 @@
+---
+layout: default
+---
+
+<style>
+  .use-case-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .use-case-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .use-case-header h1 {
+    margin: 0 0 1rem 0;
+    font-size: 2.5rem;
+  }
+
+  .use-case-header p {
+    margin: 0;
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+
+  .use-case-nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .use-case-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border: 2px solid #667eea;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #667eea;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .use-case-nav-link:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+
+  .use-case-nav-link.active {
+    background: #667eea;
+    color: white;
+  }
+
+  .use-case-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .use-case-content h2 {
+    color: #667eea;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f0f0f0;
+  }
+
+  .use-case-content h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+</style>
+
+<div class="use-case-container">
+  {% if page.service %}
+  <div class="use-case-header">
+    <h1>{{ page.title }}</h1>
+    <p>{{ page.description }}</p>
+  </div>
+
+  <div class="use-case-nav">
+    <a
+      href="{{ '/api-reference/' | append: page.service | append: '/' | relative_url }}"
+      class="use-case-nav-link"
+    >
+      <i class="fas fa-book-open"></i>
+      Interactive API Reference
+    </a>
+    <a
+      href="{{ '/use-cases/' | append: page.service | append: '/' | append: page.service | append: '-overview/' | relative_url }}"
+      class="use-case-nav-link {% if page.url contains '-overview' %}active{% endif %}"
+    >
+      <i class="fas fa-map"></i>
+      Use Case Overview
+    </a>
+    <a
+      href="{{ '/use-cases/' | append: page.service | append: '/' | append: page.service | append: '-api-documentation/' | relative_url }}"
+      class="use-case-nav-link {% if page.url contains '-api-documentation' %}active{% endif %}"
+    >
+      <i class="fas fa-file-alt"></i>
+      Implementation Guide
+    </a>
+    <a
+      href="{{ '/openapi/' | append: page.service | append: '.json' | relative_url }}"
+      class="use-case-nav-link"
+      download
+    >
+      <i class="fas fa-download"></i>
+      Download Spec
+    </a>
+  </div>
+  {% endif %}
+
+  <div class="use-case-content">{{ content }}</div>
+</div>

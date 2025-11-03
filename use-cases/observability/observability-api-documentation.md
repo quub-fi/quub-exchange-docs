@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: observability API Documentation
 service: observability
 ---

@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: marketplace API Documentation
 service: marketplace
 ---

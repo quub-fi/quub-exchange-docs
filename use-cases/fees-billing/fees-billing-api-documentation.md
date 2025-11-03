@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: fees-billing API Documentation
 service: fees-billing
 ---

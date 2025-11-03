@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: use-case
 title: exchange API Documentation
 service: exchange
 ---
