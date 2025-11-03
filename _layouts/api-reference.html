@@ -1,35 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-    <meta name="description" content="{{ page.description | default: site.description }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} - {{ site.title }}</title>
+  <meta name="description" content="{{ page.description }}">
 
-    <!-- Redoc for API Documentation -->
-    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ '/assets/css/docs.css' | relative_url }}">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Redoc -->
+  <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ '/assets/css/docs.css' | relative_url }}">
+  <style>
+    /* Override default body styles for full-width Redoc */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
 
-    <style>
-        .api-container {
-            height: calc(100vh - 60px);
-            overflow: hidden;
-        }
+    .redoc-wrap {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: auto;
+    }
 
-        #redoc-container {
-            height: 100%;
-        }
-    </style>
+    /* Ensure Redoc content is scrollable */
+    redoc {
+      display: block;
+      height: 100%;
+      overflow: auto;
+    }
+  </style>
 </head>
 <body>
     <!-- Top Navigation Bar -->
