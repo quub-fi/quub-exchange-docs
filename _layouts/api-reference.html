@@ -108,8 +108,11 @@
 
     <script>
         // Initialize Redoc with the OpenAPI spec
+        const specUrl = '{{ "/openapi/" | relative_url }}{{ page.api }}.json';
+        console.log('Loading OpenAPI spec from:', specUrl);
+
         Redoc.init(
-            '{{ site.baseurl }}/openapi/{{ page.api }}.json',
+            specUrl,
             {
                 scrollYOffset: 60,
                 hideDownloadButton: false,
@@ -132,7 +135,17 @@
                 }
             },
             document.getElementById('redoc-container')
-        );
+        ).catch(error => {
+            console.error('Failed to load API specification:', error);
+            document.getElementById('redoc-container').innerHTML = `
+                <div style="padding: 40px; text-align: center; font-family: Inter, sans-serif;">
+                    <h2 style="color: #ef4444;">Failed to Load API Specification</h2>
+                    <p>Could not load: <code>${specUrl}</code></p>
+                    <p style="color: #6b7280;">Please check the console for more details.</p>
+                    <a href="{{ "/openapi/" | relative_url }}{{ page.api }}.json" target="_blank" style="color: #6366f1;">View Raw Specification</a>
+                </div>
+            `;
+        });
     </script>
 </body>
 </html>
