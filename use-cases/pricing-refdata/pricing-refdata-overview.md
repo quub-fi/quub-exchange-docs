@@ -58,5 +58,6 @@ Pricing and reference data operations are defined in:
 - Market data integration patterns
 
 ---
+permalink: /use-cases/pricing-refdata/pricing-refdata-overview/
 
 *Enterprise-grade pricing and reference data with institutional accuracy standards.*

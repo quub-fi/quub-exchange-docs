@@ -58,5 +58,6 @@ Document management operations are defined in:
 - Compliance documentation requirements
 
 ---
+permalink: /use-cases/documents/documents-overview/
 
 *Enterprise document management with secure storage and comprehensive audit capabilities.*

@@ -58,5 +58,6 @@ Settlement operations are defined in:
 - Cross-chain settlement patterns
 
 ---
+permalink: /use-cases/settlements/settlements-overview/
 
 *Institutional-grade settlement and clearing with comprehensive risk management.*

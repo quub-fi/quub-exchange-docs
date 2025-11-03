@@ -58,5 +58,6 @@ Gateway operations are defined in:
 - Security protocol specifications
 
 ---
+permalink: /use-cases/gateway/gateway-overview/
 
 *Enterprise payment gateway with advanced fraud detection and global payment support.*

@@ -59,5 +59,6 @@ Event operations are defined in:
 - Stream processing patterns
 
 ---
+permalink: /use-cases/events/events-overview/
 
 *Event-driven architecture with reliable messaging and real-time stream processing.*

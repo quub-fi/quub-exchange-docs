@@ -58,5 +58,6 @@ Governance operations are defined in:
 - Stakeholder engagement guides
 
 ---
+permalink: /use-cases/governance/governance-overview/
 
 *Transparent platform governance with democratic voting and stakeholder participation.*

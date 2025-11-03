@@ -58,5 +58,6 @@ Fees and billing operations are defined in:
 - Payment processing flows
 
 ---
+permalink: /use-cases/fees-billing/fees-billing-overview/
 
 *Sophisticated fee management with dynamic pricing and automated billing operations.*

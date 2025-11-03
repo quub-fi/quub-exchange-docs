@@ -59,5 +59,6 @@ Marketplace operations are defined in:
 - Market surveillance and compliance workflows
 
 ---
+permalink: /use-cases/marketplace/marketplace-overview/
 
 *Secondary market operations built for institutional liquidity and retail accessibility.*

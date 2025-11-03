@@ -58,5 +58,6 @@ Primary market operations are defined in:
 - Integration testing strategies
 
 ---
+permalink: /use-cases/primary-market/primary-market-overview/
 
 *Primary market operations designed for institutional-grade compliance and transparency.*

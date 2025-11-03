@@ -58,5 +58,6 @@ Analytics and reporting operations are defined in:
 - Data pipeline documentation
 
 ---
+permalink: /use-cases/analytics-reports/analytics-reports-overview/
 
 *Comprehensive business intelligence with real-time analytics and automated reporting.*
