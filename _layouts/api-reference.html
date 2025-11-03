@@ -109,7 +109,9 @@
     <script>
         // Initialize Redoc with the OpenAPI spec
         const baseUrl = window.location.origin;
-        const specUrl = baseUrl + '/quub-exchange-docs/openapi/{{ page.api }}.json';
+        const serviceName = '{{ page.service }}' || '{{ page.api }}';
+        const specUrl = baseUrl + '/quub-exchange-docs/openapi/' + serviceName + '.json';
+        console.log('Service name:', serviceName);
         console.log('Loading OpenAPI spec from:', specUrl);
 
         Redoc.init(
