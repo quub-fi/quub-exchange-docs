@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/treasury/treasury-overview/
+---
+
 # Treasury Management
 
 This directory contains documentation for treasury operations including asset allocation, liquidity management, and yield optimization strategies.
@@ -57,7 +62,5 @@ Treasury operations are defined in:
 - Risk management frameworks
 - Yield optimization protocols
 
----
-permalink: /use-cases/treasury/treasury-overview/
 
 *Institutional treasury management with sophisticated risk controls and yield optimization.*

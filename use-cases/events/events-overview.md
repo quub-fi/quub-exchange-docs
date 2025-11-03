@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/events/events-overview/
+---
+
 # Event Sourcing & Message Handling
 
 This directory contains documentation for event sourcing, message queues, and event-driven architecture including real-time event processing and stream analytics.
@@ -58,7 +63,5 @@ Event operations are defined in:
 - CQRS implementation guides
 - Stream processing patterns
 
----
-permalink: /use-cases/events/events-overview/
 
 *Event-driven architecture with reliable messaging and real-time stream processing.*

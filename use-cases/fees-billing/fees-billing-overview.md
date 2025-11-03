@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/fees-billing/fees-billing-overview/
+---
+
 # Fees & Billing Management
 
 This directory contains documentation for fee structures, billing systems, and revenue management including dynamic pricing, commission tracking, and automated billing.
@@ -57,7 +62,5 @@ Fees and billing operations are defined in:
 - Revenue optimization strategies
 - Payment processing flows
 
----
-permalink: /use-cases/fees-billing/fees-billing-overview/
 
 *Sophisticated fee management with dynamic pricing and automated billing operations.*

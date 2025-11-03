@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/exchange/exchange-overview/
+---
+
 # Exchange Operations
 
 This directory contains documentation for core exchange functionality including trading, order management, and market operations.
@@ -62,7 +67,5 @@ Exchange operations are defined in:
 - Risk management workflows
 - Market data flow documentation
 
----
-permalink: /use-cases/exchange/exchange-overview/
 
 *Core exchange operations with institutional-grade security and multi-tenant isolation.*

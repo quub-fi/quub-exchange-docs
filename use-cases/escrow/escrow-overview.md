@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/escrow/escrow-overview/
+---
+
 # Escrow Services
 
 This directory contains documentation for escrow services including smart contract escrow, traditional escrow, and automated settlement mechanisms.
@@ -57,7 +62,5 @@ Escrow operations are defined in:
 - Dispute resolution procedures
 - Integration patterns
 
----
-permalink: /use-cases/escrow/escrow-overview/
 
 *Secure escrow services with smart contract automation and legal compliance.*

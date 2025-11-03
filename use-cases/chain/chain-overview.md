@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/chain/chain-overview/
+---
+
 # Blockchain Integration
 
 This directory contains documentation for blockchain integration including smart contracts, cross-chain protocols, and decentralized finance (DeFi) connectivity.
@@ -57,7 +62,5 @@ Blockchain operations are defined in:
 - Cross-chain integration patterns
 - DeFi protocol documentation
 
----
-permalink: /use-cases/chain/chain-overview/
 
 *Comprehensive blockchain integration with multi-chain support and DeFi connectivity.*

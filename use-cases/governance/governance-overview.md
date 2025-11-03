@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/governance/governance-overview/
+---
+
 # Platform Governance
 
 This directory contains documentation for platform governance including voting mechanisms, proposal systems, and decentralized governance protocols.
@@ -57,7 +62,5 @@ Governance operations are defined in:
 - Proposal workflow processes
 - Stakeholder engagement guides
 
----
-permalink: /use-cases/governance/governance-overview/
 
 *Transparent platform governance with democratic voting and stakeholder participation.*

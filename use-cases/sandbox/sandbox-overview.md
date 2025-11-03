@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/sandbox/sandbox-overview/
+---
+
 # Development Sandbox
 
 This directory contains documentation for development sandbox environments including testing frameworks, simulation tools, and development utilities.
@@ -57,7 +62,5 @@ Sandbox operations are defined in:
 - Environment provisioning guides
 - Simulation tool specifications
 
----
-permalink: /use-cases/sandbox/sandbox-overview/
 
 *Comprehensive development sandbox with testing frameworks and simulation capabilities.*

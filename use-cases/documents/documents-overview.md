@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/documents/documents-overview/
+---
+
 # Document Management & Audit Trails
 
 This directory contains documentation for document management including secure storage, version control, and comprehensive audit trail systems.
@@ -57,7 +62,5 @@ Document management operations are defined in:
 - Audit trail procedures
 - Compliance documentation requirements
 
----
-permalink: /use-cases/documents/documents-overview/
 
 *Enterprise document management with secure storage and comprehensive audit capabilities.*

@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/gateway/gateway-overview/
+---
+
 # Payment Gateway Services
 
 This directory contains documentation for payment gateway operations including payment processing, fraud detection, and multi-channel payment support.
@@ -57,7 +62,5 @@ Gateway operations are defined in:
 - Integration patterns documentation
 - Security protocol specifications
 
----
-permalink: /use-cases/gateway/gateway-overview/
 
 *Enterprise payment gateway with advanced fraud detection and global payment support.*

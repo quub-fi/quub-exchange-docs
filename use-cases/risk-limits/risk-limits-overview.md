@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/risk-limits/risk-limits-overview/
+---
+
 # Risk Management & Limits
 
 This directory contains documentation for risk management including position limits, exposure monitoring, and automated risk controls.
@@ -57,7 +62,5 @@ Risk management operations are defined in:
 - Stress testing procedures
 - Risk monitoring dashboards
 
----
-permalink: /use-cases/risk-limits/risk-limits-overview/
 
 *Institutional risk management with real-time monitoring and automated controls.*

@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/compliance/compliance-overview/
+---
+
 # Regulatory Compliance
 
 This directory contains documentation for regulatory compliance including automated reporting, policy enforcement, and multi-jurisdiction compliance frameworks.
@@ -57,7 +62,5 @@ Compliance operations are defined in:
 - Policy enforcement procedures
 - Multi-jurisdiction compliance guides
 
----
-permalink: /use-cases/compliance/compliance-overview/
 
 *Comprehensive regulatory compliance with automated reporting and global framework support.*

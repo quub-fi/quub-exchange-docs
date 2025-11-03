@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/pricing-refdata/pricing-refdata-overview/
+---
+
 # Pricing & Reference Data
 
 This directory contains documentation for pricing engines, reference data management, and market data services.
@@ -57,7 +62,5 @@ Pricing and reference data operations are defined in:
 - Data quality and validation processes
 - Market data integration patterns
 
----
-permalink: /use-cases/pricing-refdata/pricing-refdata-overview/
 
 *Enterprise-grade pricing and reference data with institutional accuracy standards.*

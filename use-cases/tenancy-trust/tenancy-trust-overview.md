@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/tenancy-trust/tenancy-trust-overview/
+---
+
 # Multi-Tenant Trust & Isolation
 
 This directory contains documentation for multi-tenant trust mechanisms, data isolation strategies, and tenant security frameworks.
@@ -57,7 +62,5 @@ Tenancy trust operations are defined in:
 - Trust framework documentation
 - Security policy configuration
 
----
-permalink: /use-cases/tenancy-trust/tenancy-trust-overview/
 
 *Enterprise multi-tenancy with complete data isolation and comprehensive trust frameworks.*

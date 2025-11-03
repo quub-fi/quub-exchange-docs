@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/analytics-reports/analytics-reports-overview/
+---
+
 # Analytics & Reporting
 
 This directory contains documentation for business intelligence, analytics engines, and comprehensive reporting systems including real-time dashboards and regulatory reports.
@@ -57,7 +62,5 @@ Analytics and reporting operations are defined in:
 - Dashboard configuration guides
 - Data pipeline documentation
 
----
-permalink: /use-cases/analytics-reports/analytics-reports-overview/
 
 *Comprehensive business intelligence with real-time analytics and automated reporting.*

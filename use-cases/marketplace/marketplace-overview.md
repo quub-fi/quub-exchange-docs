@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/marketplace/marketplace-overview/
+---
+
 # Marketplace Operations
 
 This directory contains documentation for secondary market functionality including peer-to-peer trading, liquidity provision, and marketplace operations.
@@ -58,7 +63,5 @@ Marketplace operations are defined in:
 - Liquidity provision strategies
 - Market surveillance and compliance workflows
 
----
-permalink: /use-cases/marketplace/marketplace-overview/
 
 *Secondary market operations built for institutional liquidity and retail accessibility.*

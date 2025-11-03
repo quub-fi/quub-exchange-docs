@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/notifications/notifications-overview/
+---
+
 # Notification & Communication Services
 
 This directory contains documentation for notification systems, communication channels, and messaging services including real-time alerts and multi-channel delivery.
@@ -57,7 +62,5 @@ Notification operations are defined in:
 - Personalization engine documentation
 - Delivery optimization strategies
 
----
-permalink: /use-cases/notifications/notifications-overview/
 
 *Comprehensive notification system with multi-channel delivery and intelligent routing.*

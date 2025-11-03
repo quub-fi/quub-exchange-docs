@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/settlements/settlements-overview/
+---
+
 # Trade Settlement & Clearing
 
 This directory contains documentation for trade settlement and clearing operations including real-time settlement, clearing protocols, and counterparty risk management.
@@ -57,7 +62,5 @@ Settlement operations are defined in:
 - Risk management frameworks
 - Cross-chain settlement patterns
 
----
-permalink: /use-cases/settlements/settlements-overview/
 
 *Institutional-grade settlement and clearing with comprehensive risk management.*

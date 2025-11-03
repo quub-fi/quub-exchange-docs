@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/identity/identity-overview/
+---
+
 # Digital Identity Management
 
 This directory contains documentation for digital identity services including KYC/AML processes, identity verification, and credential management.
@@ -57,7 +62,5 @@ Identity operations are defined in:
 - Biometric authentication flows
 - Compliance validation procedures
 
----
-permalink: /use-cases/identity/identity-overview/
 
 *Comprehensive digital identity management with automated KYC/AML and regulatory compliance.*

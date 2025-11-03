@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/observability/observability-overview/
+---
+
 # System Observability & Monitoring
 
 This directory contains documentation for system monitoring, observability tools, and operational intelligence including metrics, logging, and alerting systems.
@@ -57,7 +62,5 @@ Observability operations are defined in:
 - Alerting rule documentation
 - Incident response procedures
 
----
-permalink: /use-cases/observability/observability-overview/
 
 *Enterprise observability with comprehensive monitoring and intelligent operational insights.*

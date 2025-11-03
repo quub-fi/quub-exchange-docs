@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/primary-market/primary-market-overview/
+---
+
 # Primary Market Operations
 
 This directory contains documentation for primary market functionality including initial token offerings, subscriptions, and primary issuance operations.
@@ -57,7 +62,5 @@ Primary market operations are defined in:
 - Regulatory compliance workflows
 - Integration testing strategies
 
----
-permalink: /use-cases/primary-market/primary-market-overview/
 
 *Primary market operations designed for institutional-grade compliance and transparency.*

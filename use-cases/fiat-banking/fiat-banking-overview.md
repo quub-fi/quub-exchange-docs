@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/fiat-banking/fiat-banking-overview/
+---
+
 # Fiat Banking Integration
 
 This directory contains documentation for traditional banking integration including wire transfers, ACH processing, and international payment rails.
@@ -57,7 +62,5 @@ Fiat banking operations are defined in:
 - Compliance procedures
 - International transfer protocols
 
----
-permalink: /use-cases/fiat-banking/fiat-banking-overview/
 
 *Comprehensive fiat banking integration with global reach and regulatory compliance.*

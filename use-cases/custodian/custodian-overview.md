@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/custodian/custodian-overview/
+---
+
 # Digital Asset Custody
 
 This directory contains documentation for digital asset custody services including secure storage, key management, and institutional-grade security protocols.
@@ -57,7 +62,5 @@ Custody operations are defined in:
 - Security protocol documentation
 - Emergency response procedures
 
----
-permalink: /use-cases/custodian/custodian-overview/
 
 *Bank-grade digital asset custody with institutional security and regulatory compliance.*

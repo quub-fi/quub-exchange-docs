@@ -1,3 +1,8 @@
+---
+layout: use-case
+permalink: /use-cases/transfer-agent/transfer-agent-overview/
+---
+
 # Transfer Agent Services
 
 This directory contains documentation for transfer agent operations including shareholder registry, corporate actions, and asset transfer services.
@@ -57,7 +62,5 @@ Transfer agent operations are defined in:
 - Registry management procedures
 - Compliance validation frameworks
 
----
-permalink: /use-cases/transfer-agent/transfer-agent-overview/
 
 *Professional transfer agent services with full regulatory compliance and automation.*
