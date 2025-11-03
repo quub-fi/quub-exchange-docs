@@ -21,7 +21,7 @@
     <!-- Primary Links (Left/Center) -->
     <div style="display: flex; gap: 16px; flex-wrap: wrap; flex: 1">
       <a
-        href="{{ site.baseurl }}/capabilities/{{ page.service }}/{{ page.service }}-overview/"
+        href="{{ '/capabilities/' | append: page.service | append: '/' | append: page.service | append: '-overview/' | relative_url }}"
         style="
           background: white;
           color: #667eea;
@@ -50,7 +50,7 @@
         </div>
       </a>
       <a
-        href="{{ site.baseurl }}/capabilities/{{ page.service }}/{{ page.service }}-api-documentation/"
+        href="{{ '/capabilities/' | append: page.service | append: '/' | append: page.service | append: '-api-documentation/' | relative_url }}"
         style="
           background: white;
           color: #667eea;
