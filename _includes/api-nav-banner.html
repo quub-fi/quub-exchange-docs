@@ -21,20 +21,23 @@
   }
 
   .nav-link {
-    color: #ffffff;
-    text-decoration: none;
+    color: #ffffff !important;
+    text-decoration: none !important;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     padding: 6px 12px;
     border-radius: 6px;
     transition: all 0.2s;
     border-bottom: 2px solid transparent;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
-  .nav-link:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-bottom-color: rgba(255, 255, 255, 0.9);
+  .nav-link:hover,
+  .nav-link:focus {
+    background: rgba(255, 255, 255, 0.25);
+    border-bottom-color: transparent;
+    text-decoration: none !important;
+    outline: none;
   }
 
   .download-links {
@@ -44,29 +47,32 @@
   }
 
   .download-label {
-    color: rgba(255, 255, 255, 0.9);
+    color: #ffffff;
     font-size: 12px;
     margin-right: 4px;
-    font-weight: 500;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
   .download-link {
-    color: #ffffff;
-    text-decoration: none;
+    color: #ffffff !important;
+    text-decoration: none !important;
     font-size: 12px;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.2);
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.25);
     transition: all 0.2s;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
-  .download-link:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+  .download-link:hover,
+  .download-link:focus {
+    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.6);
+    text-decoration: none !important;
+    outline: none;
   }
 
   @media (max-width: 768px) {

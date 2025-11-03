@@ -1,8 +1,44 @@
 title: Quub Exchange Documentation
-description: Comprehensive documentation for the Quub Exchange platform
+description: Comprehensive API documentation for the Quub Exchange platform - Digital asset trading, custody, compliance, and settlement infrastructure
 url: "https://quub-fi.github.io"
 baseurl: "/quub-exchange-docs"
 repository: quub-fi/quub-exchange-docs
+
+# SEO Configuration
+author:
+  name: Quub Exchange
+  email: docs@quub.fi
+  twitter: quub_exchange
+
+logo: /assets/images/quub-logo.png
+
+social:
+  name: Quub Exchange
+  links:
+    - https://github.com/quub-fi
+    - https://linkedin.com/company/quub-exchange
+
+twitter:
+  username: quub_exchange
+  card: summary_large_image
+
+og_image: /assets/images/quub-og-image.png
+
+google_site_verification: # Add your Google Search Console verification code
+
+# Additional SEO
+tagline: Enterprise Digital Asset Exchange Infrastructure
+keywords:
+  - digital asset exchange
+  - cryptocurrency API
+  - blockchain infrastructure
+  - trading platform API
+  - crypto custody
+  - compliance API
+  - settlement infrastructure
+  - DeFi infrastructure
+
+lang: en_US
 
 markdown: kramdown
 highlighter: rouge
@@ -10,6 +46,7 @@ highlighter: rouge
 plugins:
   - jekyll-feed
   - jekyll-sitemap
+  - jekyll-seo-tag
 
 exclude:
   - Gemfile

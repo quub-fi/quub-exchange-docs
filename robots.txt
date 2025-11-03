@@ -1,0 +1,19 @@
+# Robots.txt for Quub Exchange Documentation
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://quub-fi.github.io/quub-exchange-docs/sitemap.xml
+
+# Disallow admin and private areas (if any)
+Disallow: /assets/
+Disallow: /.git/
+Disallow: /vendor/
+Disallow: /node_modules/
+
+# Allow search engines to crawl all documentation
+Allow: /capabilities/
+Allow: /api-reference/
+Allow: /guides/
+Allow: /docs/
+Allow: /openapi/

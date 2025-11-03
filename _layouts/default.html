@@ -1,15 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ site.lang | default: 'en' }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary Meta Tags -->
     <title>
       {% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}
     </title>
     <meta
-      name="description"
-      content="{{ page.description | default: site.description }}"
+      name="title"
+      content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}"
     />
+    <meta
+      name="description"
+      content="{{ page.description | default: page.excerpt | default: site.description | strip_html | truncate: 160 }}"
+    />
+    <meta
+      name="keywords"
+      content="{{ page.keywords | default: site.keywords | join: ', ' }}"
+    />
+    <meta
+      name="author"
+      content="{{ page.author | default: site.author.name }}"
+    />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ page.url | absolute_url }}" />
+
+    <!-- Open Graph / Facebook -->
+    <meta
+      property="og:type"
+      content="{% if page.layout == 'post' %}article{% else %}website{% endif %}"
+    />
+    <meta property="og:url" content="{{ page.url | absolute_url }}" />
+    <meta
+      property="og:title"
+      content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}"
+    />
+    <meta
+      property="og:description"
+      content="{{ page.description | default: page.excerpt | default: site.description | strip_html | truncate: 160 }}"
+    />
+    <meta
+      property="og:image"
+      content="{{ page.image | default: site.og_image | absolute_url }}"
+    />
+    <meta property="og:site_name" content="{{ site.title }}" />
+
+    <!-- Twitter -->
+    <meta
+      name="twitter:card"
+      content="{{ site.twitter.card | default: 'summary_large_image' }}"
+    />
+    <meta name="twitter:url" content="{{ page.url | absolute_url }}" />
+    <meta
+      name="twitter:title"
+      content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}"
+    />
+    <meta
+      name="twitter:description"
+      content="{{ page.description | default: page.excerpt | default: site.description | strip_html | truncate: 160 }}"
+    />
+    <meta
+      name="twitter:image"
+      content="{{ page.image | default: site.og_image | absolute_url }}"
+    />
+    {% if site.twitter.username %}
+    <meta name="twitter:site" content="@{{ site.twitter.username }}" />
+    <meta name="twitter:creator" content="@{{ site.twitter.username }}" />
+    {% endif %}
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ site.title }}",
+        "description": "{{ site.description }}",
+        "url": "{{ site.url }}{{ site.baseurl }}",
+        "publisher": {
+          "@type": "Organization",
+          "name": "{{ site.author.name }}",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "{{ site.logo | absolute_url }}"
+          }
+        }
+      }
+    </script>
+
+    <!-- Stylesheets -->
     <link
       rel="stylesheet"
       href="{{ '/assets/css/style.css' | relative_url }}"
@@ -19,7 +102,12 @@
       type="image/x-icon"
       href="{{ '/assets/favicon.ico' | relative_url }}"
     />
+
+    <!-- Jekyll SEO Tag -->
     {% seo %}
+
+    <!-- Additional SEO Tags -->
+    {% include seo-tags.html %}
   </head>
   <body>
     <header class="site-header">
@@ -33,7 +121,9 @@
           <nav class="main-nav">
             <ul>
               <li><a href="{{ '/' | relative_url }}">Home</a></li>
-              <li><a href="{{ '/capabilities/' | relative_url }}">API Docs</a></li>
+              <li>
+                <a href="{{ '/capabilities/' | relative_url }}">API Docs</a>
+              </li>
               <li>
                 <a href="{{ '/openapi/' | relative_url }}">OpenAPI Specs</a>
               </li>

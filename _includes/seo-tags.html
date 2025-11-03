@@ -1,0 +1,85 @@
+<!-- Additional SEO Enhancements -->
+
+<!-- Preconnect to external resources -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
+<!-- Alternate languages (if applicable) -->
+<link rel="alternate" hreflang="en" href="{{ page.url | absolute_url }}" />
+
+<!-- RSS Feed -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title="{{ site.title }} Feed"
+  href="{{ '/feed.xml' | absolute_url }}"
+/>
+
+<!-- Additional Meta Tags for SEO -->
+<meta name="theme-color" content="#667eea" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta
+  name="apple-mobile-web-app-status-bar-style"
+  content="black-translucent"
+/>
+
+<!-- Page-specific structured data for API documentation -->
+{% if page.service %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "{{ page.title }}",
+    "description": "{{ page.description | default: site.description }}",
+    "author": {
+      "@type": "Organization",
+      "name": "{{ site.author.name }}"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "{{ site.author.name }}",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ site.logo | absolute_url }}"
+      }
+    },
+    "datePublished": "{{ page.date | default: site.time | date_to_xmlschema }}",
+    "dateModified": "{{ page.last_modified_at | default: site.time | date_to_xmlschema }}",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ page.url | absolute_url }}"
+    }
+  }
+</script>
+{% endif %}
+
+<!-- Breadcrumb Schema -->
+{% if page.url != "/" %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ site.url }}{{ site.baseurl }}"
+      }
+      {% assign crumbs = page.url | split: '/' %}
+      {% assign crumb_path = '' %}
+      {% for crumb in crumbs offset: 1 %}
+        {% if crumb != '' %}
+          {% assign crumb_path = crumb_path | append: '/' | append: crumb %}
+          ,{
+            "@type": "ListItem",
+            "position": {{ forloop.index | plus: 1 }},
+            "name": "{{ crumb | replace: '-', ' ' | replace: '_', ' ' | capitalize }}",
+            "item": "{{ site.url }}{{ site.baseurl }}{{ crumb_path }}"
+          }
+        {% endif %}
+      {% endfor %}
+    ]
+  }
+</script>
+{% endif %}
