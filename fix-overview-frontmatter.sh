@@ -4,7 +4,7 @@
 
 echo "Fixing front matter for overview files..."
 
-find /Users/nrahal/@code_2025/products/quub/quub-exchange-docs/use-cases -name "*-overview.md" | while read -r file; do
+find /Users/nrahal/@code_2025/products/quub/quub-exchange-docs/capabilities -name "*-overview.md" | while read -r file; do
   # Check if file has permalink at the bottom
   if grep -q "^permalink:" "$file"; then
     # Extract the permalink

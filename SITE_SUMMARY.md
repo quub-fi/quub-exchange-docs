@@ -83,7 +83,7 @@ All services use interactive Redoc viewers with JSON OpenAPI specs:
 ---
 
 ### 5. **Use Cases**
-**Base URL**: `/use-cases/`
+**Base URL**: `/capabilities/`
 
 - Detailed use case documentation for all 26 services
 - Includes overview and API documentation for each service

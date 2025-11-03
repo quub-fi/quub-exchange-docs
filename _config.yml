@@ -33,7 +33,7 @@ defaults:
     values:
       layout: "api-reference"
   - scope:
-      path: "use-cases"
+      path: "capabilities"
     values:
       layout: "docs"
   - scope:

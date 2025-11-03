@@ -55,8 +55,8 @@ ${service_desc}
 ## Quick Links
 
 - [OpenAPI Specification]({{ site.baseurl }}/openapi/${service_slug}.yaml)
-- [Use Cases Documentation]({{ site.baseurl }}/use-cases/${service_slug}/)
-- [Integration Guide]({{ site.baseurl }}/use-cases/${service_slug}/${service_slug}-api-documentation.html)
+- [Use Cases Documentation]({{ site.baseurl }}/capabilities/${service_slug}/)
+- [Integration Guide]({{ site.baseurl }}/capabilities/${service_slug}/${service_slug}-api-documentation.html)
 
 ## Authentication
 
@@ -77,7 +77,7 @@ https://api.quub.exchange/v1/$\{service_slug\}
 ## Support
 
 For API support and questions:
-- **Documentation**: [Use Cases]({{ site.baseurl }}/use-cases/${service_slug}/)
+- **Documentation**: [Use Cases]({{ site.baseurl }}/capabilities/${service_slug}/)
 - **Technical Support**: support@quub.exchange
 - **Status Page**: https://status.quub.exchange
 INNER_EOF

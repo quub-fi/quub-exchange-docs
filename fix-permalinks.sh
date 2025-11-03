@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to add permalinks to API documentation files in use-cases
+# Script to add permalinks to API documentation files in capabilities
 
 # Array of service names
 services=(
@@ -33,7 +33,7 @@ services=(
 )
 
 # Base directory
-BASE_DIR="/Users/nrahal/@code_2025/products/quub/quub-exchange-docs/use-cases"
+BASE_DIR="/Users/nrahal/@code_2025/products/quub/quub-exchange-docs/capabilities"
 
 for service in "${services[@]}"; do
   file="$BASE_DIR/$service/${service}-api-documentation.md"
@@ -55,7 +55,7 @@ for service in "${services[@]}"; do
         NR==1 { print; next }
         NR==2 && /^layout:/ {
           print
-          print "permalink: /use-cases/" service "/"
+          print "permalink: /capabilities/" service "/"
           next
         }
         { print }
@@ -69,7 +69,7 @@ for service in "${services[@]}"; do
       {
         echo "---"
         echo "layout: use-case"
-        echo "permalink: /use-cases/$service/"
+        echo "permalink: /capabilities/$service/"
         echo "---"
         echo ""
         cat "$file"

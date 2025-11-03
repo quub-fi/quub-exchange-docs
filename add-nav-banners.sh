@@ -2,7 +2,7 @@
 
 # Add navigation banners to use-case documentation files
 
-for dir in use-cases/*/; do
+for dir in capabilities/*/; do
     service=$(basename "$dir")
 
     # Skip if not a service directory

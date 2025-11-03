@@ -2,7 +2,7 @@
 
 # Add front matter to all use-case documentation files
 
-for dir in use-cases/*/; do
+for dir in capabilities/*/; do
     service=$(basename "$dir")
     
     # Skip if README

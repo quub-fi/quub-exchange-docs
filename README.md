@@ -17,57 +17,57 @@ Quub Exchange is an enterprise-grade financial technology platform providing:
 
 ### Core Documentation
 
-- [`use-cases/`](./use-cases/) - Business workflows and technical implementations
+- [`capabilities/`](./capabilities/) - Business workflows and technical implementations
 - [`openapi/`](./openapi/) - API specifications and service contracts
 
 ### Service Documentation
 
 #### **🏛️ Core Trading & Exchange**
 
-- [`exchange/`](./use-cases/exchange/) - Core trading operations and order management
-- [`primary-market/`](./use-cases/primary-market/) - Initial offerings and primary market operations
-- [`marketplace/`](./use-cases/marketplace/) - Secondary market trading and liquidity
-- [`pricing-refdata/`](./use-cases/pricing-refdata/) - Pricing engines and reference data
-- [`market-oracles/`](./use-cases/market-oracles/) - Market data feeds and oracle services
+- [`exchange/`](./capabilities/exchange/) - Core trading operations and order management
+- [`primary-market/`](./capabilities/primary-market/) - Initial offerings and primary market operations
+- [`marketplace/`](./capabilities/marketplace/) - Secondary market trading and liquidity
+- [`pricing-refdata/`](./capabilities/pricing-refdata/) - Pricing engines and reference data
+- [`market-oracles/`](./capabilities/market-oracles/) - Market data feeds and oracle services
 
 #### **💰 Financial Infrastructure**
 
-- [`treasury/`](./use-cases/treasury/) - Treasury management and asset allocation
-- [`custodian/`](./use-cases/custodian/) - Digital asset custody and security
-- [`escrow/`](./use-cases/escrow/) - Escrow services and smart contracts
-- [`settlements/`](./use-cases/settlements/) - Trade settlement and clearing
-- [`transfer-agent/`](./use-cases/transfer-agent/) - Asset transfer and registry services
+- [`treasury/`](./capabilities/treasury/) - Treasury management and asset allocation
+- [`custodian/`](./capabilities/custodian/) - Digital asset custody and security
+- [`escrow/`](./capabilities/escrow/) - Escrow services and smart contracts
+- [`settlements/`](./capabilities/settlements/) - Trade settlement and clearing
+- [`transfer-agent/`](./capabilities/transfer-agent/) - Asset transfer and registry services
 
 #### **🏦 Banking & Payments**
 
-- [`fiat-banking/`](./use-cases/fiat-banking/) - Traditional banking integration
-- [`fees-billing/`](./use-cases/fees-billing/) - Fee structures and billing systems
-- [`gateway/`](./use-cases/gateway/) - Payment processing and gateway services
+- [`fiat-banking/`](./capabilities/fiat-banking/) - Traditional banking integration
+- [`fees-billing/`](./capabilities/fees-billing/) - Fee structures and billing systems
+- [`gateway/`](./capabilities/gateway/) - Payment processing and gateway services
 
 #### **🔐 Identity & Access Management**
 
-- [`auth/`](./use-cases/auth/) - Authentication and JWT implementation
-- [`identity/`](./use-cases/identity/) - Digital identity and KYC/AML
-- [`tenancy-trust/`](./use-cases/tenancy-trust/) - Multi-tenant trust and isolation
+- [`auth/`](./capabilities/auth/) - Authentication and JWT implementation
+- [`identity/`](./capabilities/identity/) - Digital identity and KYC/AML
+- [`tenancy-trust/`](./capabilities/tenancy-trust/) - Multi-tenant trust and isolation
 
 #### **📋 Compliance & Risk**
 
-- [`compliance/`](./use-cases/compliance/) - Regulatory compliance and reporting
-- [`risk-limits/`](./use-cases/risk-limits/) - Risk management and position limits
-- [`documents/`](./use-cases/documents/) - Document management and audit trails
+- [`compliance/`](./capabilities/compliance/) - Regulatory compliance and reporting
+- [`risk-limits/`](./capabilities/risk-limits/) - Risk management and position limits
+- [`documents/`](./capabilities/documents/) - Document management and audit trails
 
 #### **📊 Operations & Analytics**
 
-- [`analytics-reports/`](./use-cases/analytics-reports/) - Business intelligence and reporting
-- [`observability/`](./use-cases/observability/) - System monitoring and alerting
-- [`notifications/`](./use-cases/notifications/) - Communication and notification systems
-- [`events/`](./use-cases/events/) - Event sourcing and message handling
+- [`analytics-reports/`](./capabilities/analytics-reports/) - Business intelligence and reporting
+- [`observability/`](./capabilities/observability/) - System monitoring and alerting
+- [`notifications/`](./capabilities/notifications/) - Communication and notification systems
+- [`events/`](./capabilities/events/) - Event sourcing and message handling
 
 #### **⚙️ Platform Infrastructure**
 
-- [`chain/`](./use-cases/chain/) - Blockchain integration and smart contracts
-- [`governance/`](./use-cases/governance/) - Platform governance and voting
-- [`sandbox/`](./use-cases/sandbox/) - Development and testing environments
+- [`chain/`](./capabilities/chain/) - Blockchain integration and smart contracts
+- [`governance/`](./capabilities/governance/) - Platform governance and voting
+- [`sandbox/`](./capabilities/sandbox/) - Development and testing environments
 
 ## 🔐 Security Architecture
 
@@ -77,10 +77,10 @@ Every service implements strict tenant isolation:
 
 | Layer               | Implementation                | Documentation                                 |
 | ------------------- | ----------------------------- | --------------------------------------------- |
-| **Authentication**  | JWT with `orgId` claims       | [Auth Documentation](./use-cases/auth/)       |
-| **API Gateway**     | Request routing by tenant     | [Gateway Documentation](./use-cases/gateway/) |
+| **Authentication**  | JWT with `orgId` claims       | [Auth Documentation](./capabilities/auth/)       |
+| **API Gateway**     | Request routing by tenant     | [Gateway Documentation](./capabilities/gateway/) |
 | **Database RLS**    | Row-level security by `orgId` | Database Architecture (See OpenAPI specs)     |
-| **Event Isolation** | Tenant-scoped event streams   | [Events Documentation](./use-cases/events/)   |
+| **Event Isolation** | Tenant-scoped event streams   | [Events Documentation](./capabilities/events/)   |
 
 ### Compliance & Risk
 
@@ -93,8 +93,8 @@ Every service implements strict tenant isolation:
 
 ### For Developers
 
-1. **Authentication**: Start with [JWT implementation](./use-cases/auth/JWT/)
-2. **Core Trading**: Review [exchange operations](./use-cases/exchange/)
+1. **Authentication**: Start with [JWT implementation](./capabilities/auth/JWT/)
+2. **Core Trading**: Review [exchange operations](./capabilities/exchange/)
 3. **API Integration**: Explore [OpenAPI specifications](./openapi/)
 4. **Testing**: Follow service-specific testing strategies
 
@@ -102,17 +102,17 @@ Every service implements strict tenant isolation:
 
 ```bash
 # View all system diagrams
-find use-cases -name "diagrams" -type d -exec open {}/*.svg \;
+find capabilities -name "diagrams" -type d -exec open {}/*.svg \;
 
 # Generate fresh diagrams
-find use-cases -name "*.poml" -exec plantuml -tsvg {} \;
+find capabilities -name "*.poml" -exec plantuml -tsvg {} \;
 ```
 
 ### For Compliance Officers
 
-- [Regulatory compliance framework](./use-cases/compliance/)
-- [Risk management policies](./use-cases/risk-limits/)
-- [Audit and reporting capabilities](./use-cases/analytics-reports/)
+- [Regulatory compliance framework](./capabilities/compliance/)
+- [Risk management policies](./capabilities/risk-limits/)
+- [Audit and reporting capabilities](./capabilities/analytics-reports/)
 
 ## 📊 Platform Capabilities
 

@@ -3,7 +3,7 @@
 # Script to add permalinks to all use-case overview files
 
 # Find all overview files
-FILES=$(find /Users/nrahal/@code_2025/products/quub/quub-exchange-docs/use-cases -name "*-overview.md" -type f | sort)
+FILES=$(find /Users/nrahal/@code_2025/products/quub/quub-exchange-docs/capabilities -name "*-overview.md" -type f | sort)
 
 for file in $FILES; do
     echo "Processing: $file"
@@ -19,7 +19,7 @@ for file in $FILES; do
         else
             # Add permalink to existing front matter
             sed -i '' "/^---/a\\
-permalink: /use-cases/$service_name/$service_name-overview/\\
+permalink: /capabilities/$service_name/$service_name-overview/\\
 " "$file"
             echo "  ✓ Added permalink to existing front matter"
         fi
@@ -29,7 +29,7 @@ permalink: /use-cases/$service_name/$service_name-overview/\\
         cat > "$temp_file" << EOF
 ---
 layout: use-case
-permalink: /use-cases/$service_name/$service_name-overview/
+permalink: /capabilities/$service_name/$service_name-overview/
 ---
 
 EOF

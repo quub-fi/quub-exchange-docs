@@ -2,7 +2,7 @@
 
 # Update all use-case documentation files to use the use-case layout
 
-for file in use-cases/*/*-{overview,api-documentation}.md; do
+for file in capabilities/*/*-{overview,api-documentation}.md; do
   if [ -f "$file" ]; then
     # Replace layout: docs with layout: use-case
     sed -i '' 's/^layout: docs$/layout: use-case/' "$file"

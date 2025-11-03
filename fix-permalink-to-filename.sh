@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Script to make all permalinks match their filenames exactly
-# Example: marketplace-api-documentation.md → /use-cases/marketplace/marketplace-api-documentation/
+# Example: marketplace-api-documentation.md → /capabilities/marketplace/marketplace-api-documentation/
 
 echo "Fixing permalinks to match filenames exactly..."
 echo ""
 
-# Find all markdown files in use-cases with permalinks
-find /Users/nrahal/@code_2025/products/quub/quub-exchange-docs/use-cases -name "*.md" -type f | while read -r file; do
+# Find all markdown files in capabilities with permalinks
+find /Users/nrahal/@code_2025/products/quub/quub-exchange-docs/capabilities -name "*.md" -type f | while read -r file; do
   # Get the filename without extension
   filename=$(basename "$file" .md)
 
@@ -21,7 +21,7 @@ find /Users/nrahal/@code_2025/products/quub/quub-exchange-docs/use-cases -name "
     current_permalink=$(grep "^permalink:" "$file" | sed 's/permalink: //' | sed 's|/$||')
 
     # Build expected permalink based on filename
-    expected_permalink="/use-cases/$service/$filename/"
+    expected_permalink="/capabilities/$service/$filename/"
 
     # If they don't match, fix it
     if [ "$current_permalink/" != "$expected_permalink" ]; then
