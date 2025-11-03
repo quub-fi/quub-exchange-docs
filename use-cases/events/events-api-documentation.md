@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/events
+permalink: /use-cases/events/
 title: events API Documentation
 service: events
 ---

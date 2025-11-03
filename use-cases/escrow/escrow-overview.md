@@ -58,6 +58,6 @@ Escrow operations are defined in:
 - Integration patterns
 
 ---
-permalink: /use-cases/escrow/escrow-overview
+permalink: /use-cases/escrow/escrow-overview/
 
 *Secure escrow services with smart contract automation and legal compliance.*

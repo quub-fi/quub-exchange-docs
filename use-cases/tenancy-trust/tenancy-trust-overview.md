@@ -58,6 +58,6 @@ Tenancy trust operations are defined in:
 - Security policy configuration
 
 ---
-permalink: /use-cases/tenancy-trust/tenancy-trust-overview
+permalink: /use-cases/tenancy-trust/tenancy-trust-overview/
 
 *Enterprise multi-tenancy with complete data isolation and comprehensive trust frameworks.*

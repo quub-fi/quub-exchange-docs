@@ -2,7 +2,7 @@
 layout: docs
 title: marketplace API Documentation
 service: marketplace
-permalink: /use-cases/marketplace/marketplace-api-documentation
+permalink: /use-cases/marketplace/marketplace-api-documentation/
 ---
 
 {% include api-nav-banner.html %}

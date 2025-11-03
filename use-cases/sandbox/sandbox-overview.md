@@ -58,6 +58,6 @@ Sandbox operations are defined in:
 - Simulation tool specifications
 
 ---
-permalink: /use-cases/sandbox/sandbox-overview
+permalink: /use-cases/sandbox/sandbox-overview/
 
 *Comprehensive development sandbox with testing frameworks and simulation capabilities.*

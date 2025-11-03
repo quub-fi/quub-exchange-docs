@@ -58,6 +58,6 @@ Observability operations are defined in:
 - Incident response procedures
 
 ---
-permalink: /use-cases/observability/observability-overview
+permalink: /use-cases/observability/observability-overview/
 
 *Enterprise observability with comprehensive monitoring and intelligent operational insights.*

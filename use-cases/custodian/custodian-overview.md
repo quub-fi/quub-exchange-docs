@@ -58,6 +58,6 @@ Custody operations are defined in:
 - Emergency response procedures
 
 ---
-permalink: /use-cases/custodian/custodian-overview
+permalink: /use-cases/custodian/custodian-overview/
 
 *Bank-grade digital asset custody with institutional security and regulatory compliance.*

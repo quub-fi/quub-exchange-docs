@@ -63,6 +63,6 @@ Exchange operations are defined in:
 - Market data flow documentation
 
 ---
-permalink: /use-cases/exchange/exchange-overview
+permalink: /use-cases/exchange/exchange-overview/
 
 *Core exchange operations with institutional-grade security and multi-tenant isolation.*

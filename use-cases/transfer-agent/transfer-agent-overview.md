@@ -58,6 +58,6 @@ Transfer agent operations are defined in:
 - Compliance validation frameworks
 
 ---
-permalink: /use-cases/transfer-agent/transfer-agent-overview
+permalink: /use-cases/transfer-agent/transfer-agent-overview/
 
 *Professional transfer agent services with full regulatory compliance and automation.*

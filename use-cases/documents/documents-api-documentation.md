@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/documents
+permalink: /use-cases/documents/
 title: documents API Documentation
 service: documents
 ---

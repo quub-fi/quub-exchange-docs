@@ -58,6 +58,6 @@ Treasury operations are defined in:
 - Yield optimization protocols
 
 ---
-permalink: /use-cases/treasury/treasury-overview
+permalink: /use-cases/treasury/treasury-overview/
 
 *Institutional treasury management with sophisticated risk controls and yield optimization.*
