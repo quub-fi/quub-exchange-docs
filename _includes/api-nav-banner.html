@@ -4,82 +4,126 @@
   style="
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 16px;
+    padding: 20px;
     margin: -20px -20px 30px -20px;
     border-radius: 8px 8px 0 0;
   "
 >
-  <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center">
-    <strong style="margin-right: 10px">📚 Related Documentation:</strong>
-    <a
-      href="{{ site.baseurl }}/api-reference/{{ page.service }}/"
-      style="
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 6px 14px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.2s;
-      "
-      onmouseover="this.style.background='rgba(255,255,255,0.3)'"
-      onmouseout="this.style.background='rgba(255,255,255,0.2)'"
-    >
-      🔌 Interactive API Reference
-    </a>
-    <a
-      href="{{ site.baseurl }}/use-cases/{{ page.service }}/"
-      style="
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 6px 14px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.2s;
-      "
-      onmouseover="this.style.background='rgba(255,255,255,0.3)'"
-      onmouseout="this.style.background='rgba(255,255,255,0.2)'"
-    >
-      📖 Use Case Overview
-    </a>
-    <a
-      href="{{ site.baseurl }}/use-cases/{{ page.service }}/{{ page.service }}-api-documentation"
-      style="
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 6px 14px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.2s;
-      "
-      onmouseover="this.style.background='rgba(255,255,255,0.3)'"
-      onmouseout="this.style.background='rgba(255,255,255,0.2)'"
-    >
-      📚 Implementation Guide
-    </a>
-    <a
-      href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.json"
-      target="_blank"
-      style="
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 6px 14px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.2s;
-      "
-      onmouseover="this.style.background='rgba(255,255,255,0.3)'"
-      onmouseout="this.style.background='rgba(255,255,255,0.2)'"
-    >
-      ⬇️ OpenAPI Spec
-    </a>
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    "
+  >
+    <!-- Primary Links (Left/Center) -->
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; flex: 1">
+      <a
+        href="{{ site.baseurl }}/use-cases/{{ page.service }}/"
+        style="
+          background: white;
+          color: #667eea;
+          padding: 12px 20px;
+          border-radius: 8px;
+          text-decoration: none;
+          font-size: 15px;
+          font-weight: 600;
+          transition: all 0.2s;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        "
+        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'"
+      >
+        <span style="font-size: 18px">�</span>
+        <div
+          style="display: flex; flex-direction: column; align-items: flex-start"
+        >
+          <span>Use Case Overview</span>
+          <small style="font-size: 11px; font-weight: 400; opacity: 0.7"
+            >Business context & workflows</small
+          >
+        </div>
+      </a>
+      <a
+        href="{{ site.baseurl }}/use-cases/{{ page.service }}/{{ page.service }}-api-documentation"
+        style="
+          background: white;
+          color: #667eea;
+          padding: 12px 20px;
+          border-radius: 8px;
+          text-decoration: none;
+          font-size: 15px;
+          font-weight: 600;
+          transition: all 0.2s;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        "
+        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'"
+      >
+        <span style="font-size: 18px">📚</span>
+        <div
+          style="display: flex; flex-direction: column; align-items: flex-start"
+        >
+          <span>Implementation Guide</span>
+          <small style="font-size: 11px; font-weight: 400; opacity: 0.7"
+            >Complete integration guide</small
+          >
+        </div>
+      </a>
+    </div>
+
+    <!-- Secondary Links (Right) -->
+    <div style="display: flex; gap: 8px; align-items: center">
+      <small style="opacity: 0.9; font-size: 12px; margin-right: 4px"
+        >Download:</small
+      >
+      <a
+        href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.json"
+        download
+        style="
+          background: rgba(255, 255, 255, 0.25);
+          color: white;
+          padding: 6px 12px;
+          border-radius: 5px;
+          text-decoration: none;
+          font-size: 12px;
+          font-weight: 500;
+          transition: all 0.2s;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        "
+        onmouseover="this.style.background='rgba(255,255,255,0.35)'"
+        onmouseout="this.style.background='rgba(255,255,255,0.25)'"
+      >
+        📥 JSON
+      </a>
+      <a
+        href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.yaml"
+        download
+        style="
+          background: rgba(255, 255, 255, 0.25);
+          color: white;
+          padding: 6px 12px;
+          border-radius: 5px;
+          text-decoration: none;
+          font-size: 12px;
+          font-weight: 500;
+          transition: all 0.2s;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        "
+        onmouseover="this.style.background='rgba(255,255,255,0.35)'"
+        onmouseout="this.style.background='rgba(255,255,255,0.25)'"
+      >
+        📄 YAML
+      </a>
+    </div>
   </div>
 </div>
 {% endif %}
