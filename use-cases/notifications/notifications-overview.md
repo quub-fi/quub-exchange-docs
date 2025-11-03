@@ -58,6 +58,6 @@ Notification operations are defined in:
 - Delivery optimization strategies
 
 ---
-permalink: /use-cases/notifications/notifications-overview/
+permalink: /use-cases/notifications/notifications-overview
 
 *Comprehensive notification system with multi-channel delivery and intelligent routing.*

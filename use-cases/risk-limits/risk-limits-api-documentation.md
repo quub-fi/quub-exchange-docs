@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/risk-limits/
+permalink: /use-cases/risk-limits
 title: risk-limits API Documentation
 service: risk-limits
 ---

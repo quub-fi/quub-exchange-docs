@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/notifications/
+permalink: /use-cases/notifications
 title: notifications API Documentation
 service: notifications
 ---

@@ -58,6 +58,6 @@ Risk management operations are defined in:
 - Risk monitoring dashboards
 
 ---
-permalink: /use-cases/risk-limits/risk-limits-overview/
+permalink: /use-cases/risk-limits/risk-limits-overview
 
 *Institutional risk management with real-time monitoring and automated controls.*

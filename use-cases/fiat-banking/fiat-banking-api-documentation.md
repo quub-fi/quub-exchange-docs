@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/fiat-banking/
+permalink: /use-cases/fiat-banking
 title: fiat-banking API Documentation
 service: fiat-banking
 ---

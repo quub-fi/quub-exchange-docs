@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/sandbox/
+permalink: /use-cases/sandbox
 title: sandbox API Documentation
 service: sandbox
 ---

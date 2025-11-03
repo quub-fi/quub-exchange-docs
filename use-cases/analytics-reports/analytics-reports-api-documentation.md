@@ -1,6 +1,6 @@
 ---
 layout: use-case
-permalink: /use-cases/analytics-reports/
+permalink: /use-cases/analytics-reports
 ---
 
 # Analytics & Reports API Documentation

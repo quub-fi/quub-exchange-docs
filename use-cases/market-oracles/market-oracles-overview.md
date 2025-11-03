@@ -58,6 +58,6 @@ Market oracle operations are defined in:
 - Data quality and security protocols
 
 ---
-permalink: /use-cases/market-oracles/market-oracles-overview/
+permalink: /use-cases/market-oracles/market-oracles-overview
 
 *Secure and reliable market data oracles with institutional-grade accuracy and tamper resistance.*

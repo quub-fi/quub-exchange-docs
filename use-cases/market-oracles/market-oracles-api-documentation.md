@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/market-oracles/
+permalink: /use-cases/market-oracles
 title: market-oracles API Documentation
 service: market-oracles
 ---

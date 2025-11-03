@@ -58,6 +58,6 @@ Identity operations are defined in:
 - Compliance validation procedures
 
 ---
-permalink: /use-cases/identity/identity-overview/
+permalink: /use-cases/identity/identity-overview
 
 *Comprehensive digital identity management with automated KYC/AML and regulatory compliance.*

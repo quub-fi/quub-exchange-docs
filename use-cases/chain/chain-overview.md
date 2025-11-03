@@ -58,6 +58,6 @@ Blockchain operations are defined in:
 - DeFi protocol documentation
 
 ---
-permalink: /use-cases/chain/chain-overview/
+permalink: /use-cases/chain/chain-overview
 
 *Comprehensive blockchain integration with multi-chain support and DeFi connectivity.*

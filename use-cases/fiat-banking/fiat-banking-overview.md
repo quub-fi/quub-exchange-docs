@@ -58,6 +58,6 @@ Fiat banking operations are defined in:
 - International transfer protocols
 
 ---
-permalink: /use-cases/fiat-banking/fiat-banking-overview/
+permalink: /use-cases/fiat-banking/fiat-banking-overview
 
 *Comprehensive fiat banking integration with global reach and regulatory compliance.*

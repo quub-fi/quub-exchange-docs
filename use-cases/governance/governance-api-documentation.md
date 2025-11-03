@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/governance/
+permalink: /use-cases/governance
 title: governance API Documentation
 service: governance
 ---

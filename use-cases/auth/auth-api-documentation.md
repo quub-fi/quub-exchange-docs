@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/auth/
+permalink: /use-cases/auth
 title: auth API Documentation
 service: auth
 ---

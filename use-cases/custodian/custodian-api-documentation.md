@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/custodian/
+permalink: /use-cases/custodian
 title: custodian API Documentation
 service: custodian
 ---

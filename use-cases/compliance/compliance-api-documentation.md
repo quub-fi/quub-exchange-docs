@@ -1,6 +1,6 @@
 ---
 layout: docs
-permalink: /use-cases/compliance/
+permalink: /use-cases/compliance
 title: compliance API Documentation
 service: compliance
 ---

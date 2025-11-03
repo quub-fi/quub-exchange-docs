@@ -58,6 +58,6 @@ Compliance operations are defined in:
 - Multi-jurisdiction compliance guides
 
 ---
-permalink: /use-cases/compliance/compliance-overview/
+permalink: /use-cases/compliance/compliance-overview
 
 *Comprehensive regulatory compliance with automated reporting and global framework support.*
