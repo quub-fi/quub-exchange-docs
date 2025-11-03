@@ -2,171 +2,94 @@
 <style>
   .api-nav-banner {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 32px;
-    margin: -20px -20px 40px -20px;
+    padding: 12px 20px;
+    margin: -20px -20px 20px -20px;
     border-radius: 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  }
-  
-  .nav-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
-    max-width: 1200px;
-    margin: 0 auto 24px;
-  }
-  
-  .nav-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .nav-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-    transform: scaleY(0);
-    transition: transform 0.3s ease;
-  }
-  
-  .nav-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
-    border-color: rgba(102, 126, 234, 0.3);
-  }
-  
-  .nav-card:hover::before {
-    transform: scaleY(1);
-  }
-  
-  .nav-icon {
-    font-size: 32px;
-    line-height: 1;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-  }
-  
-  .nav-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1a202c;
-    margin: 0;
-    line-height: 1.3;
-  }
-  
-  .nav-desc {
-    font-size: 13px;
-    color: #718096;
-    margin: 0;
-    line-height: 1.4;
-  }
-  
-  .download-section {
-    display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
     flex-wrap: wrap;
-    padding-top: 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    gap: 12px;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-bottom-color: white;
+  }
+  
+  .download-links {
+    display: flex;
+    gap: 8px;
+    align-items: center;
   }
   
   .download-label {
-    color: white;
-    font-size: 13px;
-    font-weight: 500;
-    opacity: 0.9;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    margin-right: 4px;
   }
   
-  .download-btn {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
+  .download-link {
     color: white;
-    padding: 8px 16px;
-    border-radius: 8px;
     text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.15);
     transition: all 0.2s;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    display: flex;
-    align-items: center;
-    gap: 6px;
   }
   
-  .download-btn:hover {
+  .download-link:hover {
     background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
   
   @media (max-width: 768px) {
     .api-nav-banner {
-      padding: 24px 16px;
+      padding: 12px 16px;
     }
     
-    .nav-grid {
-      grid-template-columns: 1fr;
+    .nav-links {
       gap: 12px;
     }
     
-    .nav-card {
-      padding: 16px;
+    .nav-link {
+      font-size: 13px;
+      padding: 4px 8px;
     }
   }
 </style>
 
 <div class="api-nav-banner">
-  <div class="nav-grid">
-    <a href="{{ '/capabilities/' | append: page.service | append: '/' | append: page.service | append: '-overview/' | relative_url }}" class="nav-card">
-      <div class="nav-icon">📖</div>
-      <h3 class="nav-title">Capability Overview</h3>
-      <p class="nav-desc">Business context & workflows</p>
-    </a>
-    
-    <a href="{{ '/capabilities/' | append: page.service | append: '/' | append: page.service | append: '-api-documentation/' | relative_url }}" class="nav-card">
-      <div class="nav-icon">📚</div>
-      <h3 class="nav-title">Implementation Guide</h3>
-      <p class="nav-desc">Complete integration guide</p>
-    </a>
-    
-    <a href="{{ '/capabilities/' | append: page.service | append: '/api-reference/' | relative_url }}" class="nav-card">
-      <div class="nav-icon">🔌</div>
-      <h3 class="nav-title">API Reference</h3>
-      <p class="nav-desc">Interactive API explorer</p>
-    </a>
-    
-    <a href="{{ '/capabilities/' | append: page.service | append: '/guides/' | relative_url }}" class="nav-card">
-      <div class="nav-icon">🎓</div>
-      <h3 class="nav-title">Guides</h3>
-      <p class="nav-desc">Tutorials & best practices</p>
-    </a>
+  <div class="nav-links">
+    <a href="{{ '/capabilities/' | append: page.service | append: '/' | append: page.service | append: '-overview/' | relative_url }}" class="nav-link">📖 Overview</a>
+    <a href="{{ '/capabilities/' | append: page.service | append: '/' | append: page.service | append: '-api-documentation/' | relative_url }}" class="nav-link">📚 Implementation</a>
+    <a href="{{ '/capabilities/' | append: page.service | append: '/api-reference/' | relative_url }}" class="nav-link">🔌 API Reference</a>
+    <a href="{{ '/capabilities/' | append: page.service | append: '/guides/' | relative_url }}" class="nav-link">🎓 Guides</a>
   </div>
   
-  <div class="download-section">
-    <span class="download-label">Download Spec:</span>
-    <a href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.json" download class="download-btn">
-      <span>📥</span> JSON
-    </a>
-    <a href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.yaml" download class="download-btn">
-      <span>📄</span> YAML
-    </a>
+  <div class="download-links">
+    <span class="download-label">Download:</span>
+    <a href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.json" download class="download-link">JSON</a>
+    <a href="https://quub-fi.github.io/quub-exchange-docs/openapi/{{ page.service }}.yaml" download class="download-link">YAML</a>
   </div>
 </div>
 {% endif %}
