@@ -111,9 +111,9 @@ open diagrams/*.svg
 
 ## 📚 Related Documentation
 
-- [Authentication Overview](../../README.md)
-- [API Security Guidelines](../../../api/security/)
-- [Database RLS Configuration](../../../database/rls/)
+- [Authentication API Documentation](../auth-api-documentation.md)
+- [Authentication Overview](../README.md)
+- [OpenAPI Specification](../../../openapi/auth.yaml)
 
 ## 🔧 Development Tools
 

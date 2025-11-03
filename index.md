@@ -28,14 +28,14 @@ Quub Exchange is an enterprise-grade financial technology platform providing:
 
 ### For Developers
 
-- [API Documentation](./api-docs/) - Complete API reference for all services
+- [API Documentation](./use-cases/) - Complete API reference for all services
 - [OpenAPI Specifications](./openapi/) - Machine-readable API definitions
 - [Integration Guides](./use-cases/) - Implementation guides and code examples
 
 ### For Project Teams
 
-- [Architecture Documentation](./architecture/) - System design and technical decisions
 - [Implementation Checklists](./use-cases/) - Development and deployment guides
+- [OpenAPI Specifications](./openapi/) - Service contracts and API schemas
 
 ## 📁 Documentation Structure
 

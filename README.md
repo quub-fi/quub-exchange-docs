@@ -19,8 +19,6 @@ Quub Exchange is an enterprise-grade financial technology platform providing:
 
 - [`use-cases/`](./use-cases/) - Business workflows and technical implementations
 - [`openapi/`](./openapi/) - API specifications and service contracts
-- [`architecture/`](./architecture/) - System design and architectural decisions
-- [`api/`](./api/) - API implementation guides and examples
 
 ### Service Documentation
 
@@ -77,12 +75,12 @@ Quub Exchange is an enterprise-grade financial technology platform providing:
 
 Every service implements strict tenant isolation:
 
-| Layer               | Implementation                | Documentation                                     |
-| ------------------- | ----------------------------- | ------------------------------------------------- |
-| **Authentication**  | JWT with `orgId` claims       | [Auth Documentation](./use-cases/auth/)           |
-| **API Gateway**     | Request routing by tenant     | [Gateway Documentation](./use-cases/gateway/)     |
-| **Database RLS**    | Row-level security by `orgId` | [Database Architecture](./architecture/database/) |
-| **Event Isolation** | Tenant-scoped event streams   | [Events Documentation](./use-cases/events/)       |
+| Layer               | Implementation                | Documentation                                 |
+| ------------------- | ----------------------------- | --------------------------------------------- |
+| **Authentication**  | JWT with `orgId` claims       | [Auth Documentation](./use-cases/auth/)       |
+| **API Gateway**     | Request routing by tenant     | [Gateway Documentation](./use-cases/gateway/) |
+| **Database RLS**    | Row-level security by `orgId` | Database Architecture (See OpenAPI specs)     |
+| **Event Isolation** | Tenant-scoped event streams   | [Events Documentation](./use-cases/events/)   |
 
 ### Compliance & Risk
 

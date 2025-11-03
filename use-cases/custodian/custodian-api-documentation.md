@@ -854,7 +854,7 @@ alerting:
 
 ### For Technical Teams
 
-- [OpenAPI Specification](../openapi/custodian.yaml) - Complete API specification
+- [OpenAPI Specification](../../openapi/custodian.yaml) - Complete API specification
 - [Postman Collection](https://docs.quub.exchange/api/custodian.postman) - API testing collection
 - [SDK Documentation](https://docs.quub.exchange/sdk/custodian) - Official SDKs for multiple languages
 - [Integration Examples](https://github.com/quub-fi/custodian-examples) - Sample integration code
