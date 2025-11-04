@@ -467,8 +467,9 @@
         const mobileMenuBtn = document.getElementById("mobileMenuBtn");
         const sidebar = document.querySelector(".sidebar");
         const mobileOverlay = document.getElementById("mobileOverlay");
+        const docsLayout = document.querySelector(".docs-layout");
 
-        if (!mobileMenuBtn || !sidebar || !mobileOverlay) {
+        if (!mobileMenuBtn || !sidebar || !mobileOverlay || !docsLayout) {
           console.error("Mobile nav elements not found");
           return;
         }
@@ -477,6 +478,7 @@
           sidebar.classList.toggle("active");
           mobileOverlay.classList.toggle("active");
           mobileMenuBtn.classList.toggle("active");
+          docsLayout.classList.toggle("nav-open");
           if (sidebar.classList.contains("active")) {
             document.body.classList.add("no-scroll");
           } else {
@@ -488,6 +490,7 @@
           sidebar.classList.remove("active");
           mobileOverlay.classList.remove("active");
           mobileMenuBtn.classList.remove("active");
+          docsLayout.classList.remove("nav-open");
           document.body.classList.remove("no-scroll");
         }
 

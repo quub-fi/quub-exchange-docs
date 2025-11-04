@@ -1062,22 +1062,24 @@ body {
 
   /* Push animation for entire layout */
   .docs-layout {
+    display: block !important;
     margin-top: 0;
     transition: transform 0.3s ease;
     will-change: transform;
+    position: relative;
   }
 
-  body.no-scroll .docs-layout {
+  .docs-layout.nav-open {
     transform: translateX(280px);
   }
 
   .sidebar {
     position: fixed !important;
-    left: -280px;
+    left: -280px !important;
     top: var(--nav-height);
     height: calc(100vh - var(--nav-height));
     width: 280px;
-    background: var(--bg-secondary);
+    background: var(--bg-secondary) !important;
     z-index: 1000;
     transition: left 0.3s ease;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
@@ -1092,15 +1094,16 @@ body {
     padding: 2rem 1.5rem;
     max-width: 100%;
     margin-left: 0;
+    width: 100%;
   }
 
   .toc {
-    display: none;
+    display: none !important;
   }
 }
 
 @media (max-width: 640px) {
-  body.no-scroll .docs-layout {
+  .docs-layout.nav-open {
     transform: translateX(85vw);
   }
 
