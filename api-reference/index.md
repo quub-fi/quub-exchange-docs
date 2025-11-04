@@ -194,9 +194,6 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
   </a>
 </div>
 
-</div>
-</div>
-
 [View all 26 APIs →](/api-reference/all-apis/)
 {: .api-view-all}
 
