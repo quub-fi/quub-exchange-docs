@@ -32,6 +32,7 @@
     <style>
       /* Z-index ordering for mobile nav layers */
       .top-nav {
+        position: relative;
         z-index: 1002;
       }
 
@@ -123,8 +124,8 @@
         .sidebar {
           position: fixed;
           left: -100%;
-          top: var(--nav-height);
-          height: calc(100vh - var(--nav-height));
+          top: 60px;
+          height: calc(100vh - 60px);
           width: 85%;
           max-width: 320px;
           transition: left 0.3s ease-in-out;
