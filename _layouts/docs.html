@@ -37,6 +37,7 @@
 
       .sidebar {
         z-index: 1001;
+        background: var(--bg-primary);
       }
 
       .mobile-overlay {
@@ -98,6 +99,19 @@
       }
 
       @media (max-width: 1024px) {
+        .top-nav {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 60px;
+          background: var(--bg-primary);
+        }
+
+        .docs-layout {
+          margin-top: 60px;
+        }
+
         .mobile-menu-btn {
           display: block;
         }
