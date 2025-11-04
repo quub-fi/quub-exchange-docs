@@ -1084,10 +1084,30 @@ body {
     transition: left 0.3s ease;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
+    border-right: 1px solid var(--border-color);
   }
 
   .sidebar.active {
     left: 0 !important;
+  }
+
+  .sidebar-header {
+    display: block !important;
+    background: var(--bg-secondary) !important;
+  }
+
+  .sidebar-nav {
+    display: block !important;
+    padding: 1rem 0;
+  }
+
+  .nav-section {
+    display: block !important;
+  }
+
+  .nav-item {
+    display: flex !important;
+    color: var(--text-primary) !important;
   }
 
   .content {
