@@ -67,42 +67,42 @@
                     <select id="apiSelector" onchange="window.location.href=this.value">
                         <option value="">Select API...</option>
                         <optgroup label="Core Platform">
-                            <option value="{{ '/api-reference/auth/' | relative_url }}" {% if page.api == 'auth' %}selected{% endif %}>Auth Service</option>
-                            <option value="{{ '/api-reference/identity/' | relative_url }}" {% if page.api == 'identity' %}selected{% endif %}>Identity Service</option>
-                            <option value="{{ '/api-reference/tenancy-trust/' | relative_url }}" {% if page.api == 'tenancy-trust' %}selected{% endif %}>Tenancy & Trust</option>
+                            <option value="{{ '/capabilities/auth/api-reference/' | relative_url }}" {% if page.api == 'auth' %}selected{% endif %}>Auth Service</option>
+                            <option value="{{ '/capabilities/identity/api-reference/' | relative_url }}" {% if page.api == 'identity' %}selected{% endif %}>Identity Service</option>
+                            <option value="{{ '/capabilities/tenancy-trust/api-reference/' | relative_url }}" {% if page.api == 'tenancy-trust' %}selected{% endif %}>Tenancy & Trust</option>
                         </optgroup>
                         <optgroup label="Trading & Markets">
-                            <option value="{{ '/api-reference/exchange/' | relative_url }}" {% if page.api == 'exchange' %}selected{% endif %}>Exchange</option>
-                            <option value="{{ '/api-reference/marketplace/' | relative_url }}" {% if page.api == 'marketplace' %}selected{% endif %}>Marketplace</option>
-                            <option value="{{ '/api-reference/gateway/' | relative_url }}" {% if page.api == 'gateway' %}selected{% endif %}>Gateway</option>
-                            <option value="{{ '/api-reference/market-oracles/' | relative_url }}" {% if page.api == 'market-oracles' %}selected{% endif %}>Market Oracles</option>
-                            <option value="{{ '/api-reference/pricing-refdata/' | relative_url }}" {% if page.api == 'pricing-refdata' %}selected{% endif %}>Pricing & RefData</option>
+                            <option value="{{ '/capabilities/exchange/api-reference/' | relative_url }}" {% if page.api == 'exchange' %}selected{% endif %}>Exchange</option>
+                            <option value="{{ '/capabilities/marketplace/api-reference/' | relative_url }}" {% if page.api == 'marketplace' %}selected{% endif %}>Marketplace</option>
+                            <option value="{{ '/capabilities/gateway/api-reference/' | relative_url }}" {% if page.api == 'gateway' %}selected{% endif %}>Gateway</option>
+                            <option value="{{ '/capabilities/market-oracles/api-reference/' | relative_url }}" {% if page.api == 'market-oracles' %}selected{% endif %}>Market Oracles</option>
+                            <option value="{{ '/capabilities/pricing-refdata/api-reference/' | relative_url }}" {% if page.api == 'pricing-refdata' %}selected{% endif %}>Pricing & RefData</option>
                         </optgroup>
                         <optgroup label="Financial Services">
-                            <option value="{{ '/api-reference/custodian/' | relative_url }}" {% if page.api == 'custodian' %}selected{% endif %}>Custodian</option>
-                            <option value="{{ '/api-reference/treasury/' | relative_url }}" {% if page.api == 'treasury' %}selected{% endif %}>Treasury</option>
-                            <option value="{{ '/api-reference/fiat-banking/' | relative_url }}" {% if page.api == 'fiat-banking' %}selected{% endif %}>Fiat Banking</option>
-                            <option value="{{ '/api-reference/settlements/' | relative_url }}" {% if page.api == 'settlements' %}selected{% endif %}>Settlements</option>
-                            <option value="{{ '/api-reference/escrow/' | relative_url }}" {% if page.api == 'escrow' %}selected{% endif %}>Escrow</option>
-                            <option value="{{ '/api-reference/fees-billing/' | relative_url }}" {% if page.api == 'fees-billing' %}selected{% endif %}>Fees & Billing</option>
+                            <option value="{{ '/capabilities/custodian/api-reference/' | relative_url }}" {% if page.api == 'custodian' %}selected{% endif %}>Custodian</option>
+                            <option value="{{ '/capabilities/treasury/api-reference/' | relative_url }}" {% if page.api == 'treasury' %}selected{% endif %}>Treasury</option>
+                            <option value="{{ '/capabilities/fiat-banking/api-reference/' | relative_url }}" {% if page.api == 'fiat-banking' %}selected{% endif %}>Fiat Banking</option>
+                            <option value="{{ '/capabilities/settlements/api-reference/' | relative_url }}" {% if page.api == 'settlements' %}selected{% endif %}>Settlements</option>
+                            <option value="{{ '/capabilities/escrow/api-reference/' | relative_url }}" {% if page.api == 'escrow' %}selected{% endif %}>Escrow</option>
+                            <option value="{{ '/capabilities/fees-billing/api-reference/' | relative_url }}" {% if page.api == 'fees-billing' %}selected{% endif %}>Fees & Billing</option>
                         </optgroup>
                         <optgroup label="Capital Markets">
-                            <option value="{{ '/api-reference/primary-market/' | relative_url }}" {% if page.api == 'primary-market' %}selected{% endif %}>Primary Market</option>
-                            <option value="{{ '/api-reference/transfer-agent/' | relative_url }}" {% if page.api == 'transfer-agent' %}selected{% endif %}>Transfer Agent</option>
-                            <option value="{{ '/api-reference/documents/' | relative_url }}" {% if page.api == 'documents' %}selected{% endif %}>Documents</option>
+                            <option value="{{ '/capabilities/primary-market/api-reference/' | relative_url }}" {% if page.api == 'primary-market' %}selected{% endif %}>Primary Market</option>
+                            <option value="{{ '/capabilities/transfer-agent/api-reference/' | relative_url }}" {% if page.api == 'transfer-agent' %}selected{% endif %}>Transfer Agent</option>
+                            <option value="{{ '/capabilities/documents/api-reference/' | relative_url }}" {% if page.api == 'documents' %}selected{% endif %}>Documents</option>
                         </optgroup>
                         <optgroup label="Operations & Compliance">
-                            <option value="{{ '/api-reference/compliance/' | relative_url }}" {% if page.api == 'compliance' %}selected{% endif %}>Compliance</option>
-                            <option value="{{ '/api-reference/risk-limits/' | relative_url }}" {% if page.api == 'risk-limits' %}selected{% endif %}>Risk & Limits</option>
-                            <option value="{{ '/api-reference/governance/' | relative_url }}" {% if page.api == 'governance' %}selected{% endif %}>Governance</option>
-                            <option value="{{ '/api-reference/analytics-reports/' | relative_url }}" {% if page.api == 'analytics-reports' %}selected{% endif %}>Analytics & Reports</option>
+                            <option value="{{ '/capabilities/compliance/api-reference/' | relative_url }}" {% if page.api == 'compliance' %}selected{% endif %}>Compliance</option>
+                            <option value="{{ '/capabilities/risk-limits/api-reference/' | relative_url }}" {% if page.api == 'risk-limits' %}selected{% endif %}>Risk & Limits</option>
+                            <option value="{{ '/capabilities/governance/api-reference/' | relative_url }}" {% if page.api == 'governance' %}selected{% endif %}>Governance</option>
+                            <option value="{{ '/capabilities/analytics-reports/api-reference/' | relative_url }}" {% if page.api == 'analytics-reports' %}selected{% endif %}>Analytics & Reports</option>
                         </optgroup>
                         <optgroup label="Infrastructure">
-                            <option value="{{ '/api-reference/chain/' | relative_url }}" {% if page.api == 'chain' %}selected{% endif %}>Chain Integration</option>
-                            <option value="{{ '/api-reference/events/' | relative_url }}" {% if page.api == 'events' %}selected{% endif %}>Events</option>
-                            <option value="{{ '/api-reference/notifications/' | relative_url }}" {% if page.api == 'notifications' %}selected{% endif %}>Notifications</option>
-                            <option value="{{ '/api-reference/observability/' | relative_url }}" {% if page.api == 'observability' %}selected{% endif %}>Observability</option>
-                            <option value="{{ '/api-reference/sandbox/' | relative_url }}" {% if page.api == 'sandbox' %}selected{% endif %}>Sandbox</option>
+                            <option value="{{ '/capabilities/chain/api-reference/' | relative_url }}" {% if page.api == 'chain' %}selected{% endif %}>Chain Integration</option>
+                            <option value="{{ '/capabilities/events/api-reference/' | relative_url }}" {% if page.api == 'events' %}selected{% endif %}>Events</option>
+                            <option value="{{ '/capabilities/notifications/api-reference/' | relative_url }}" {% if page.api == 'notifications' %}selected{% endif %}>Notifications</option>
+                            <option value="{{ '/capabilities/observability/api-reference/' | relative_url }}" {% if page.api == 'observability' %}selected{% endif %}>Observability</option>
+                            <option value="{{ '/capabilities/sandbox/api-reference/' | relative_url }}" {% if page.api == 'sandbox' %}selected{% endif %}>Sandbox</option>
                         </optgroup>
                     </select>
                 </div>
