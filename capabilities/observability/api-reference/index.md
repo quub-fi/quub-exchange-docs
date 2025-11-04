@@ -21,7 +21,7 @@ Monitoring and observability
 
 ## Authentication
 
-All API requests require authentication using JWT tokens. See the [Authentication Guide]({{ site.baseurl }}/api-reference/auth/) for details.
+All API requests require authentication using JWT tokens. See the [Authentication Guide]({{ site.baseurl }}/capabilities/auth/api-documentation/) for details.
 
 ## Base URL
 

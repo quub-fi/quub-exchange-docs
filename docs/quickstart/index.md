@@ -159,9 +159,9 @@ curl -X GET https://api.quub.exchange/exchange/v1/orders/ord_789xyz \
 ### Continue Learning
 
 - 📖 [Authentication Guide](../authentication/) - Deep dive into security
-- 🔐 [Multi-Tenancy](../../api-reference/tenancy-trust/) - Understand tenant isolation
-- 💱 [Trading APIs](../../api-reference/exchange/) - Advanced order types
-- 🏦 [Custody APIs](../../api-reference/custodian/) - Manage wallets and assets
+- 🔐 [Multi-Tenancy](../../capabilities/tenancy-trust/api-documentation/) - Understand tenant isolation
+- 💱 [Trading APIs](../../capabilities/exchange/api-documentation/) - Advanced order types
+- 🏦 [Custody APIs](../../capabilities/custodian/api-documentation/) - Manage wallets and assets
 - 🔔 [Webhooks](../webhooks/) - Real-time notifications
 
 ### Code Examples

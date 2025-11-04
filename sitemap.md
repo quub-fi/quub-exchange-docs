@@ -32,44 +32,44 @@
 
 ### Core Platform Services
 
-- [Auth Service](https://quub-fi.github.io/quub-exchange-docs/api-reference/auth/)
-- [Identity Service](https://quub-fi.github.io/quub-exchange-docs/api-reference/identity/)
-- [Tenancy & Trust](https://quub-fi.github.io/quub-exchange-docs/api-reference/tenancy-trust/)
+- [Auth Service](https://quub-fi.github.io/quub-exchange-docs/capabilities/auth/api-documentation/)
+- [Identity Service](https://quub-fi.github.io/quub-exchange-docs/capabilities/identity/api-documentation/)
+- [Tenancy & Trust](https://quub-fi.github.io/quub-exchange-docs/capabilities/tenancy-trust/api-documentation/)
 
 ### Trading & Markets
 
-- [Exchange](https://quub-fi.github.io/quub-exchange-docs/api-reference/exchange/)
-- [Marketplace](https://quub-fi.github.io/quub-exchange-docs/api-reference/marketplace/)
-- [Gateway](https://quub-fi.github.io/quub-exchange-docs/api-reference/gateway/)
-- [Market Oracles](https://quub-fi.github.io/quub-exchange-docs/api-reference/market-oracles/)
-- [Pricing & RefData](https://quub-fi.github.io/quub-exchange-docs/api-reference/pricing-refdata/)
-- [Primary Market](https://quub-fi.github.io/quub-exchange-docs/api-reference/primary-market/)
+- [Exchange](https://quub-fi.github.io/quub-exchange-docs/capabilities/exchange/api-documentation/)
+- [Marketplace](https://quub-fi.github.io/quub-exchange-docs/capabilities/marketplace/api-documentation/)
+- [Gateway](https://quub-fi.github.io/quub-exchange-docs/capabilities/gateway/api-documentation/)
+- [Market Oracles](https://quub-fi.github.io/quub-exchange-docs/capabilities/market-oracles/api-documentation/)
+- [Pricing & RefData](https://quub-fi.github.io/quub-exchange-docs/capabilities/pricing-refdata/api-documentation/)
+- [Primary Market](https://quub-fi.github.io/quub-exchange-docs/capabilities/primary-market/api-documentation/)
 
 ### Financial Services
 
-- [Custodian](https://quub-fi.github.io/quub-exchange-docs/api-reference/custodian/)
-- [Treasury](https://quub-fi.github.io/quub-exchange-docs/api-reference/treasury/)
-- [Fiat Banking](https://quub-fi.github.io/quub-exchange-docs/api-reference/fiat-banking/)
-- [Settlements](https://quub-fi.github.io/quub-exchange-docs/api-reference/settlements/)
-- [Escrow](https://quub-fi.github.io/quub-exchange-docs/api-reference/escrow/)
-- [Fees & Billing](https://quub-fi.github.io/quub-exchange-docs/api-reference/fees-billing/)
-- [Transfer Agent](https://quub-fi.github.io/quub-exchange-docs/api-reference/transfer-agent/)
+- [Custodian](https://quub-fi.github.io/quub-exchange-docs/capabilities/custodian/api-documentation/)
+- [Treasury](https://quub-fi.github.io/quub-exchange-docs/capabilities/treasury/api-documentation/)
+- [Fiat Banking](https://quub-fi.github.io/quub-exchange-docs/capabilities/fiat-banking/api-documentation/)
+- [Settlements](https://quub-fi.github.io/quub-exchange-docs/capabilities/settlements/api-documentation/)
+- [Escrow](https://quub-fi.github.io/quub-exchange-docs/capabilities/escrow/api-documentation/)
+- [Fees & Billing](https://quub-fi.github.io/quub-exchange-docs/capabilities/fees-billing/api-documentation/)
+- [Transfer Agent](https://quub-fi.github.io/quub-exchange-docs/capabilities/transfer-agent/api-documentation/)
 
 ### Operations & Compliance
 
-- [Compliance](https://quub-fi.github.io/quub-exchange-docs/api-reference/compliance/)
-- [Risk & Limits](https://quub-fi.github.io/quub-exchange-docs/api-reference/risk-limits/)
-- [Governance](https://quub-fi.github.io/quub-exchange-docs/api-reference/governance/)
-- [Documents](https://quub-fi.github.io/quub-exchange-docs/api-reference/documents/)
-- [Analytics & Reports](https://quub-fi.github.io/quub-exchange-docs/api-reference/analytics-reports/)
+- [Compliance](https://quub-fi.github.io/quub-exchange-docs/capabilities/compliance/api-documentation/)
+- [Risk & Limits](https://quub-fi.github.io/quub-exchange-docs/capabilities/risk-limits/api-documentation/)
+- [Governance](https://quub-fi.github.io/quub-exchange-docs/capabilities/governance/api-documentation/)
+- [Documents](https://quub-fi.github.io/quub-exchange-docs/capabilities/documents/api-documentation/)
+- [Analytics & Reports](https://quub-fi.github.io/quub-exchange-docs/capabilities/analytics-reports/api-documentation/)
 
 ### Infrastructure
 
-- [Events](https://quub-fi.github.io/quub-exchange-docs/api-reference/events/)
-- [Notifications](https://quub-fi.github.io/quub-exchange-docs/api-reference/notifications/)
-- [Observability](https://quub-fi.github.io/quub-exchange-docs/api-reference/observability/)
-- [Sandbox](https://quub-fi.github.io/quub-exchange-docs/api-reference/sandbox/)
-- [Chain](https://quub-fi.github.io/quub-exchange-docs/api-reference/chain/)
+- [Events](https://quub-fi.github.io/quub-exchange-docs/capabilities/events/api-documentation/)
+- [Notifications](https://quub-fi.github.io/quub-exchange-docs/capabilities/notifications/api-documentation/)
+- [Observability](https://quub-fi.github.io/quub-exchange-docs/capabilities/observability/api-documentation/)
+- [Sandbox](https://quub-fi.github.io/quub-exchange-docs/capabilities/sandbox/api-documentation/)
+- [Chain](https://quub-fi.github.io/quub-exchange-docs/capabilities/chain/api-documentation/)
 
 ---
 

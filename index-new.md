@@ -21,13 +21,13 @@ Build powerful financial applications with Quub Exchange's comprehensive suite o
     <p>Learn how to authenticate and secure your API requests</p>
   </a>
 
-  <a href="{{ '/api-reference/exchange/' | relative_url }}" class="topic-card">
+  <a href="{{ '/capabilities/exchange/api-documentation/' | relative_url }}" class="topic-card">
     <div class="topic-icon">💱</div>
     <h3>Trading APIs</h3>
     <p>Execute trades and manage orders programmatically</p>
   </a>
 
-  <a href="{{ '/api-reference/custodian/' | relative_url }}" class="topic-card">
+  <a href="{{ '/capabilities/custodian/api-documentation/' | relative_url }}" class="topic-card">
     <div class="topic-icon">🏦</div>
     <h3>Custody Services</h3>
     <p>Securely manage digital assets and wallets</p>
@@ -46,33 +46,33 @@ Explore our complete API documentation organized by service category:
 
 ### Core Platform
 
-- [**Auth Service**]({{ '/api-reference/auth/' | relative_url }}) - Authentication and session management
-- [**Identity Service**]({{ '/api-reference/identity/' | relative_url }}) - User identity and KYC
-- [**Tenancy & Trust**]({{ '/api-reference/tenancy-trust/' | relative_url }}) - Multi-tenant security
+- [**Auth Service**]({{ '/capabilities/auth/api-documentation/' | relative_url }}) - Authentication and session management
+- [**Identity Service**]({{ '/capabilities/identity/api-documentation/' | relative_url }}) - User identity and KYC
+- [**Tenancy & Trust**]({{ '/capabilities/tenancy-trust/api-documentation/' | relative_url }}) - Multi-tenant security
 
 ### Trading & Markets
 
-- [**Exchange**]({{ '/api-reference/exchange/' | relative_url }}) - Order execution and trading
-- [**Marketplace**]({{ '/api-reference/marketplace/' | relative_url }}) - P2P trading and liquidity
-- [**Gateway**]({{ '/api-reference/gateway/' | relative_url }}) - Multi-venue routing
-- [**Market Oracles**]({{ '/api-reference/market-oracles/' | relative_url }}) - Price feeds and data
-- [**Pricing & RefData**]({{ '/api-reference/pricing-refdata/' | relative_url }}) - Market data reference
+- [**Exchange**]({{ '/capabilities/exchange/api-documentation/' | relative_url }}) - Order execution and trading
+- [**Marketplace**]({{ '/capabilities/marketplace/api-documentation/' | relative_url }}) - P2P trading and liquidity
+- [**Gateway**]({{ '/capabilities/gateway/api-documentation/' | relative_url }}) - Multi-venue routing
+- [**Market Oracles**]({{ '/capabilities/market-oracles/api-documentation/' | relative_url }}) - Price feeds and data
+- [**Pricing & RefData**]({{ '/capabilities/pricing-refdata/api-documentation/' | relative_url }}) - Market data reference
 
 ### Financial Services
 
-- [**Custodian**]({{ '/api-reference/custodian/' | relative_url }}) - Asset custody and wallets
-- [**Treasury**]({{ '/api-reference/treasury/' | relative_url }}) - Treasury management
-- [**Fiat Banking**]({{ '/api-reference/fiat-banking/' | relative_url }}) - Banking rails integration
-- [**Settlements**]({{ '/api-reference/settlements/' | relative_url }}) - Settlement processing
-- [**Escrow**]({{ '/api-reference/escrow/' | relative_url }}) - Escrow services
-- [**Fees & Billing**]({{ '/api-reference/fees-billing/' | relative_url }}) - Fee calculation and billing
+- [**Custodian**]({{ '/capabilities/custodian/api-documentation/' | relative_url }}) - Asset custody and wallets
+- [**Treasury**]({{ '/capabilities/treasury/api-documentation/' | relative_url }}) - Treasury management
+- [**Fiat Banking**]({{ '/capabilities/fiat-banking/api-documentation/' | relative_url }}) - Banking rails integration
+- [**Settlements**]({{ '/capabilities/settlements/api-documentation/' | relative_url }}) - Settlement processing
+- [**Escrow**]({{ '/capabilities/escrow/api-documentation/' | relative_url }}) - Escrow services
+- [**Fees & Billing**]({{ '/capabilities/fees-billing/api-documentation/' | relative_url }}) - Fee calculation and billing
 
 ## 🛠️ Developer Tools
 
 - **[OpenAPI Specifications]({{ '/openapi/' | relative_url }})** - Download machine-readable API specs
 - **[Postman Collection](#)** - Import and test APIs with Postman
 - **[SDKs & Libraries](#)** - Official client libraries for popular languages
-- **[Sandbox Environment]({{ '/api-reference/sandbox/' | relative_url }})** - Test safely in our sandbox
+- **[Sandbox Environment]({{ '/capabilities/sandbox/api-documentation/' | relative_url }})** - Test safely in our sandbox
 
 ## 💡 Guides & Tutorials
 

@@ -474,9 +474,9 @@ export QUUB_API_URL="https://sandbox.api.quub.exchange"
 
 ## Related Resources
 
-- 🔐 [Auth API Reference](../../api-reference/auth/) - Complete API documentation
-- 🏢 [Tenancy & Trust](../../api-reference/tenancy-trust/) - Multi-tenant architecture
-- 🔑 [Identity Service](../../api-reference/identity/) - User management
+- 🔐 [Auth API Reference](../../capabilities/auth/api-documentation/) - Complete API documentation
+- 🏢 [Tenancy & Trust](../../capabilities/tenancy-trust/api-documentation/) - Multi-tenant architecture
+- 🔑 [Identity Service](../../capabilities/identity/api-documentation/) - User management
 - 📚 [Best Practices](../best-practices/) - Security recommendations
 
 ## Support

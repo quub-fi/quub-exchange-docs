@@ -515,13 +515,13 @@ ws.onmessage = (event) => {
 };
 ```
 
-See [Events API Reference](../../api-reference/events/) for full WebSocket documentation.
+See [Events API Reference](../../capabilities/events/api-documentation/) for full WebSocket documentation.
 
 ## Related Resources
 
-- 📡 [Events API Reference](../../api-reference/events/) - Complete API documentation
-- 🔄 [Notifications Service](../../api-reference/notifications/) - Email/SMS notifications
-- 📊 [Observability](../../api-reference/observability/) - Monitoring and metrics
+- 📡 [Events API Reference](../../capabilities/events/api-documentation/) - Complete API documentation
+- 🔄 [Notifications Service](../../capabilities/notifications/api-documentation/) - Email/SMS notifications
+- 📊 [Observability](../../capabilities/observability/api-documentation/) - Monitoring and metrics
 
 ## Support
 

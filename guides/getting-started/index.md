@@ -422,9 +422,9 @@ Congratulations! You've successfully integrated with Quub Exchange. Here's what 
 
 ### Explore APIs
 
-- [**Exchange API**](../../api-reference/exchange/) - Trading and orders
-- [**Custodian API**](../../api-reference/custodian/) - Asset management
-- [**Market Data API**](../../api-reference/market-oracles/) - Price feeds
+- [**Exchange API**](../../capabilities/exchange/api-documentation/) - Trading and orders
+- [**Custodian API**](../../capabilities/custodian/api-documentation/) - Asset management
+- [**Market Data API**](../../capabilities/market-oracles/api-documentation/) - Price feeds
 - [**All APIs**](../../api-reference/) - Complete reference
 
 ---
