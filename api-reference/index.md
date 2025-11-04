@@ -13,19 +13,19 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
 ### 🔐 Core Platform
 
 <div class="api-list">
-  <a href="{{ '/capabilities/auth/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/auth/auth-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-key"></i> Authentication Service</h3>
     <p>User authentication, session management, and access control</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/identity/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/identity/identity-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-user-shield"></i> Identity Service</h3>
     <p>User identity, KYC/AML, and profile management</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/tenancy-trust/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/tenancy-trust/tenancy-trust-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-building"></i> Tenancy & Trust</h3>
     <p>Multi-tenant isolation and trust management</p>
     <span class="api-version">v2.0.0</span>
@@ -35,33 +35,33 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
 ### 💱 Trading & Markets
 
 <div class="api-list">
-  <a href="{{ '/capabilities/exchange/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/exchange/exchange-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-exchange-alt"></i> Exchange</h3>
     <p>Order execution, matching engine, and trade management</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/marketplace/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/marketplace/marketplace-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-store"></i> Marketplace</h3>
     <p>P2P trading, liquidity pools, and secondary markets</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/gateway/api-reference/' | relative_url }}" class="api-card">
-    <h3><i class="fas fa-network-wired"></i> Gateway</h3>
-    <p>Multi-venue routing and aggregation</p>
+  <a href="{{ '/capabilities/gateway/gateway-api-documentation/' | relative_url }}" class="api-card">
+    <h3><i class="fas fa-plug"></i> Gateway</h3>
+    <p>API gateway, routing, and protocol translation</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/market-oracles/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/market-oracles/market-oracles-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-chart-line"></i> Market Oracles</h3>
-    <p>Price feeds, market data, and oracle services</p>
+    <p>Price feeds, market data aggregation, and oracle services</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/pricing-refdata/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/pricing-refdata/pricing-refdata-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-database"></i> Pricing & RefData</h3>
-    <p>Pricing engines and reference data management</p>
+    <p>Reference data, pricing information, and market standards</p>
     <span class="api-version">v2.0.0</span>
   </a>
 </div>
@@ -69,37 +69,37 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
 ### 🏦 Financial Services
 
 <div class="api-list">
-  <a href="{{ '/capabilities/custodian/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/custodian/custodian-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-vault"></i> Custodian</h3>
     <p>Asset custody, wallet management, and security</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/treasury/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/treasury/treasury-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-coins"></i> Treasury</h3>
     <p>Treasury operations and cash management</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/fiat-banking/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/fiat-banking/fiat-banking-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-university"></i> Fiat Banking</h3>
     <p>Banking rails integration and fiat operations</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/settlements/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/settlements/settlements-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-handshake"></i> Settlements</h3>
     <p>Settlement processing and reconciliation</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/escrow/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/escrow/escrow-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-lock"></i> Escrow</h3>
     <p>Escrow services and conditional transfers</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/fees-billing/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/fees-billing/fees-billing-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-file-invoice-dollar"></i> Fees & Billing</h3>
     <p>Fee calculation, billing, and invoicing</p>
     <span class="api-version">v2.0.0</span>
@@ -109,19 +109,19 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
 ### 🏛️ Capital Markets
 
 <div class="api-list">
-  <a href="{{ '/capabilities/primary-market/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/primary-market/primary-market-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-seedling"></i> Primary Market</h3>
     <p>IPOs, token launches, and primary issuance</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/transfer-agent/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/transfer-agent/transfer-agent-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-exchange"></i> Transfer Agent</h3>
     <p>Share registry and transfer agent services</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/governance/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/governance/governance-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-gavel"></i> Governance</h3>
     <p>Voting, proposals, and governance mechanisms</p>
     <span class="api-version">v2.0.0</span>
@@ -131,19 +131,19 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
 ### 🛡️ Compliance & Risk
 
 <div class="api-list">
-  <a href="{{ '/capabilities/compliance/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/compliance/compliance-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-shield-alt"></i> Compliance</h3>
     <p>Regulatory compliance and monitoring</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/risk-limits/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/risk-limits/risk-limits-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-exclamation-triangle"></i> Risk & Limits</h3>
     <p>Risk management and trading limits</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/documents/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/documents/documents-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-file-alt"></i> Documents</h3>
     <p>Document management and storage</p>
     <span class="api-version">v2.0.0</span>
@@ -153,25 +153,25 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
 ### 🔗 Infrastructure
 
 <div class="api-list">
-  <a href="{{ '/capabilities/chain/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/chain/chain-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-link"></i> Chain</h3>
     <p>Blockchain integration and bridge services</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/events/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/events/events-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-bolt"></i> Events</h3>
     <p>Event streaming and pub/sub messaging</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/notifications/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/notifications/notifications-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-bell"></i> Notifications</h3>
     <p>Multi-channel notification delivery</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/observability/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/observability/observability-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-chart-area"></i> Observability</h3>
     <p>Monitoring, metrics, and logging</p>
     <span class="api-version">v2.0.0</span>
@@ -181,20 +181,26 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
 ### 📊 Analytics & Reporting
 
 <div class="api-list">
-  <a href="{{ '/capabilities/analytics-reports/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/analytics-reports/analytics-reports-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-chart-pie"></i> Analytics & Reports</h3>
     <p>Business intelligence and reporting</p>
     <span class="api-version">v2.0.0</span>
   </a>
 
-  <a href="{{ '/capabilities/sandbox/api-reference/' | relative_url }}" class="api-card">
+  <a href="{{ '/capabilities/sandbox/sandbox-api-documentation/' | relative_url }}" class="api-card">
     <h3><i class="fas fa-flask"></i> Sandbox</h3>
     <p>Testing and development environment</p>
     <span class="api-version">v2.0.0</span>
   </a>
 </div>
 
-[View all 26 APIs →]({{ '/capabilities/' | relative_url }})
+</div>
+</div>
+
+[View all 26 APIs →](/api-reference/all-apis/)
+{: .api-view-all}
+
+---
 
 ## 🛠️ Developer Resources
 
