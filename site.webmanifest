@@ -1,0 +1,27 @@
+{
+    "name": "Quub Exchange Documentation",
+    "short_name": "Quub Docs",
+    "description": "Complete API documentation and developer guides for Quub Exchange",
+    "icons": [
+        {
+            "src": "/quub-exchange-docs/assets/images/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/quub-exchange-docs/assets/images/favicon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/quub-exchange-docs/assets/images/favicon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/quub-exchange-docs/",
+    "display": "standalone",
+    "theme_color": "#667eea",
+    "background_color": "#1a1d29"
+}
