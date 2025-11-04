@@ -369,6 +369,186 @@ body {
   text-align: center;
 }
 
+.nav-item-sub {
+  padding-left: 2.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* ========================================
+   Blockchain Integration Cards
+   ======================================== */
+
+.integration-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.integration-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.integration-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.integration-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.integration-card h4 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.integration-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+  flex-grow: 1;
+}
+
+.integration-card .badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--primary);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 12px;
+  align-self: flex-start;
+}
+
+.integration-hero {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.integration-icon-large {
+  font-size: 4rem;
+  flex-shrink: 0;
+}
+
+.integration-details {
+  flex-grow: 1;
+}
+
+.integration-details h4 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.integration-details p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+}
+
+.integration-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.integration-details ul li {
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  margin-top: 1rem;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateX(4px);
+}
+
+.btn-primary-large {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.125rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary-large:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.security-checklist {
+  background: var(--bg-secondary);
+  border-left: 4px solid var(--primary);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border-radius: 4px;
+}
+
+.security-checklist h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.security-checklist h4:first-child {
+  margin-top: 0;
+}
+
+.footer-cta {
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin: 3rem 0;
+}
+
+.footer-cta h3 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.footer-cta p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
 /* ========================================
    Main Content
    ======================================== */

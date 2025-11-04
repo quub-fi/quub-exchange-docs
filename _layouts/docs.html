@@ -38,6 +38,34 @@
         cursor: pointer;
         padding: 8px;
         color: var(--text-primary);
+        position: relative;
+        width: 40px;
+        height: 40px;
+        transition: transform 0.3s;
+      }
+
+      .mobile-menu-btn i {
+        transition: opacity 0.2s;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .mobile-menu-btn .fa-bars {
+        opacity: 1;
+      }
+
+      .mobile-menu-btn .fa-times {
+        opacity: 0;
+      }
+
+      .mobile-menu-btn.active .fa-bars {
+        opacity: 0;
+      }
+
+      .mobile-menu-btn.active .fa-times {
+        opacity: 1;
       }
 
       .mobile-overlay {
@@ -76,6 +104,7 @@
           transition: left 0.3s;
           background: var(--bg-primary);
           box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+          overflow-y: auto;
         }
 
         .sidebar.active {
@@ -94,8 +123,26 @@
         .toc {
           display: none;
         }
+
+        .content {
+          padding: 2rem 1.5rem;
+        }
       }
     </style>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{{ '/assets/images/favicon.svg' | relative_url }}"
+    />
+    <link
+      rel="alternate icon"
+      href="{{ '/assets/images/favicon.svg' | relative_url }}"
+    />
+    <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}" />
+    <meta name="theme-color" content="#667eea" />
+  </head>
   <body>
     <!-- Mobile Overlay -->
     <div class="mobile-overlay" id="mobileOverlay"></div>
@@ -104,8 +151,13 @@
     <nav class="top-nav">
       <div class="nav-container">
         <div class="nav-left">
-          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+          <button
+            class="mobile-menu-btn"
+            id="mobileMenuBtn"
+            aria-label="Toggle menu"
+          >
             <i class="fas fa-bars"></i>
+            <i class="fas fa-times"></i>
           </button>
           <a href="{{ '/' | relative_url }}" class="logo">
             <i class="fas fa-cube"></i>
@@ -349,6 +401,11 @@
               >Chain Integration</a
             >
             <a
+              href="{{ '/capabilities/chain/integrations/' | relative_url }}"
+              class="nav-item nav-item-sub"
+              >⛓️ Blockchain Integrations</a
+            >
+            <a
               href="{{ '/capabilities/events/api-documentation/' | relative_url }}"
               class="nav-item"
               >Events</a
@@ -417,50 +474,52 @@
 
     <!-- Mobile Navigation Script -->
     <script>
-      (function() {
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const sidebar = document.querySelector('.sidebar');
-        const mobileOverlay = document.getElementById('mobileOverlay');
+      (function () {
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+        const sidebar = document.querySelector(".sidebar");
+        const mobileOverlay = document.getElementById("mobileOverlay");
 
         function toggleMobileMenu() {
-          sidebar.classList.toggle('active');
-          mobileOverlay.classList.toggle('active');
-          if (sidebar.classList.contains('active')) {
-            document.body.style.overflow = 'hidden';
+          sidebar.classList.toggle("active");
+          mobileOverlay.classList.toggle("active");
+          mobileMenuBtn.classList.toggle("active");
+          if (sidebar.classList.contains("active")) {
+            document.body.style.overflow = "hidden";
           } else {
-            document.body.style.overflow = '';
+            document.body.style.overflow = "";
           }
         }
 
         function closeMobileMenu() {
-          sidebar.classList.remove('active');
-          mobileOverlay.classList.remove('active');
-          document.body.style.overflow = '';
+          sidebar.classList.remove("active");
+          mobileOverlay.classList.remove("active");
+          mobileMenuBtn.classList.remove("active");
+          document.body.style.overflow = "";
         }
 
         if (mobileMenuBtn) {
-          mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+          mobileMenuBtn.addEventListener("click", toggleMobileMenu);
         }
 
         if (mobileOverlay) {
-          mobileOverlay.addEventListener('click', closeMobileMenu);
+          mobileOverlay.addEventListener("click", closeMobileMenu);
         }
 
         // Close menu on navigation
-        const sidebarLinks = sidebar.querySelectorAll('a');
-        sidebarLinks.forEach(link => {
-          link.addEventListener('click', closeMobileMenu);
+        const sidebarLinks = sidebar.querySelectorAll("a");
+        sidebarLinks.forEach((link) => {
+          link.addEventListener("click", closeMobileMenu);
         });
 
         // Close menu on escape key
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && sidebar.classList.contains("active")) {
             closeMobileMenu();
           }
         });
 
         // Close menu on window resize if > 1024px
-        window.addEventListener('resize', function() {
+        window.addEventListener("resize", function () {
           if (window.innerWidth > 1024) {
             closeMobileMenu();
           }
