@@ -105,7 +105,9 @@ POST /data/price-ticks — Submit a new tick. Request body schema: `PriceTick`.
 Example (curl) — query recent ticks:
 
 ```bash
-curl -X GET "https://api.quub.exchange/v2/data/price-ticks?instrumentId={instrumentId}&since=2025-11-01T00:00:00Z" \
+curl -G "https://api.quub.exchange/v2/data/price-ticks" \
+  --data-urlencode "instrumentId={instrumentId}" \
+  --data-urlencode "since={since}" \
   -H "Authorization: Bearer <ACCESS_TOKEN>"
 ```
 
