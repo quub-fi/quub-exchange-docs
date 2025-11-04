@@ -108,11 +108,12 @@
 
         .sidebar {
           position: fixed;
-          left: -300px;
-          top: 60px;
-          height: calc(100vh - 60px);
-          width: 280px;
-          transition: left 0.3s;
+          left: -100%;
+          top: var(--nav-height);
+          height: calc(100vh - var(--nav-height));
+          width: 85%;
+          max-width: 320px;
+          transition: left 0.3s ease-in-out;
           background: var(--bg-primary);
           box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
           overflow-y: auto;
@@ -137,6 +138,21 @@
 
         .content {
           padding: 2rem 1.5rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .sidebar {
+          width: 90%;
+          max-width: 280px;
+        }
+
+        .logo span {
+          display: none;
+        }
+
+        .content {
+          padding: 1.5rem 1rem;
         }
       }
     </style>
