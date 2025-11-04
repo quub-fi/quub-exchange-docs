@@ -194,7 +194,7 @@ Interactive API documentation powered by OpenAPI specifications. Select a servic
   </a>
 </div>
 
-[View all 26 APIs →](/api-reference/all-apis/)
+[View all 26 APIs →]({{ '/api-reference/all-apis/' | relative_url }})
 {: .api-view-all}
 
 ---
