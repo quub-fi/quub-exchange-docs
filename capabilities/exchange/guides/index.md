@@ -6,7 +6,7 @@ permalink: /capabilities/exchange/guides/
 
 # 📚 Exchange Implementation Guides
 
-> Comprehensive guides for implementing and integrating Exchange capabilities into your trading applications.
+> Comprehensive developer guide for implementing high-performance trading, order management, and market operations.
 
 ## 🚀 Quick Navigation
 
@@ -16,19 +16,20 @@ permalink: /capabilities/exchange/guides/
   <h3 style="margin-top: 0; color: #667eea;">🎯 Getting Started</h3>
   <p>New to Exchange? Start here to get up and running quickly.</p>
   <ul style="margin-bottom: 0;">
+    <li><a href="#overview">API Overview & Architecture</a></li>
     <li><a href="#quick-start">Quick Start Guide</a></li>
-    <li><a href="#integration">Integration Guide</a></li>
     <li><a href="#authentication">Authentication Setup</a></li>
   </ul>
 </div>
 
 <div style="border: 2px solid #10b981; border-radius: 8px; padding: 20px; background: linear-gradient(135deg, #10b98110 0%, #059669100%);">
-  <h3 style="margin-top: 0; color: #10b981;">✨ Best Practices</h3>
-  <p>Learn recommended patterns and industry best practices.</p>
+  <h3 style="margin-top: 0; color: #10b981;">🏗️ Core Operations</h3>
+  <p>Master the essential trading and market operations.</p>
   <ul style="margin-bottom: 0;">
-    <li><a href="#best-practices">Implementation Best Practices</a></li>
-    <li><a href="#security">Security Guidelines</a></li>
-    <li><a href="#performance">Performance Optimization</a></li>
+    <li><a href="#markets">Markets Management</a></li>
+    <li><a href="#orders">Order Management</a></li>
+    <li><a href="#trades">Trade Execution</a></li>
+    <li><a href="#positions">Position Tracking</a></li>
   </ul>
 </div>
 
@@ -36,13 +37,56 @@ permalink: /capabilities/exchange/guides/
   <h3 style="margin-top: 0; color: #f59e0b;">🔧 Advanced Topics</h3>
   <p>Deep dives into advanced features and capabilities.</p>
   <ul style="margin-bottom: 0;">
-    <li><a href="#advanced">Advanced Configuration</a></li>
+    <li><a href="#market-making">Market Making</a></li>
+    <li><a href="#risk-management">Risk Management</a></li>
     <li><a href="#troubleshooting">Troubleshooting</a></li>
     <li><a href="#monitoring">Monitoring & Observability</a></li>
   </ul>
 </div>
 
 </div>
+
+---
+
+## 🎯 API Overview & Architecture {#overview}
+
+### Business Purpose
+
+The Exchange API serves as the core trading infrastructure for Quub Exchange, providing:
+
+- **High-Performance Order Matching:** Sub-millisecond execution with price-time priority
+- **Multi-Asset Trading:** Support for SPOT, tokenized RWAs, and derivatives
+- **Market Making Infrastructure:** Continuous liquidity provision and spread management
+- **Risk Management:** Real-time position monitoring and circuit breakers
+- **Regulatory Compliance:** ATS/MTF frameworks with comprehensive audit trails
+
+### Technical Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  Trading Client │    │  Exchange API   │    │ Matching Engine │
+│                 │────│                 │────│                 │
+│ • Order Entry   │    │ • Validation    │    │ • Order Book    │
+│ • Portfolio     │    │ • Risk Checks   │    │ • Price Match   │
+│ • Market Data   │    │ • Settlement    │    │ • Trade Exec    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │
+                    ┌─────────────────┐
+                    │  Data Pipeline  │
+                    │                 │
+                    │ • Real-time     │
+                    │ • WebSockets    │
+                    │ • Market Data   │
+                    └─────────────────┘
+```
+
+### Core Data Models
+
+**Markets:** Trading venues with configurable parameters (lot sizes, price bands, market types)
+**Orders:** Trading instructions with various types (LIMIT, MARKET, STOP_LIMIT, IOC) and time-in-force options
+**Trades:** Executed transactions with complete audit trail and settlement details
+**Positions:** Real-time portfolio tracking with P/L calculations and risk metrics
+**Market Maker Quotes:** Continuous two-sided quotes for liquidity provision
 
 ---
 
@@ -56,6 +100,7 @@ Before you begin, ensure you have:
 - ✅ API credentials with `read:exchange` and `write:exchange` scopes
 - ✅ Development environment configured (Node.js 18+ or Python 3.9+)
 - ✅ Understanding of JWT authentication and trading concepts
+- ✅ Risk management policies and position limits configured
 
 ### 5-Minute Setup
 
@@ -64,13 +109,13 @@ Before you begin, ensure you have:
 **Node.js:**
 
 ```bash
-npm install @quub/exchange-sdk
+npm install @quub/exchange-sdk ws
 ```
 
 **Python:**
 
 ```bash
-pip install quub-exchange
+pip install quub-exchange websocket-client
 ```
 
 #### Step 2: Configure Authentication
@@ -83,7 +128,10 @@ import { ExchangeClient } from "@quub/exchange-sdk";
 const client = new ExchangeClient({
   apiKey: process.env.QUUB_API_KEY,
   orgId: process.env.QUUB_ORG_ID,
-  environment: "sandbox", // or 'production'
+  baseUrl:
+    process.env.NODE_ENV === "production"
+      ? "https://api.quub.exchange/v2"
+      : "https://api.sandbox.quub.exchange/v2",
 });
 ```
 
@@ -91,42 +139,55 @@ const client = new ExchangeClient({
 
 ```python
 from quub.exchange import ExchangeClient
+import os
 
 client = ExchangeClient(
     api_key=os.getenv('QUUB_API_KEY'),
     org_id=os.getenv('QUUB_ORG_ID'),
-    environment='sandbox'  # or 'production'
+    base_url='https://api.sandbox.quub.exchange/v2'
 )
 ```
 
-#### Step 3: Create Your First Market
+#### Step 3: Explore Available Markets
 
 **Node.js:**
 
 ```javascript
-const market = await client.markets.create({
-  instrumentId: "inst_btc_usd_001",
-  quoteCcy: "USD",
-  chainId: 1,
-  lotSize: 100,
-  marketType: "SPOT",
+// GET /orgs/{orgId}/markets
+const response = await client.get(`/orgs/${orgId}/markets`, {
+  params: {
+    status: "OPEN",
+    limit: 20,
+  },
 });
 
-console.log(`Market created: ${market.id}`);
+console.log("Available Markets:");
+response.data.data.forEach((market) => {
+  console.log(`${market.id}: ${market.quoteCcy} (${market.marketType})`);
+  console.log(
+    `  Lot Size: ${market.lotSize}, Price Band: ${market.priceBandPct}%`
+  );
+});
 ```
 
 **Python:**
 
 ```python
-market = client.markets.create(
-    instrument_id='inst_btc_usd_001',
-    quote_ccy='USD',
-    chain_id=1,
-    lot_size=100,
-    market_type='SPOT'
-)
+# GET /orgs/{orgId}/markets
+try:
+    response = client.get(f'/orgs/{org_id}/markets', params={
+        'status': 'OPEN',
+        'limit': 20
+    })
 
-print(f"Market created: {market.id}")
+    markets = response.json()
+    print("Available Markets:")
+    for market in markets['data']:
+        print(f"{market['id']}: {market['quoteCcy']} ({market['marketType']})")
+        print(f"  Lot Size: {market['lotSize']}, Price Band: {market['priceBandPct']}%")
+
+except Exception as e:
+    print(f"Failed to fetch markets: {e}")
 ```
 
 #### Step 4: Place Your First Order
@@ -134,7 +195,8 @@ print(f"Market created: {market.id}")
 **Node.js:**
 
 ```javascript
-const order = await client.orders.create({
+// POST /orgs/{orgId}/orders
+const orderResponse = await client.post(`/orgs/${orgId}/orders`, {
   accountId: "acc_123456789",
   instrumentId: "inst_btc_usd_001",
   side: "BUY",
@@ -142,143 +204,423 @@ const order = await client.orders.create({
   qty: 0.1,
   px: 45000.0,
   tif: "GTC",
+  clientRef: "my-first-order-001",
 });
 
-console.log(`Order placed: ${order.id}`);
+console.log(
+  `Order placed: ${orderResponse.data.id} (Status: ${orderResponse.data.status})`
+);
+
+// GET /orgs/{orgId}/orders/{orderId} - Monitor order status
+const orderStatus = await client.get(
+  `/orgs/${orgId}/orders/${orderResponse.data.id}`
+);
+if (orderStatus.data.status === "FILLED") {
+  console.log(
+    `Order filled: ${orderStatus.data.filledQty} at ${orderStatus.data.px}`
+  );
+}
 ```
 
 **Python:**
 
 ```python
-order = client.orders.create(
-    account_id='acc_123456789',
-    instrument_id='inst_btc_usd_001',
-    side='BUY',
-    type='LIMIT',
-    qty=0.1,
-    px=45000.00,
-    tif='GTC'
-)
+# POST /orgs/{orgId}/orders
+try:
+    order_response = client.post(f'/orgs/{org_id}/orders', json={
+        'accountId': 'acc_123456789',
+        'instrumentId': 'inst_btc_usd_001',
+        'side': 'BUY',
+        'type': 'LIMIT',
+        'qty': 0.1,
+        'px': 45000.00,
+        'tif': 'GTC',
+        'clientRef': 'my-first-order-001'
+    })
 
-print(f"Order placed: {order.id}")
+    order = order_response.json()
+    print(f"Order placed: {order['id']} (Status: {order['status']})")
+
+    # Check if immediately filled
+    if order['status'] == 'FILLED':
+        print(f"Order immediately filled: {order['filledQty']} at {order['px']}")
+    elif order['status'] == 'OPEN':
+        print("Order is now in the order book")
+
+except Exception as e:
+    print(f"Order placement failed: {e}")
 ```
 
 ---
 
-## 🔌 Integration Guide {#integration}
+## 🏗️ Core API Operations {#core-operations}
 
-### Architecture Overview
+### 1. Markets Management {#markets}
 
-```
-┌─────────────────┐
-│  Your Trading   │
-│     App         │
-└────────┬────────┘
-         │
-         ↓ HTTPS + JWT
-┌─────────────────┐
-│ Exchange API    │
-└────────┬────────┘
-         │
-    ┌────┴─────┬─────────┬─────────┐
-    ↓          ↓         ↓         ↓
-┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
-│Markets │ │Orders  │ │Trades  │ │Halts   │
-└────────┘ └────────┘ └────────┘ └────────┘
-```
+**Available Operations:**
 
-### Integration Patterns
+- `GET /orgs/{orgId}/markets` - List markets (operationId: listMarkets)
+- `POST /orgs/{orgId}/markets` - Create market (operationId: createMarket)
+- `GET /orgs/{orgId}/markets/{marketId}` - Get market details (operationId: getMarket)
+- `PATCH /orgs/{orgId}/markets/{marketId}` - Update market (operationId: updateMarket)
 
-#### 1. Market Management Workflow
+**List Markets**
 
 ```javascript
-// 1. Create a new market
-const market = await client.markets.create({
-  instrumentId: "inst_eth_usd_001",
+// GET /orgs/{orgId}/markets
+const response = await client.get(`/orgs/${orgId}/markets`, {
+  params: {
+    status: "OPEN",
+    cursor: null,
+    limit: 50,
+  },
+});
+
+console.log(`Found ${response.data.data.length} markets`);
+response.data.data.forEach((market) => {
+  console.log(`Market: ${market.id}`);
+  console.log(`  Quote Currency: ${market.quoteCcy}`);
+  console.log(`  Market Type: ${market.marketType}`);
+  console.log(`  Lot Size: ${market.lotSize}`);
+});
+```
+
+**Create Market**
+
+```javascript
+// POST /orgs/{orgId}/markets
+const marketResponse = await client.post(`/orgs/${orgId}/markets`, {
+  instrumentId: "inst_reit_001",
   quoteCcy: "USD",
   chainId: 1,
-  priceBandPct: 0.05, // 5% price collar
-  lotSize: 10,
+  priceBandPct: 0.05,
+  lotSize: 100,
   marketType: "SPOT",
 });
 
-// 2. Monitor market status
-const checkMarketStatus = async (marketId) => {
-  const marketDetails = await client.markets.get(marketId);
-  console.log(`Market ${marketId} status: ${marketDetails.status}`);
-  return marketDetails;
-};
-
-// 3. Update market parameters if needed
-if (market.status === "ACTIVE") {
-  await client.markets.update(market.id, {
-    priceBandPct: 0.03, // Tighten price collar to 3%
-  });
-}
+console.log(`Market created: ${marketResponse.data.id}`);
 ```
 
-#### 2. Order Management System
+### 2. Order Management {#orders}
+
+**Available Operations:**
+
+- `GET /orgs/{orgId}/orders` - List orders (operationId: listOrders)
+- `POST /orgs/{orgId}/orders` - Create order (operationId: createOrder)
+- `GET /orgs/{orgId}/orders/{orderId}` - Get order details (operationId: getOrder)
+- `DELETE /orgs/{orgId}/orders/{orderId}` - Cancel order (operationId: cancelOrder)
+
+**Create Order**
 
 ```javascript
-// Place order with error handling
-const placeOrder = async (orderParams) => {
-  try {
-    const order = await client.orders.create(orderParams);
+// POST /orgs/{orgId}/orders
+const orderResponse = await client.post(`/orgs/${orgId}/orders`, {
+  accountId: "acc_trader_001",
+  instrumentId: "inst_btc_usd_001",
+  side: "BUY",
+  type: "LIMIT",
+  qty: 1.5,
+  px: 44500.0,
+  tif: "GTC",
+  clientRef: "trade-2025-001",
+});
 
-    // Monitor order status
-    const orderStatus = await client.orders.get(order.id);
-
-    if (orderStatus.status === "OPEN") {
-      console.log("Order is active in the order book");
-    } else if (orderStatus.status === "FILLED") {
-      console.log(
-        `Order filled: ${orderStatus.filledQty} at ${orderStatus.px}`
-      );
-    }
-
-    return order;
-  } catch (error) {
-    if (error.code === "INSUFFICIENT_BALANCE") {
-      console.error("Not enough balance to place order");
-    } else if (error.code === "MARKET_HALTED") {
-      console.error("Market is currently halted");
-    }
-    throw error;
-  }
-};
+console.log(`Order created: ${orderResponse.data.id}`);
+console.log(`Status: ${orderResponse.data.status}`);
 ```
 
-#### 3. Real-time Trade Monitoring
+**List Orders**
 
 ```javascript
-// Fetch recent trades
-const getTrades = async (marketId, accountId = null) => {
-  const trades = await client.trades.list({
-    marketId: marketId,
-    accountId: accountId, // Optional: filter by account
-    limit: 50,
-  });
+// GET /orgs/{orgId}/orders
+const ordersResponse = await client.get(`/orgs/${orgId}/orders`, {
+  params: {
+    accountId: "acc_trader_001",
+    instrumentId: "inst_btc_usd_001",
+    status: "OPEN",
+    limit: 100,
+  },
+});
 
-  return trades.data.map((trade) => ({
-    id: trade.id,
-    quantity: trade.qty,
-    price: trade.px,
-    timestamp: trade.executedAt,
-  }));
-};
+ordersResponse.data.data.forEach((order) => {
+  console.log(`Order ${order.id}: ${order.side} ${order.qty} at ${order.px}`);
+});
+```
 
-// Calculate position metrics
-const calculatePositions = async (accountId) => {
-  const positions = await client.positions.list({ accountId });
+**Cancel Order**
 
-  return positions.data.map((position) => ({
-    instrument: position.instrumentId,
-    quantity: position.qty,
-    averagePrice: position.avgPx,
-    realizedPnL: position.realizedPnL,
-    unrealizedPnL: position.unrealizedPnL,
-  }));
-};
+```javascript
+// DELETE /orgs/{orgId}/orders/{orderId}
+await client.delete(`/orgs/${orgId}/orders/${orderId}`);
+console.log(`Order ${orderId} cancelled`);
+```
+
+### 3. Trade Execution & History {#trades}
+
+**Available Operations:**
+
+- `GET /orgs/{orgId}/trades` - List trades (operationId: listTrades)
+
+**List Trades**
+
+```javascript
+// GET /orgs/{orgId}/trades
+const tradesResponse = await client.get(`/orgs/${orgId}/trades`, {
+  params: {
+    marketId: "market_btc_usd_001",
+    accountId: "acc_trader_001", // Optional filter
+    limit: 100,
+  },
+});
+
+tradesResponse.data.data.forEach((trade) => {
+  console.log(`Trade ${trade.id}:`);
+  console.log(`  Quantity: ${trade.qty}`);
+  console.log(`  Price: ${trade.px}`);
+  console.log(`  Executed: ${trade.executedAt}`);
+});
+```
+
+### 4. Position Tracking {#positions}
+
+**Available Operations:**
+
+- `GET /orgs/{orgId}/positions` - List positions (operationId: listPositions)
+
+**List Positions**
+
+```javascript
+// GET /orgs/{orgId}/positions
+const positionsResponse = await client.get(`/orgs/${orgId}/positions`, {
+  params: {
+    accountId: "acc_trader_001", // Required parameter
+  },
+});
+
+console.log("Current Positions:");
+positionsResponse.data.data.forEach((position) => {
+  console.log(`${position.instrumentId}:`);
+  console.log(`  Quantity: ${position.qty}`);
+  console.log(`  Avg Price: ${position.avgPx}`);
+  console.log(`  Realized P/L: ${position.realizedPnL}`);
+  console.log(`  Unrealized P/L: ${position.unrealizedPnL}`);
+});
+```
+
+### 5. Market Maker Quotes {#market-making}
+
+**Available Operations:**
+
+- `GET /orgs/{orgId}/mm-quotes` - List market maker quotes (operationId: listMMQuotes)
+- `POST /orgs/{orgId}/mm-quotes` - Upsert market maker quote (operationId: upsertMMQuote)
+
+**Upsert Market Maker Quote**
+
+```javascript
+// POST /orgs/{orgId}/mm-quotes
+const quoteResponse = await client.post(`/orgs/${orgId}/mm-quotes`, {
+  marketId: "market_btc_usd_001",
+  bidPx: 44950.0,
+  bidQty: 1000,
+  askPx: 45050.0,
+  askQty: 1000,
+  validUntil: new Date(Date.now() + 30000).toISOString(), // 30 seconds
+});
+
+console.log(`Market maker quote updated: ${quoteResponse.data.id}`);
+```
+
+### 6. Market Halts {#risk-management}
+
+**Available Operations:**
+
+- `GET /orgs/{orgId}/halts` - List halts (operationId: listHalts)
+- `POST /orgs/{orgId}/halts` - Create halt (operationId: createHalt)
+
+**Create Market Halt**
+
+```javascript
+// POST /orgs/{orgId}/halts
+const haltResponse = await client.post(`/orgs/${orgId}/halts`, {
+  marketId: "market_btc_usd_001",
+  reason: "VOLATILITY",
+  triggeredBy: "AUTOMATED_SYSTEM",
+});
+
+console.log(`Market halt triggered: ${haltResponse.data.id}`);
+```
+
+qty: 1.5,
+px: 44500.0,
+tif: "GTC", // Good-Till-Cancelled
+clientRef: "trade-2025-001",
+});
+
+````
+
+**Place Market Order**
+
+```javascript
+// Market order for immediate execution
+const marketOrder = await client.orders.create({
+  accountId: "acc_trader_001",
+  instrumentId: "inst_eth_usd_001",
+  side: "SELL",
+  type: "MARKET",
+  qty: 10.0,
+  tif: "IOC", // Immediate-or-Cancel
+});
+````
+
+**Order Monitoring & Management**
+
+```python
+class OrderManager:
+    def __init__(self, client):
+        self.client = client
+
+    async def monitor_order(self, order_id, timeout=60):
+        """Monitor order until filled or cancelled"""
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            order = await self.client.orders.get(order_id)
+
+            if order['status'] == 'FILLED':
+                return {
+                    'status': 'COMPLETED',
+                    'filled_qty': order['filledQty'],
+                    'avg_price': order['px']
+                }
+            elif order['status'] == 'CANCELLED':
+                return {'status': 'CANCELLED'}
+
+            await asyncio.sleep(1)  # Check every second
+
+        return {'status': 'TIMEOUT'}
+
+    async def cancel_order(self, order_id):
+        """Cancel an open order"""
+        try:
+            await self.client.orders.cancel(order_id)
+            print(f"Order {order_id} cancelled successfully")
+        except Exception as e:
+            print(f"Failed to cancel order {order_id}: {e}")
+```
+
+### 3. Trade Execution & History {#trades}
+
+**Business Use Case:** Monitor trade executions and analyze trading history
+
+**Fetch Recent Trades**
+
+```javascript
+// Get trades for specific market
+const trades = await client.trades.list({
+  marketId: "market_btc_usd_001",
+  limit: 100,
+  accountId: "acc_trader_001", // Optional: filter by account
+});
+
+trades.data.forEach((trade) => {
+  console.log(`Trade ${trade.id}:`);
+  console.log(`  Quantity: ${trade.qty}`);
+  console.log(`  Price: ${trade.px}`);
+  console.log(`  Executed: ${trade.executedAt}`);
+});
+```
+
+**Trade Analysis**
+
+```python
+def analyze_trading_performance(client, account_id, start_date, end_date):
+    """Analyze trading performance over period"""
+    trades = client.trades.list(
+        account_id=account_id,
+        start_date=start_date,
+        end_date=end_date
+    )
+
+    total_volume = sum(trade['qty'] * trade['px'] for trade in trades['data'])
+    total_trades = len(trades['data'])
+
+    buy_trades = [t for t in trades['data'] if t['side'] == 'BUY']
+    sell_trades = [t for t in trades['data'] if t['side'] == 'SELL']
+
+    return {
+        'total_volume': total_volume,
+        'total_trades': total_trades,
+        'buy_trades': len(buy_trades),
+        'sell_trades': len(sell_trades),
+        'avg_trade_size': total_volume / total_trades if total_trades > 0 else 0
+    }
+```
+
+### 4. Position Tracking {#positions}
+
+**Business Use Case:** Monitor real-time portfolio positions and P/L
+
+**Get Account Positions**
+
+```javascript
+// Fetch all positions for an account
+const positions = await client.positions.list({
+  accountId: "acc_trader_001",
+});
+
+console.log("Current Positions:");
+positions.data.forEach((position) => {
+  console.log(`${position.instrumentId}:`);
+  console.log(`  Quantity: ${position.qty}`);
+  console.log(`  Avg Price: ${position.avgPx}`);
+  console.log(`  Realized P/L: ${position.realizedPnL}`);
+  console.log(`  Unrealized P/L: ${position.unrealizedPnL}`);
+});
+```
+
+**Real-time Position Monitoring**
+
+```python
+class PositionMonitor:
+    def __init__(self, client, account_id):
+        self.client = client
+        self.account_id = account_id
+        self.risk_limits = {
+            'max_position_size': 1000000,  # $1M max position
+            'max_loss_threshold': -50000   # -$50K max loss
+        }
+
+    async def check_risk_limits(self):
+        """Monitor positions against risk limits"""
+        positions = await self.client.positions.list(
+            account_id=self.account_id
+        )
+
+        alerts = []
+        total_unrealized = 0
+
+        for position in positions['data']:
+            position_value = position['qty'] * position['avgPx']
+            total_unrealized += position['unrealizedPnL']
+
+            # Check position size limits
+            if position_value > self.risk_limits['max_position_size']:
+                alerts.append({
+                    'type': 'POSITION_SIZE_EXCEEDED',
+                    'instrument': position['instrumentId'],
+                    'current_value': position_value,
+                    'limit': self.risk_limits['max_position_size']
+                })
+
+        # Check total unrealized loss
+        if total_unrealized < self.risk_limits['max_loss_threshold']:
+            alerts.append({
+                'type': 'LOSS_THRESHOLD_EXCEEDED',
+                'unrealized_pnl': total_unrealized,
+                'threshold': self.risk_limits['max_loss_threshold']
+            })
+
+        return alerts
 ```
 
 ---
