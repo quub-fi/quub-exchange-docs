@@ -400,11 +400,78 @@
               class="nav-item"
               >Chain Integration</a
             >
-            <a
-              href="{{ '/capabilities/chain/integrations/' | relative_url }}"
-              class="nav-item nav-item-sub"
-              >⛓️ Blockchain Integrations</a
-            >
+
+            <!-- Blockchain Integrations Dropdown -->
+            <div class="nav-dropdown">
+              <button
+                class="nav-item nav-dropdown-toggle"
+                id="blockchainDropdown"
+              >
+                <span>⛓️ Blockchain Integrations</span>
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="nav-dropdown-content">
+                <a
+                  href="{{ '/capabilities/chain/integrations/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  📚 All Integrations
+                </a>
+                <div class="nav-dropdown-divider"></div>
+                <div class="nav-dropdown-label">Layer 1</div>
+                <a
+                  href="{{ '/capabilities/chain/integrations/ethereum/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  ⟠ Ethereum
+                </a>
+                <a
+                  href="{{ '/capabilities/chain/integrations/bnb/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  🔶 BNB Chain
+                </a>
+                <a
+                  href="{{ '/capabilities/chain/integrations/avalanche/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  🔺 Avalanche
+                </a>
+                <a
+                  href="{{ '/capabilities/chain/integrations/solana/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  ◎ Solana
+                </a>
+                <div class="nav-dropdown-divider"></div>
+                <div class="nav-dropdown-label">Layer 2</div>
+                <a
+                  href="{{ '/capabilities/chain/integrations/polygon/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  🟣 Polygon
+                </a>
+                <a
+                  href="{{ '/capabilities/chain/integrations/arbitrum/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  🔵 Arbitrum
+                </a>
+                <a
+                  href="{{ '/capabilities/chain/integrations/optimism/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  🔴 Optimism
+                </a>
+                <a
+                  href="{{ '/capabilities/chain/integrations/base/' | relative_url }}"
+                  class="nav-dropdown-item"
+                >
+                  🔵 Base
+                </a>
+              </div>
+            </div>
+
             <a
               href="{{ '/capabilities/events/api-documentation/' | relative_url }}"
               class="nav-item"
@@ -471,6 +538,30 @@
 
     <!-- Scripts -->
     <script src="{{ '/assets/js/docs.js' | relative_url }}"></script>
+
+    <!-- Navigation Dropdowns Script -->
+    <script>
+      (function () {
+        // Blockchain integrations dropdown
+        const blockchainDropdown =
+          document.getElementById("blockchainDropdown");
+        if (blockchainDropdown) {
+          blockchainDropdown.addEventListener("click", function () {
+            const dropdown = this.closest(".nav-dropdown");
+            dropdown.classList.toggle("active");
+          });
+        }
+
+        // Auto-expand dropdown if on a blockchain integration page
+        const currentPath = window.location.pathname;
+        if (currentPath.includes("/capabilities/chain/integrations/")) {
+          const dropdown = document.querySelector(".nav-dropdown");
+          if (dropdown) {
+            dropdown.classList.add("active");
+          }
+        }
+      })();
+    </script>
 
     <!-- Mobile Navigation Script -->
     <script>
