@@ -16,6 +16,7 @@ Detailed guides for each Quub Exchange capability:
 - [Analytics & Reports]({{ '/capabilities/analytics-reports/guides/' | relative_url }}) - Business intelligence and reporting
 - [Authentication]({{ '/capabilities/auth/guides/' | relative_url }}) - User authentication and authorization
 - [Blockchain Integration]({{ '/capabilities/chain/guides/' | relative_url }}) - Multi-chain integration and DeFi
+  - [⛓️ Blockchain Integrations]({{ '/capabilities/chain/integrations/' | relative_url }}) - Ethereum, Solana, Polygon, Arbitrum, Base & more
 - [Compliance]({{ '/capabilities/compliance/guides/' | relative_url }}) - Regulatory compliance and reporting
 - [Custodian]({{ '/capabilities/custodian/guides/' | relative_url }}) - Digital asset custody and security
 - [Documents]({{ '/capabilities/documents/guides/' | relative_url }}) - Document management and storage
