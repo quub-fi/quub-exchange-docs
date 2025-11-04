@@ -86,33 +86,51 @@ def create_wallet(org_id, token, payload):
 
 ## 🏗️ Core API Operations {#core-operations}
 
-All operations below are taken verbatim from `openapi/chain.yaml`.
-
 ### Chains
 
-- GET /chains — List blockchain networks
+#### List Blockchain Networks
 
-  - Query filters: `networkType` (MAINNET|TESTNET|DEVNET), `layer` (L1|L2), `status` (ACTIVE|DEPRECATED|DISABLED), `cursor`, `limit`.
-  - Response: paginated `data: Chain[]` (200).
-
-- POST /chains — Register a new blockchain network
-
-  - Security: `write:chain` scope required for OAuth.
-  - Headers: `idempotencyKey` (common/components).
-  - Body: `CreateChainInput` (see spec). Returns 201 with `data: Chain` and optional `meta` (traceId, timestamp).
-
-- GET /chains/{chainId} — Get blockchain network details
-
-  - Path: `chainId` (integer). Returns 200 with `{ data: Chain }`.
-
-- PATCH /chains/{chainId} — Update blockchain network configuration
-  - Body: `UpdateChainInput`. Returns 200 with `{ data: Chain }`.
-
-Example (cURL) — get chain details:
-
-```bash
-curl -H "Authorization: Bearer <TOKEN>" "https://api.sandbox.quub.exchange/v2/chains/1"
+```http
+GET /chains
 ```
+
+- **Description**: Retrieve a list of supported blockchain networks.
+- **Query Parameters**:
+  - `networkType` (optional): Filter by network type (`MAINNET`, `TESTNET`, `DEVNET`).
+  - `layer` (optional): Filter by chain layer (`L1`, `L2`).
+  - `status` (optional): Filter by status (`ACTIVE`, `DEPRECATED`, `DISABLED`).
+- **Responses**:
+  - `200 OK`: List of blockchain networks.
+  - `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `500 Internal Server Error`.
+
+#### Register a New Blockchain Network
+
+```http
+POST /chains
+```
+
+- **Description**: Register a new blockchain network.
+- **Request Body**:
+  - `idempotencyKey` (header): Unique key to ensure idempotency.
+  - JSON payload matching `CreateChainInput` schema.
+- **Responses**:
+  - `201 Created`: Chain created successfully.
+  - `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `409 Conflict`, `500 Internal Server Error`.
+
+### Blockchain Network Details
+
+#### Get Blockchain Network Details
+
+```http
+GET /chains/{chainId}
+```
+
+- **Description**: Retrieve details of a specific blockchain network.
+- **Path Parameters**:
+  - `chainId` (required): Unique identifier of the blockchain network.
+- **Responses**:
+  - `200 OK`: Blockchain network details.
+  - `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `500 Internal Server Error`.
 
 ### Wallets
 
@@ -177,18 +195,8 @@ resp = requests.post(f"{BASE}/orgs/{org_id}/onchain/txs", json=payload, headers=
 
   - Body: `UpdateChainAdapterInput`. Returns `{ data: ChainAdapter }`.
 
-- GET /chain/adapters/{adapterId}/health — Check adapter health status
-
-  - Returns `data: HealthMetrics` and optional `meta` (traceId, timestamp).
-
-- GET /chain/health — Overall chain service health summary
+  - GET /chain/health — Overall chain service health summary
   - Returns overall health data with adapter counts and chain summaries.
-
-Example (cURL) — check adapter health:
-
-```bash
-curl -H "Authorization: Bearer <TOKEN>" "https://api.sandbox.quub.exchange/v2/chain/adapters/<ADAPTER_ID>/health"
-```
 
 ## 🔐 Authentication Setup {#authentication}
 
@@ -248,7 +256,3 @@ This guide was rewritten to match `openapi/chain.yaml` exactly. All endpoints, p
 - API Documentation: `../api-documentation/`
 - Service Overview: `../overview/`
 - OpenAPI Specification: `/openapi/chain.yaml`
-
-```
-
-```

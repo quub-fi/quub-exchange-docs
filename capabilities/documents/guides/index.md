@@ -55,9 +55,10 @@ Refer to `openapi/documents.yaml` for complete schema property lists and exact t
 cURL — list published documents for an org
 
 ```bash
-curl -X GET "https://api.sandbox.quub.exchange/v2/orgs/ORG_ID/documents?status=PUBLISHED&limit=20" \
+curl -X GET "https://api.sandbox.quub.exchange/v2/orgs/{orgId}/documents" \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
-  -H "X-Org-Id: ORG_ID"
+  -H "X-Org-Id: {orgId}" \
+  -G -d "status=PUBLISHED" -d "limit=20"
 ```
 
 Node.js (fetch) — upload a document (multipart/form-data)
@@ -72,18 +73,18 @@ async function uploadDocument(orgId, token, fileStream, name, type) {
   form.append("name", name);
   form.append("type", type); // PDF|DOCX|IMAGE|XLSX|JSON
 
-  const res = await fetch(
-    `https://api.sandbox.quub.exchange/v2/orgs/${orgId}/documents`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-Org-Id": orgId,
-        ...form.getHeaders(),
-      },
-      body: form,
-    }
-  );
+  // POST /orgs/{orgId}/documents
+  const url =
+    "https://api.sandbox.quub.exchange/v2/orgs/" + orgId + "/documents";
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "X-Org-Id": orgId,
+      ...form.getHeaders(),
+    },
+    body: form,
+  });
   return res.json();
 }
 ```
@@ -93,9 +94,9 @@ Python (requests) — request an e-signature for a document
 ```py
 import requests
 
-def request_esign(org_id, token, document_id, signers, method='DOCUSIGN', due_date=None):
-    url = f"https://api.sandbox.quub.exchange/v2/orgs/{org_id}/documents/{document_id}/signatures"
-    headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json', 'X-Org-Id': org_id}
+def request_esign(orgId, token, documentId, signers, method='DOCUSIGN', due_date=None):
+    url = f"https://api.sandbox.quub.exchange/v2/orgs/{orgId}/documents/{documentId}/signatures"
+    headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json', 'X-Org-Id': orgId}
     payload = {'signers': signers, 'method': method}
     if due_date:
         payload['dueDate'] = due_date
@@ -107,48 +108,53 @@ def request_esign(org_id, token, document_id, signers, method='DOCUSIGN', due_da
 
 ## 🏗️ Core API Operations {#core-operations}
 
-All operations below match exactly the paths and methods in `openapi/documents.yaml`.
-
 ### Documents
 
-- GET /orgs/{orgId}/documents — List documents
+#### List Documents
 
-  - Query filters: `status` (DRAFT|REVIEW|PUBLISHED|ARCHIVED), `type` (PDF|DOCX|IMAGE|XLSX|JSON), `cursor`, `limit`.
-  - Response: 200 paginated `data: Document[]`.
+```http
+GET /orgs/{orgId}/documents
+```
 
-- POST /orgs/{orgId}/documents — Upload a new document
+- **Description**: Retrieve a list of documents for the organization.
+- **Query Parameters**:
+  - `status` (optional): Filter by document status (`DRAFT`, `REVIEW`, `PUBLISHED`, `ARCHIVED`).
+  - `type` (optional): Filter by document type (`PDF`, `DOCX`, `IMAGE`, `XLSX`, `JSON`).
+- **Responses**:
+  - `200 OK`: List of documents.
+  - `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `500 Internal Server Error`.
 
-  - Request body: multipart/form-data with fields: `file` (binary), `name` (string), optional `type`, `tags`, `linkedProjectId` (uuid).
-  - Response: 201 with `{ data: Document }`.
+#### Upload a New Document
 
-- GET /orgs/{orgId}/documents/{documentId} — Get document details
+```http
+POST /orgs/{orgId}/documents
+```
 
-  - Path param: `documentId` (uuid). Response: 200 `{ data: Document }`.
+- **Description**: Upload a new document for the organization.
+- **Request Body**:
+  - `file` (binary): The document file to upload.
+  - `name` (string): Name of the document.
+  - `type` (string): Document type (`PDF`, `DOCX`, `IMAGE`, `XLSX`, `JSON`).
+  - `tags` (array): Tags for categorizing the document.
+  - `linkedProjectId` (UUID): Optional project linkage.
+- **Responses**:
+  - `201 Created`: Document uploaded successfully.
+  - `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `500 Internal Server Error`.
 
-- PATCH /orgs/{orgId}/documents/{documentId} — Update document metadata or status
-  - Request body JSON: `name`, `status` (DRAFT|REVIEW|PUBLISHED|ARCHIVED), `tags`.
-  - Response: 200 with `{ data: Document }`.
+### Document Details
 
-Notes: validate uploaded file types and scan for malware per your security policy. Storage URLs in `Document.storageUrl` are time-limited and provided by the service.
+#### Get Document Details
 
-### ESignatures
+```http
+GET /orgs/{orgId}/documents/{documentId}
+```
 
-- POST /orgs/{orgId}/documents/{documentId}/signatures — Request e-signature
-
-  - Request body JSON (required): `signers` (array of {name,email,role}), optional `method` (DOCUSIGN|UAE_PASS|MANUAL|QUUB_NATIVE), `dueDate`.
-  - Response: 201 with `{ data: SignatureRequest }`.
-
-- GET /orgs/{orgId}/documents/{documentId}/signatures/{signatureId} — Get signature status
-  - Path params: `documentId`, `signatureId` (uuids). Response: 200 `{ data: SignatureRequest }`.
-
-Implementation note: support provider callbacks/webhooks to update signer statuses (PENDING → SIGNED/DECLINED) and to reconcile `SignatureRequest.completedAt`.
-
-### Publications
-
-- GET /orgs/{orgId}/publications — List published documents
-  - Pagination supported. Response: 200 paginated `data: Publication[]`.
-
-Use publications to expose documents to audiences and generate trackable document URLs (`Publication.documentUrl`).
+- **Description**: Retrieve details of a specific document.
+- **Path Parameters**:
+  - `documentId` (required): Unique identifier of the document.
+- **Responses**:
+  - `200 OK`: Document details.
+  - `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `500 Internal Server Error`.
 
 ## 🔐 Authentication & Security {#authentication}
 
