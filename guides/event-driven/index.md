@@ -16,7 +16,7 @@ Build reactive applications using Quub Exchange webhooks and event streams.
 ```javascript
 // Register webhook endpoints
 await client.events.createWebhook({
-  url: "https://your-app.com/webhooks/quub",
+  url: "https://example.com/webhooks/quub",
   events: [
     "order.created",
     "order.filled",

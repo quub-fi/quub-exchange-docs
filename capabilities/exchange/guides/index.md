@@ -1260,9 +1260,9 @@ client.on("response", (res) => {
 - [Trading Best Practices](/guides/trading-integration/) - Advanced trading strategies
 - [Market Making Guide](/guides/market-making/) - Liquidity provision strategies
 - [Risk Management](/guides/risk-management/) - Position and risk controls
-- [Code Examples](https://github.com/quub-fi/examples) - Sample implementations
-- [Support](https://support.quub.fi) - Get help from our team
+- [Code Examples](https://github.com/quub-fi/quub-exchange-docs/tree/main/guides) - Sample implementations
+- [Support](https://quub.fi/contact) - Get help from our team
 
 ---
 
-**Need help?** Contact our support team or join our [developer community](https://community.quub.fi).
+**Need help?** Contact our support team or join our [developer community](https://quub.fi/community).

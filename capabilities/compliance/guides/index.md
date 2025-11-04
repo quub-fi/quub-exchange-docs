@@ -198,7 +198,7 @@ print(resp.json())
 const body = {
   accountId: "22222222-2222-2222-2222-222222222222",
   type: "PERSON",
-  evidenceUrls: ["https://files.example.com/kyc/doc1.pdf"],
+  evidenceUrls: ["https://example.com/documents/kyc-doc1.pdf"],
 };
 
 const res = await client.post(`/orgs/${orgId}/kyc/cases`, body, {
@@ -286,7 +286,7 @@ const res = await client.post(
     accountId: "22222222-2222-2222-2222-222222222222",
     regime: "US_SEC_RULE501",
     expiresAt: "2026-12-31T23:59:59Z",
-    docs: ["https://files.example.com/accred/letter.pdf"],
+    docs: ["https://example.com/documents/accreditation-letter.pdf"],
   }
   // ,{ headers: { 'Idempotency-Key': '...' } }
 );

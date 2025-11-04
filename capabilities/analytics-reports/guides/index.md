@@ -619,7 +619,7 @@ await client.reports.create({
   type: "COMPLIANCE_SUMMARY",
   format: "PDF",
   delivery: {
-    webhookUrl: "https://your-app.com/webhooks/reports",
+    webhookUrl: "https://your-domain.com/webhooks/reports",
     webhookSecret: process.env.WEBHOOK_SECRET,
   },
 });
@@ -741,9 +741,9 @@ const requestDuration = new Histogram({
 
 - [API Reference](../api-documentation/) - Complete API documentation
 - [OpenAPI Specification](/openapi/analytics-reports.yaml) - Machine-readable API spec
-- [Code Examples](https://github.com/quub-fi/examples) - Sample implementations
-- [Support](https://support.quub.fi) - Get help from our team
+- [Code Examples](https://github.com/quub-fi/quub-exchange-docs/tree/main/guides) - Sample implementations
+- [Support](https://quub.fi/contact) - Get help from our team
 
 ---
 
-**Need help?** Contact our support team or join our [developer community](https://community.quub.fi).
+**Need help?** Contact our support team or join our [developer community](https://quub.fi/community).

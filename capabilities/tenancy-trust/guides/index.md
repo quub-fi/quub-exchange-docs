@@ -120,7 +120,7 @@ Example (curl) — create a webhook endpoint:
 curl -X POST "https://api.quub.exchange/v1/orgs/{orgId}/webhooks" \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
   -H "Content-Type: application/json" \
-  -d '{"url":"https://webhooks.quub.exchange/receive","events":["trade.executed"]}'
+  -d '{"url":"https://your-domain.com/webhooks/receive","events":["trade.executed"]}'
 ```
 
 ## 🔐 Authentication Setup {#authentication}
@@ -162,23 +162,23 @@ Comprehensive guides for implementing and integrating Tenancy Trust capabilities
 
 ### Getting Started
 
-- [Quick Start Guide](./getting-started.md) - Get up and running quickly
-- [Integration Guide](./integration-guide.md) - Step-by-step integration instructions
+- [Quick Start Guide](/docs/quickstart/) - Get up and running quickly
+- [Integration Guide](/guides/getting-started/) - Step-by-step integration instructions
 
 ### Best Practices
 
-- [Best Practices](./best-practices.md) - Recommended patterns and approaches
-- [Security Guide](./security-guide.md) - Security implementation guidelines
+- [Best Practices](/docs/best-practices/) - Recommended patterns and approaches
+- [Security Guide](/guides/getting-started/security-guide) - Security implementation guidelines
 
 ### Advanced Topics
 
-- [Troubleshooting](./troubleshooting.md) - Common issues and solutions
-- [Performance Optimization](./performance-optimization.md) - Optimization strategies
+- [Troubleshooting](/guides/getting-started/troubleshooting) - Common issues and solutions
+- [Performance Optimization](/guides/getting-started/performance-optimization) - Optimization strategies
 
 ### Migration & Deployment
 
-- [Migration Guide](./migration-guide.md) - Upgrade and migration instructions
-- [Deployment Guide](./deployment-guide.md) - Production deployment strategies
+- [Migration Guide](/changelog/) - Upgrade and migration instructions
+- [Deployment Guide](/guides/getting-started/deployment-guide) - Production deployment strategies
 
 ---
 

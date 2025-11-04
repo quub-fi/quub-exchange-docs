@@ -402,7 +402,7 @@ async function createSubscription() {
       name: "Trading Bot",
       eventTypes: ["com.quub.trading.order.placed.v1"],
       deliveryType: "WEBHOOK",
-      webhookUrl: "https://your-app.com/webhooks/trading",
+      webhookUrl: "https://example.com/webhooks/trading",
       enabled: true,
     },
     {
@@ -548,7 +548,7 @@ client = QuubEventsClient(
 subscription = client.create_subscription(
     name="Trading Monitor",
     event_types=["com.quub.trading.*"],
-    webhook_url="https://your-app.com/webhooks"
+    webhook_url="https://example.com/webhooks"
 )
 
 # Query recent events

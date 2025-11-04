@@ -20,36 +20,36 @@ Comprehensive documentation covering business logic, technical implementations, 
 
 **Core trading operations and order management**
 
-- [API Documentation](./exchange/exchange-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./exchange/exchange-overview.md) - Business logic and workflows
+- [API Documentation](./exchange/api-documentation/) - Complete endpoint reference
+- [Service Overview](./exchange/overview/) - Business logic and workflows
 
 ### [Primary Market](./primary-market/)
 
 **Initial offerings and primary market operations**
 
-- [API Documentation](./primary-market/primary-market-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./primary-market/primary-market-overview.md) - Business logic and workflows
+- [API Documentation](./primary-market/api-documentation/) - Complete endpoint reference
+- [Service Overview](./primary-market/overview/) - Business logic and workflows
 
 ### [Marketplace](./marketplace/)
 
 **Secondary market trading and liquidity**
 
-- [API Documentation](./marketplace/marketplace-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./marketplace/marketplace-overview.md) - Business logic and workflows
+- [API Documentation](./marketplace/api-documentation/) - Complete endpoint reference
+- [Service Overview](./marketplace/overview/) - Business logic and workflows
 
 ### [Pricing & Reference Data](./pricing-refdata/)
 
 **Pricing engines and market data**
 
-- [API Documentation](./pricing-refdata/pricing-refdata-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./pricing-refdata/pricing-refdata-overview.md) - Business logic and workflows
+- [API Documentation](./pricing-refdata/api-documentation/) - Complete endpoint reference
+- [Service Overview](./pricing-refdata/overview/) - Business logic and workflows
 
 ### [Market Oracles](./market-oracles/)
 
 **Market data feeds and oracle services**
 
-- [API Documentation](./market-oracles/market-oracles-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./market-oracles/market-oracles-overview.md) - Business logic and workflows
+- [API Documentation](./market-oracles/api-documentation/) - Complete endpoint reference
+- [Service Overview](./market-oracles/overview/) - Business logic and workflows
 
 ---
 
@@ -59,36 +59,36 @@ Comprehensive documentation covering business logic, technical implementations, 
 
 **Treasury management and asset allocation**
 
-- [API Documentation](./treasury/treasury-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./treasury/treasury-overview.md) - Business logic and workflows
+- [API Documentation](./treasury/api-documentation/) - Complete endpoint reference
+- [Service Overview](./treasury/overview/) - Business logic and workflows
 
 ### [Custodian](./custodian/)
 
 **Digital asset custody and security**
 
-- [API Documentation](./custodian/custodian-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./custodian/custodian-overview.md) - Business logic and workflows
+- [API Documentation](./custodian/api-documentation/) - Complete endpoint reference
+- [Service Overview](./custodian/overview/) - Business logic and workflows
 
 ### [Escrow](./escrow/)
 
 **Escrow services and smart contracts**
 
-- [API Documentation](./escrow/escrow-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./escrow/escrow-overview.md) - Business logic and workflows
+- [API Documentation](./escrow/api-documentation/) - Complete endpoint reference
+- [Service Overview](./escrow/overview/) - Business logic and workflows
 
 ### [Settlements](./settlements/)
 
 **Trade settlement and clearing**
 
-- [API Documentation](./settlements/settlements-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./settlements/settlements-overview.md) - Business logic and workflows
+- [API Documentation](./settlements/api-documentation/) - Complete endpoint reference
+- [Service Overview](./settlements/overview/) - Business logic and workflows
 
 ### [Transfer Agent](./transfer-agent/)
 
 **Asset transfer and registry services**
 
-- [API Documentation](./transfer-agent/transfer-agent-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./transfer-agent/transfer-agent-overview.md) - Business logic and workflows
+- [API Documentation](./transfer-agent/api-documentation/) - Complete endpoint reference
+- [Service Overview](./transfer-agent/overview/) - Business logic and workflows
 
 ---
 
@@ -98,22 +98,22 @@ Comprehensive documentation covering business logic, technical implementations, 
 
 **Traditional banking integration**
 
-- [API Documentation](./fiat-banking/fiat-banking-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./fiat-banking/fiat-banking-overview.md) - Business logic and workflows
+- [API Documentation](./fiat-banking/api-documentation/) - Complete endpoint reference
+- [Service Overview](./fiat-banking/overview/) - Business logic and workflows
 
 ### [Fees & Billing](./fees-billing/)
 
 **Fee structures and billing systems**
 
-- [API Documentation](./fees-billing/fees-billing-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./fees-billing/fees-billing-overview.md) - Business logic and workflows
+- [API Documentation](./fees-billing/api-documentation/) - Complete endpoint reference
+- [Service Overview](./fees-billing/overview/) - Business logic and workflows
 
 ### [Gateway](./gateway/)
 
 **Payment processing and gateway services**
 
-- [API Documentation](./gateway/gateway-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./gateway/gateway-overview.md) - Business logic and workflows
+- [API Documentation](./gateway/api-documentation/) - Complete endpoint reference
+- [Service Overview](./gateway/overview/) - Business logic and workflows
 
 ---
 
@@ -123,22 +123,22 @@ Comprehensive documentation covering business logic, technical implementations, 
 
 **User authentication and authorization**
 
-- [API Documentation](./auth/auth-api-documentation.md) - Complete endpoint reference
+- [API Documentation](./auth/api-documentation/) - Complete endpoint reference
 - [JWT Implementation Guide](./auth/JWT/) - Token management and security
 
 ### [Identity](./identity/)
 
 **Identity verification and KYC**
 
-- [API Documentation](./identity/identity-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./identity/identity-overview.md) - Business logic and workflows
+- [API Documentation](./identity/api-documentation/) - Complete endpoint reference
+- [Service Overview](./identity/overview/) - Business logic and workflows
 
 ### [Tenancy & Trust](./tenancy-trust/)
 
 **Multi-tenancy and trust management**
 
-- [API Documentation](./tenancy-trust/tenancy-trust-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./tenancy-trust/tenancy-trust-overview.md) - Business logic and workflows
+- [API Documentation](./tenancy-trust/api-documentation/) - Complete endpoint reference
+- [Service Overview](./tenancy-trust/overview/) - Business logic and workflows
 
 ---
 
@@ -148,22 +148,22 @@ Comprehensive documentation covering business logic, technical implementations, 
 
 **Regulatory compliance and reporting**
 
-- [API Documentation](./compliance/compliance-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./compliance/compliance-overview.md) - Business logic and workflows
+- [API Documentation](./compliance/api-documentation/) - Complete endpoint reference
+- [Service Overview](./compliance/overview/) - Business logic and workflows
 
 ### [Risk Limits](./risk-limits/)
 
 **Risk management and position limits**
 
-- [API Documentation](./risk-limits/risk-limits-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./risk-limits/risk-limits-overview.md) - Business logic and workflows
+- [API Documentation](./risk-limits/api-documentation/) - Complete endpoint reference
+- [Service Overview](./risk-limits/overview/) - Business logic and workflows
 
 ### [Governance](./governance/)
 
 **Governance and policy management**
 
-- [API Documentation](./governance/governance-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./governance/governance-overview.md) - Business logic and workflows
+- [API Documentation](./governance/api-documentation/) - Complete endpoint reference
+- [Service Overview](./governance/overview/) - Business logic and workflows
 
 ---
 
@@ -173,50 +173,50 @@ Comprehensive documentation covering business logic, technical implementations, 
 
 **Blockchain operations and smart contracts**
 
-- [API Documentation](./chain/chain-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./chain/chain-overview.md) - Business logic and workflows
+- [API Documentation](./chain/api-documentation/) - Complete endpoint reference
+- [Service Overview](./chain/overview/) - Business logic and workflows
 
 ### [Documents](./documents/)
 
 **Document management and storage**
 
-- [API Documentation](./documents/documents-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./documents/documents-overview.md) - Business logic and workflows
+- [API Documentation](./documents/api-documentation/) - Complete endpoint reference
+- [Service Overview](./documents/overview/) - Business logic and workflows
 
 ### [Events](./events/)
 
 **Event streaming and notifications**
 
-- [API Documentation](./events/events-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./events/events-overview.md) - Business logic and workflows
+- [API Documentation](./events/api-documentation/) - Complete endpoint reference
+- [Service Overview](./events/overview/) - Business logic and workflows
 
 ### [Notifications](./notifications/)
 
 **User notifications and alerts**
 
-- [API Documentation](./notifications/notifications-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./notifications/notifications-overview.md) - Business logic and workflows
+- [API Documentation](./notifications/api-documentation/) - Complete endpoint reference
+- [Service Overview](./notifications/overview/) - Business logic and workflows
 
 ### [Observability](./observability/)
 
 **Monitoring, logging, and metrics**
 
-- [API Documentation](./observability/observability-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./observability/observability-overview.md) - Business logic and workflows
+- [API Documentation](./observability/api-documentation/) - Complete endpoint reference
+- [Service Overview](./observability/overview/) - Business logic and workflows
 
 ### [Analytics & Reports](./analytics-reports/)
 
 **Business analytics and reporting**
 
-- [API Documentation](./analytics-reports/analytics-reports-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./analytics-reports/analytics-reports-overview.md) - Business logic and workflows
+- [API Documentation](./analytics-reports/api-documentation/) - Complete endpoint reference
+- [Service Overview](./analytics-reports/overview/) - Business logic and workflows
 
 ### [Sandbox](./sandbox/)
 
 **Testing and development environment**
 
-- [API Documentation](./sandbox/sandbox-api-documentation.md) - Complete endpoint reference
-- [Service Overview](./sandbox/sandbox-overview.md) - Business logic and workflows
+- [API Documentation](./sandbox/api-documentation/) - Complete endpoint reference
+- [Service Overview](./sandbox/overview/) - Business logic and workflows
 
 ---
 

@@ -856,7 +856,7 @@ alerting:
 
 ### For Stakeholders
 
-- [Custody Service Overview](./custodian-overview.md) - Business-focused service description
+- [Custody Service Overview](../overview/) - Business-focused service description
 - [Security Whitepaper](https://docs.quub.exchange/security/custody) - Technical security implementation details
 - [Compliance Framework](https://docs.quub.exchange/compliance/custody) - Regulatory compliance documentation
 - [Pricing Information](https://quub.exchange/pricing/custody) - Custody service pricing and tiers

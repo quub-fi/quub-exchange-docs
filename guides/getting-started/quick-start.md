@@ -365,7 +365,7 @@ Now that you're up and running, explore these resources:
 2. **[API Reference]({{ '/capabilities/' | relative_url }})** - Complete API documentation
 3. **[Best Practices](../best-practices/)** - Recommended patterns
 4. **[Security Guide](../security-guide/)** - Secure your implementation
-5. **[Code Examples](https://github.com/quub-fi/examples)** - Sample applications
+5. **[Code Examples](/guides/)** - Sample applications
 
 ## Troubleshooting
 
@@ -407,7 +407,7 @@ Now that you're up and running, explore these resources:
 Need help? We're here for you:
 
 - 📚 **Documentation**: [docs.quub.fi](https://docs.quub.fi)
-- 💬 **Community Forum**: [community.quub.fi](https://community.quub.fi)
+- 💬 **Community Forum**: [community.quub.fi](https://quub.fi/community)
 - 📧 **Email Support**: support@quub.fi
 - 🐛 **Report Issues**: [github.com/quub-fi/issues](https://github.com/quub-fi/issues)
 
