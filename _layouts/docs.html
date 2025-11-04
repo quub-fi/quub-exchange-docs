@@ -478,9 +478,9 @@
           mobileOverlay.classList.toggle("active");
           mobileMenuBtn.classList.toggle("active");
           if (sidebar.classList.contains("active")) {
-            document.body.style.overflow = "hidden";
+            document.body.classList.add("no-scroll");
           } else {
-            document.body.style.overflow = "";
+            document.body.classList.remove("no-scroll");
           }
         }
 
@@ -488,7 +488,7 @@
           sidebar.classList.remove("active");
           mobileOverlay.classList.remove("active");
           mobileMenuBtn.classList.remove("active");
-          document.body.style.overflow = "";
+          document.body.classList.remove("no-scroll");
         }
 
         mobileMenuBtn.addEventListener("click", toggleMobileMenu);
