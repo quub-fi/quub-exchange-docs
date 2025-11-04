@@ -10,10 +10,31 @@ permalink: /capabilities/chain/guides/
 
 ## 🚀 Quick Navigation
 
-- Getting Started
-- Core Operations (Chains, Wallets, OnChainTxs, ChainAdapters)
-- Authentication
-- Best Practices & Troubleshooting
+<div class="card-grid">
+  <a href="#quick-start" class="nav-card">
+    <div class="nav-card-icon">🚀</div>
+    <h3>Getting Started</h3>
+    <p>Register chains, wallets, and track transactions</p>
+  </a>
+
+  <a href="#blockchain-integrations" class="nav-card">
+    <div class="nav-card-icon">⛓️</div>
+    <h3>Blockchain Integrations</h3>
+    <p>Production-ready guides for Ethereum, Solana, L2s & more</p>
+  </a>
+
+  <a href="#core-operations" class="nav-card">
+    <div class="nav-card-icon">⚙️</div>
+    <h3>Core Operations</h3>
+    <p>Chain registration, wallet management, transaction tracking</p>
+  </a>
+
+  <a href="#advanced" class="nav-card">
+    <div class="nav-card-icon">🔧</div>
+    <h3>Advanced Topics</h3>
+    <p>Chain adapters, health monitoring, and optimization</p>
+  </a>
+</div>
 
 ## 🎯 API Overview & Architecture {#overview}
 
@@ -44,6 +65,100 @@ Client/Backoffice  --->  Chain Service API  --->  Adapters / RPC Providers / Ind
 - ChainAdapter (required: id, chainId, name, rpcEndpoint, signerPolicy, status)
 
 Refer to `openapi/chain.yaml` for full schema property lists and exact types.
+
+## ⛓️ Blockchain Integrations {#blockchain-integrations}
+
+> **Production-Ready Integration Guides** — Comprehensive implementation guides for major blockchain networks with real-world examples, security best practices, and production checklists.
+
+### Layer 1 Blockchains
+
+<div class="integration-grid">
+  <a href="/capabilities/chain/integrations/ethereum/" class="integration-card">
+    <div class="integration-icon">⟠</div>
+    <h4>Ethereum</h4>
+    <p>EVM flagship • Smart contracts • MEV protection</p>
+    <span class="badge">L1</span>
+  </a>
+
+  <a href="/capabilities/chain/integrations/bnb/" class="integration-card">
+    <div class="integration-icon">🔶</div>
+    <h4>BNB Chain</h4>
+    <p>3s blocks • Low fees • BEP-20 tokens</p>
+    <span class="badge">L1</span>
+  </a>
+
+  <a href="/capabilities/chain/integrations/avalanche/" class="integration-card">
+    <div class="integration-icon">🔺</div>
+    <h4>Avalanche</h4>
+    <p>Sub-second finality • C-Chain • Subnets</p>
+    <span class="badge">L1</span>
+  </a>
+
+  <a href="/capabilities/chain/integrations/solana/" class="integration-card">
+    <div class="integration-icon">◎</div>
+    <h4>Solana</h4>
+    <p>Non-EVM • 400ms slots • SPL tokens</p>
+    <span class="badge">Non-EVM</span>
+  </a>
+</div>
+
+### Layer 2 Networks
+
+<div class="integration-grid">
+  <a href="/capabilities/chain/integrations/polygon/" class="integration-card">
+    <div class="integration-icon">🟣</div>
+    <h4>Polygon</h4>
+    <p>PoS sidechain • Checkpoints • Bridge finality</p>
+    <span class="badge">L2</span>
+  </a>
+
+  <a href="/capabilities/chain/integrations/arbitrum/" class="integration-card">
+    <div class="integration-icon">🔵</div>
+    <h4>Arbitrum One</h4>
+    <p>Optimistic rollup • 7-day challenge • 250ms blocks</p>
+    <span class="badge">L2</span>
+  </a>
+
+  <a href="/capabilities/chain/integrations/optimism/" class="integration-card">
+    <div class="integration-icon">🔴</div>
+    <h4>Optimism</h4>
+    <p>OP Stack • Fault proofs • Standard bridge</p>
+    <span class="badge">L2</span>
+  </a>
+
+  <a href="/capabilities/chain/integrations/base/" class="integration-card">
+    <div class="integration-icon">🔵</div>
+    <h4>Base</h4>
+    <p>Coinbase L2 • OP Stack • Ultra-low gas</p>
+    <span class="badge">L2</span>
+  </a>
+</div>
+
+### What's Included in Each Guide
+
+Each blockchain integration guide provides:
+
+- **🏗️ Chain Registration** — Register blockchain networks with proper configuration
+- **🔌 RPC Adapter Setup** — Configure and manage chain adapters with health monitoring
+- **💼 Wallet Management** — Create and manage wallets for the specific chain
+- **📝 Transaction Tracking** — Monitor on-chain transactions with proper confirmation handling
+- **🔒 Security Best Practices** — Chain-specific security considerations and MEV protection
+- **⚡ Performance Optimization** — Gas strategies, batching, and throughput optimization
+- **✅ Production Checklist** — Comprehensive deployment and monitoring checklist
+
+### Quick Integration Comparison
+
+| Feature             | Ethereum | BNB | Solana | Polygon | Arbitrum | Optimism | Base | Avalanche |
+| ------------------- | -------- | --- | ------ | ------- | -------- | -------- | ---- | --------- |
+| **Block Time**      | 12s      | 3s  | 400ms  | 2s      | 250ms    | 2s       | 2s   | <1s       |
+| **Finality**        | 15m      | 15s | 13s    | 30m     | 7d       | 7d       | 7d   | <2s       |
+| **Gas Token**       | ETH      | BNB | SOL    | MATIC   | ETH      | ETH      | ETH  | AVAX      |
+| **EVM Compatible**  | ✅       | ✅  | ❌     | ✅      | ✅       | ✅       | ✅   | ✅        |
+| **Bridge Required** | -        | -   | -      | ✅      | ✅       | ✅       | ✅   | -         |
+
+[**📚 View All Integrations**](/capabilities/chain/integrations/) — Complete integration guides index with architecture diagrams and comparison matrices.
+
+---
 
 ## 🎯 Quick Start {#quick-start}
 
