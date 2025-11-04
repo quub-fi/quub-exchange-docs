@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Auth capabilities.
 
 ---
 
-_For API reference, see [Auth API Documentation](../auth-api-documentation.md)_
+_For API reference, see [Auth API Documentation](../api-documentation/)_

@@ -324,7 +324,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🔑</span>
-        <h3><a href="{{ '/capabilities/auth/auth-api-documentation/' | relative_url }}">Authentication Service</a></h3>
+        <h3><a href="{{ '/capabilities/auth/api-documentation/' | relative_url }}">Authentication Service</a></h3>
       </div>
       <p class="api-description">
         Secure authentication, session management, and access control. OAuth 2.0, JWT tokens, API keys, and MFA support.
@@ -339,7 +339,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/auth/auth-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/auth/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/auth/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/auth.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -349,7 +349,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">👤</span>
-        <h3><a href="{{ '/capabilities/identity/identity-api-documentation/' | relative_url }}">Identity Service</a></h3>
+        <h3><a href="{{ '/capabilities/identity/api-documentation/' | relative_url }}">Identity Service</a></h3>
       </div>
       <p class="api-description">
         User identity, KYC/AML verification, and profile management. Complete customer onboarding workflows.
@@ -364,7 +364,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/identity/identity-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/identity/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/identity/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/identity.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -374,7 +374,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🏢</span>
-        <h3><a href="{{ '/capabilities/tenancy-trust/tenancy-trust-api-documentation/' | relative_url }}">Tenancy & Trust</a></h3>
+        <h3><a href="{{ '/capabilities/tenancy-trust/api-documentation/' | relative_url }}">Tenancy & Trust</a></h3>
       </div>
       <p class="api-description">
         Multi-tenant isolation, organization management, and trust relationships. Perfect for B2B platforms.
@@ -389,7 +389,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/tenancy-trust/tenancy-trust-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/tenancy-trust/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/tenancy-trust/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/tenancy-trust.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -413,7 +413,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">💹</span>
-        <h3><a href="{{ '/capabilities/exchange/exchange-api-documentation/' | relative_url }}">Exchange API</a></h3>
+        <h3><a href="{{ '/capabilities/exchange/api-documentation/' | relative_url }}">Exchange API</a></h3>
       </div>
       <p class="api-description">
         Order management, matching engine, market data, order books. Build complete trading applications.
@@ -428,7 +428,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/exchange/exchange-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/exchange/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/exchange/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/exchange.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -438,7 +438,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🏪</span>
-        <h3><a href="{{ '/capabilities/marketplace/marketplace-api-documentation/' | relative_url }}">Marketplace API</a></h3>
+        <h3><a href="{{ '/capabilities/marketplace/api-documentation/' | relative_url }}">Marketplace API</a></h3>
       </div>
       <p class="api-description">
         Peer-to-peer trading, OTC desk, order book creation. Enable users to trade directly with each other.
@@ -453,7 +453,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/marketplace/marketplace-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/marketplace/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/marketplace/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/marketplace.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -463,7 +463,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🌉</span>
-        <h3><a href="{{ '/capabilities/gateway/gateway-api-documentation/' | relative_url }}">Gateway API</a></h3>
+        <h3><a href="{{ '/capabilities/gateway/api-documentation/' | relative_url }}">Gateway API</a></h3>
       </div>
       <p class="api-description">
         Liquidity aggregation, smart order routing, multi-exchange connectivity. Best execution across venues.
@@ -478,7 +478,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/gateway/gateway-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/gateway/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/gateway/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/gateway.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -488,7 +488,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🔮</span>
-        <h3><a href="{{ '/capabilities/market-oracles/market-oracles-api-documentation/' | relative_url }}">Market Oracles</a></h3>
+        <h3><a href="{{ '/capabilities/market-oracles/api-documentation/' | relative_url }}">Market Oracles</a></h3>
       </div>
       <p class="api-description">
         Price feeds, market indicators, oracle data. Reliable price data for DeFi and trading applications.
@@ -503,7 +503,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/market-oracles/market-oracles-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/market-oracles/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/market-oracles/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/market-oracles.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -513,7 +513,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">📊</span>
-        <h3><a href="{{ '/capabilities/pricing-refdata/pricing-refdata-api-documentation/' | relative_url }}">Pricing & RefData</a></h3>
+        <h3><a href="{{ '/capabilities/pricing-refdata/api-documentation/' | relative_url }}">Pricing & RefData</a></h3>
       </div>
       <p class="api-description">
         Reference data, asset information, pricing models. Master data management for financial instruments.
@@ -528,7 +528,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/pricing-refdata/pricing-refdata-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/pricing-refdata/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/pricing-refdata/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/pricing-refdata.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -552,7 +552,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🔐</span>
-        <h3><a href="{{ '/capabilities/custodian/custodian-api-documentation/' | relative_url }}">Custodian API</a></h3>
+        <h3><a href="{{ '/capabilities/custodian/api-documentation/' | relative_url }}">Custodian API</a></h3>
       </div>
       <p class="api-description">
         Digital asset custody, wallet management, multi-sig wallets. Institutional-grade asset security.
@@ -567,7 +567,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/custodian/custodian-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/custodian/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/custodian/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/custodian.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -577,7 +577,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🏦</span>
-        <h3><a href="{{ '/capabilities/treasury/treasury-api-documentation/' | relative_url }}">Treasury API</a></h3>
+        <h3><a href="{{ '/capabilities/treasury/api-documentation/' | relative_url }}">Treasury API</a></h3>
       </div>
       <p class="api-description">
         Liquidity management, asset allocation, yield optimization. Enterprise treasury operations.
@@ -592,7 +592,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/treasury/treasury-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/treasury/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/treasury/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/treasury.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -602,7 +602,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🏧</span>
-        <h3><a href="{{ '/capabilities/fiat-banking/fiat-banking-api-documentation/' | relative_url }}">Fiat Banking</a></h3>
+        <h3><a href="{{ '/capabilities/fiat-banking/api-documentation/' | relative_url }}">Fiat Banking</a></h3>
       </div>
       <p class="api-description">
         Bank account linking, ACH/wire transfers, fiat on/off ramps. Seamless fiat-crypto conversions.
@@ -617,7 +617,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/fiat-banking/fiat-banking-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/fiat-banking/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/fiat-banking/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/fiat-banking.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -627,7 +627,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">⚖️</span>
-        <h3><a href="{{ '/capabilities/settlements/settlements-api-documentation/' | relative_url }}">Settlements API</a></h3>
+        <h3><a href="{{ '/capabilities/settlements/api-documentation/' | relative_url }}">Settlements API</a></h3>
       </div>
       <p class="api-description">
         Trade clearing, settlement cycles, delivery vs payment. Post-trade processing and settlement.
@@ -642,7 +642,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/settlements/settlements-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/settlements/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/settlements/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/settlements.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -652,7 +652,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🔒</span>
-        <h3><a href="{{ '/capabilities/escrow/escrow-api-documentation/' | relative_url }}">Escrow API</a></h3>
+        <h3><a href="{{ '/capabilities/escrow/api-documentation/' | relative_url }}">Escrow API</a></h3>
       </div>
       <p class="api-description">
         Escrow accounts, conditional releases, milestone payments. Secure peer-to-peer transactions.
@@ -667,7 +667,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/escrow/escrow-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/escrow/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/escrow/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/escrow.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -677,7 +677,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">💳</span>
-        <h3><a href="{{ '/capabilities/fees-billing/fees-billing-api-documentation/' | relative_url }}">Fees & Billing</a></h3>
+        <h3><a href="{{ '/capabilities/fees-billing/api-documentation/' | relative_url }}">Fees & Billing</a></h3>
       </div>
       <p class="api-description">
         Fee calculation, billing, invoicing, subscriptions. Complete monetization infrastructure.
@@ -692,7 +692,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/fees-billing/fees-billing-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/fees-billing/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/fees-billing/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/fees-billing.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -716,7 +716,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">📜</span>
-        <h3><a href="{{ '/capabilities/primary-market/primary-market-api-documentation/' | relative_url }}">Primary Market</a></h3>
+        <h3><a href="{{ '/capabilities/primary-market/api-documentation/' | relative_url }}">Primary Market</a></h3>
       </div>
       <p class="api-description">
         Token issuance, ICOs, STOs, securities offerings. Launch and manage primary market events.
@@ -731,7 +731,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/primary-market/primary-market-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/primary-market/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/primary-market/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/primary-market.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -741,7 +741,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">📋</span>
-        <h3><a href="{{ '/capabilities/transfer-agent/transfer-agent-api-documentation/' | relative_url }}">Transfer Agent</a></h3>
+        <h3><a href="{{ '/capabilities/transfer-agent/api-documentation/' | relative_url }}">Transfer Agent</a></h3>
       </div>
       <p class="api-description">
         Shareholder registry, transfer restrictions, corporate actions. Complete transfer agent services.
@@ -756,7 +756,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/transfer-agent/transfer-agent-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/transfer-agent/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/transfer-agent/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/transfer-agent.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -766,7 +766,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🗳️</span>
-        <h3><a href="{{ '/capabilities/governance/governance-api-documentation/' | relative_url }}">Governance API</a></h3>
+        <h3><a href="{{ '/capabilities/governance/api-documentation/' | relative_url }}">Governance API</a></h3>
       </div>
       <p class="api-description">
         Voting, proposals, on-chain governance. Democratic decision-making for DAOs and protocols.
@@ -781,7 +781,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/governance/governance-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/governance/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/governance/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/governance.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -805,7 +805,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">✅</span>
-        <h3><a href="{{ '/capabilities/compliance/compliance-api-documentation/' | relative_url }}">Compliance API</a></h3>
+        <h3><a href="{{ '/capabilities/compliance/api-documentation/' | relative_url }}">Compliance API</a></h3>
       </div>
       <p class="api-description">
         AML/KYC, transaction monitoring, sanctions screening. Comprehensive compliance automation.
@@ -820,7 +820,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/compliance/compliance-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/compliance/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/compliance/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/compliance.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -830,7 +830,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">⚠️</span>
-        <h3><a href="{{ '/capabilities/risk-limits/risk-limits-api-documentation/' | relative_url }}">Risk & Limits</a></h3>
+        <h3><a href="{{ '/capabilities/risk-limits/api-documentation/' | relative_url }}">Risk & Limits</a></h3>
       </div>
       <p class="api-description">
         Position limits, exposure monitoring, risk controls. Real-time risk management infrastructure.
@@ -845,7 +845,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/risk-limits/risk-limits-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/risk-limits/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/risk-limits/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/risk-limits.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -855,7 +855,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">📁</span>
-        <h3><a href="{{ '/capabilities/documents/documents-api-documentation/' | relative_url }}">Documents API</a></h3>
+        <h3><a href="{{ '/capabilities/documents/api-documentation/' | relative_url }}">Documents API</a></h3>
       </div>
       <p class="api-description">
         Document storage, e-signatures, audit trails. Secure document management and compliance archival.
@@ -870,7 +870,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/documents/documents-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/documents/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/documents/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/documents.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -894,7 +894,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">⛓️</span>
-        <h3><a href="{{ '/capabilities/chain/chain-api-documentation/' | relative_url }}">Chain API</a></h3>
+        <h3><a href="{{ '/capabilities/chain/api-documentation/' | relative_url }}">Chain API</a></h3>
       </div>
       <p class="api-description">
         Blockchain connectivity, smart contract interaction, transaction monitoring. Multi-chain support.
@@ -909,7 +909,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/chain/chain-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/chain/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/chain/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/chain.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -919,7 +919,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">⚡</span>
-        <h3><a href="{{ '/capabilities/events/events-api-documentation/' | relative_url }}">Events API</a></h3>
+        <h3><a href="{{ '/capabilities/events/api-documentation/' | relative_url }}">Events API</a></h3>
       </div>
       <p class="api-description">
         Event streaming, webhooks, real-time notifications. Build reactive event-driven applications.
@@ -934,7 +934,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/events/events-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/events/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/events/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/events.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -944,7 +944,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🔔</span>
-        <h3><a href="{{ '/capabilities/notifications/notifications-api-documentation/' | relative_url }}">Notifications API</a></h3>
+        <h3><a href="{{ '/capabilities/notifications/api-documentation/' | relative_url }}">Notifications API</a></h3>
       </div>
       <p class="api-description">
         Multi-channel notifications: email, SMS, push. Keep users informed across all channels.
@@ -959,7 +959,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/notifications/notifications-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/notifications/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/notifications/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/notifications.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -969,7 +969,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">📡</span>
-        <h3><a href="{{ '/capabilities/observability/observability-api-documentation/' | relative_url }}">Observability API</a></h3>
+        <h3><a href="{{ '/capabilities/observability/api-documentation/' | relative_url }}">Observability API</a></h3>
       </div>
       <p class="api-description">
         Metrics, logs, traces, health checks. Complete observability for production systems.
@@ -984,7 +984,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/observability/observability-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/observability/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/observability/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/observability.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -1008,7 +1008,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">📈</span>
-        <h3><a href="{{ '/capabilities/analytics-reports/analytics-reports-api-documentation/' | relative_url }}">Analytics & Reports</a></h3>
+        <h3><a href="{{ '/capabilities/analytics-reports/api-documentation/' | relative_url }}">Analytics & Reports</a></h3>
       </div>
       <p class="api-description">
         Business intelligence, custom reports, dashboards. Data-driven insights and analytics.
@@ -1023,7 +1023,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/analytics-reports/analytics-reports-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/analytics-reports/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/analytics-reports/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/analytics-reports.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>
@@ -1033,7 +1033,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
       <span class="api-version">v2.0.0</span>
       <div class="api-card-header">
         <span class="api-icon">🧪</span>
-        <h3><a href="{{ '/capabilities/sandbox/sandbox-api-documentation/' | relative_url }}">Sandbox API</a></h3>
+        <h3><a href="{{ '/capabilities/sandbox/api-documentation/' | relative_url }}">Sandbox API</a></h3>
       </div>
       <p class="api-description">
         Testing environment, mock data, simulation tools. Safe environment for development and testing.
@@ -1048,7 +1048,7 @@ description: Comprehensive overview of all 26 Quub Exchange APIs with capabiliti
         </ul>
       </div>
       <div class="api-links">
-        <a href="{{ '/capabilities/sandbox/sandbox-api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
+        <a href="{{ '/capabilities/sandbox/api-documentation/' | relative_url }}" class="api-link">📖 Docs</a>
         <a href="{{ '/capabilities/sandbox/api-reference/' | relative_url }}" class="api-link">🔍 API Ref</a>
         <a href="{{ '/openapi/sandbox.yaml' | relative_url }}" class="api-link">📄 OpenAPI</a>
       </div>

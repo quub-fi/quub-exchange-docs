@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Marketplace capabilities.
 
 ---
 
-_For API reference, see [Marketplace API Documentation](../marketplace-api-documentation.md)_
+_For API reference, see [Marketplace API Documentation](../api-documentation/)_

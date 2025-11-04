@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Documents capabilities.
 
 ---
 
-_For API reference, see [Documents API Documentation](../documents-api-documentation.md)_
+_For API reference, see [Documents API Documentation](../api-documentation/)_

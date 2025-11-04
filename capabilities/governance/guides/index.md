@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Governance capabilities.
 
 ---
 
-_For API reference, see [Governance API Documentation](../governance-api-documentation.md)_
+_For API reference, see [Governance API Documentation](../api-documentation/)_

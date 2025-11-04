@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Fees Billing capabilities.
 
 ---
 
-_For API reference, see [Fees Billing API Documentation](../fees-billing-api-documentation.md)_
+_For API reference, see [Fees Billing API Documentation](../api-documentation/)_

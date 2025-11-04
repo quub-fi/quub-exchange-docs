@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Gateway capabilities.
 
 ---
 
-_For API reference, see [Gateway API Documentation](../gateway-api-documentation.md)_
+_For API reference, see [Gateway API Documentation](../api-documentation/)_

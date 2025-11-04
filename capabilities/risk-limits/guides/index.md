@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Risk Limits capabilities.
 
 ---
 
-_For API reference, see [Risk Limits API Documentation](../risk-limits-api-documentation.md)_
+_For API reference, see [Risk Limits API Documentation](../api-documentation/)_

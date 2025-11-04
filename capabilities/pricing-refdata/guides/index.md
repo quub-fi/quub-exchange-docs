@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Pricing Refdata capabiliti
 
 ---
 
-_For API reference, see [Pricing Refdata API Documentation](../pricing-refdata-api-documentation.md)_
+_For API reference, see [Pricing Refdata API Documentation](../api-documentation/)_

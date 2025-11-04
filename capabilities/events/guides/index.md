@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Events capabilities.
 
 ---
 
-_For API reference, see [Events API Documentation](../events-api-documentation.md)_
+_For API reference, see [Events API Documentation](../api-documentation/)_

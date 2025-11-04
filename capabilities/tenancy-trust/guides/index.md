@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Tenancy Trust capabilities
 
 ---
 
-_For API reference, see [Tenancy Trust API Documentation](../tenancy-trust-api-documentation.md)_
+_For API reference, see [Tenancy Trust API Documentation](../api-documentation/)_

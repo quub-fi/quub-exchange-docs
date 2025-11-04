@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Sandbox capabilities.
 
 ---
 
-_For API reference, see [Sandbox API Documentation](../sandbox-api-documentation.md)_
+_For API reference, see [Sandbox API Documentation](../api-documentation/)_

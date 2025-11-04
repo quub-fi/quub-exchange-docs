@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Compliance capabilities.
 
 ---
 
-_For API reference, see [Compliance API Documentation](../compliance-api-documentation.md)_
+_For API reference, see [Compliance API Documentation](../api-documentation/)_

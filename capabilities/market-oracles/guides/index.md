@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Market Oracles capabilitie
 
 ---
 
-_For API reference, see [Market Oracles API Documentation](../market-oracles-api-documentation.md)_
+_For API reference, see [Market Oracles API Documentation](../api-documentation/)_

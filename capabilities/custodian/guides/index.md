@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Custodian capabilities.
 
 ---
 
-_For API reference, see [Custodian API Documentation](../custodian-api-documentation.md)_
+_For API reference, see [Custodian API Documentation](../api-documentation/)_

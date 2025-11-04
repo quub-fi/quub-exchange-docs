@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Treasury capabilities.
 
 ---
 
-_For API reference, see [Treasury API Documentation](../treasury-api-documentation.md)_
+_For API reference, see [Treasury API Documentation](../api-documentation/)_

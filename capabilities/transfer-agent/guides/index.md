@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Transfer Agent capabilitie
 
 ---
 
-_For API reference, see [Transfer Agent API Documentation](../transfer-agent-api-documentation.md)_
+_For API reference, see [Transfer Agent API Documentation](../api-documentation/)_

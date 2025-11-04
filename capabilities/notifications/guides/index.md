@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Notifications capabilities
 
 ---
 
-_For API reference, see [Notifications API Documentation](../notifications-api-documentation.md)_
+_For API reference, see [Notifications API Documentation](../api-documentation/)_

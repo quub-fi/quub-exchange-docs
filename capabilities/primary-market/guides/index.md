@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Primary Market capabilitie
 
 ---
 
-_For API reference, see [Primary Market API Documentation](../primary-market-api-documentation.md)_
+_For API reference, see [Primary Market API Documentation](../api-documentation/)_

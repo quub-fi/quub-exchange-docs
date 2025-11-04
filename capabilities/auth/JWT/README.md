@@ -111,7 +111,7 @@ open diagrams/*.svg
 
 ## 📚 Related Documentation
 
-- [Authentication API Documentation](../auth-api-documentation.md)
+- [Authentication API Documentation](../api-documentation/)
 - [Authentication Overview](../README.md)
 - [OpenAPI Specification](../../../openapi/auth.yaml)
 

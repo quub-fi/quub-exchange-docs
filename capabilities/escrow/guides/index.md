@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Escrow capabilities.
 
 ---
 
-_For API reference, see [Escrow API Documentation](../escrow-api-documentation.md)_
+_For API reference, see [Escrow API Documentation](../api-documentation/)_

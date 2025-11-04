@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Observability capabilities
 
 ---
 
-_For API reference, see [Observability API Documentation](../observability-api-documentation.md)_
+_For API reference, see [Observability API Documentation](../api-documentation/)_

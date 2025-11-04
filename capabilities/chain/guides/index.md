@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Chain capabilities.
 
 ---
 
-_For API reference, see [Chain API Documentation](../chain-api-documentation.md)_
+_For API reference, see [Chain API Documentation](../api-documentation/)_

@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Identity capabilities.
 
 ---
 
-_For API reference, see [Identity API Documentation](../identity-api-documentation.md)_
+_For API reference, see [Identity API Documentation](../api-documentation/)_

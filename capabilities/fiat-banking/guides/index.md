@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Fiat Banking capabilities.
 
 ---
 
-_For API reference, see [Fiat Banking API Documentation](../fiat-banking-api-documentation.md)_
+_For API reference, see [Fiat Banking API Documentation](../api-documentation/)_

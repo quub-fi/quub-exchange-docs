@@ -28,4 +28,4 @@ Comprehensive guides for implementing and integrating Settlements capabilities.
 
 ---
 
-_For API reference, see [Settlements API Documentation](../settlements-api-documentation.md)_
+_For API reference, see [Settlements API Documentation](../api-documentation/)_

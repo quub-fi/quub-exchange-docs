@@ -521,7 +521,7 @@ const requestDuration = new Histogram({
 
 ## 📚 Additional Resources
 
-- [API Reference](../analytics-reports-api-documentation/) - Complete API documentation
+- [API Reference](../api-documentation/) - Complete API documentation
 - [OpenAPI Specification](/openapi/analytics-reports.yaml) - Machine-readable API spec
 - [Code Examples](https://github.com/quub-fi/examples) - Sample implementations
 - [Support](https://support.quub.fi) - Get help from our team
