@@ -30,6 +30,19 @@
 
     <!-- Mobile Navigation Styles -->
     <style>
+      /* Z-index ordering for mobile nav layers */
+      .top-nav {
+        z-index: 1002;
+      }
+
+      .sidebar {
+        z-index: 1001;
+      }
+
+      .mobile-overlay {
+        z-index: 1000;
+      }
+
       .mobile-menu-btn {
         display: none;
         background: none;
@@ -76,7 +89,6 @@
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 998;
         opacity: 0;
         transition: opacity 0.3s;
       }
@@ -86,6 +98,17 @@
       }
 
       @media (max-width: 1024px) {
+        .top-nav {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+        }
+
+        .docs-layout {
+          margin-top: 60px; /* reserve space below fixed nav */
+        }
+
         .mobile-menu-btn {
           display: block;
         }
@@ -100,7 +123,6 @@
           top: 60px;
           height: calc(100vh - 60px);
           width: 280px;
-          z-index: 999;
           transition: left 0.3s;
           background: var(--bg-primary);
           box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
