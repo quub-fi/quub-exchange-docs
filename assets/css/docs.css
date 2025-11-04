@@ -1035,10 +1035,10 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s ease;
 }
 
 .mobile-overlay.active {
@@ -1046,7 +1046,7 @@ body {
   opacity: 1;
 }
 
-/* Mobile Responsive Styles */
+/* Mobile Responsive Styles - iPad Push Style */
 @media (max-width: 1024px) {
   .mobile-menu-btn {
     display: block;
@@ -1060,20 +1060,26 @@ body {
     padding-top: var(--nav-height);
   }
 
+  /* Push animation for entire layout */
   .docs-layout {
     margin-top: 0;
-    grid-template-columns: 1fr;
+    transition: transform 0.3s ease;
+    will-change: transform;
+  }
+
+  body.no-scroll .docs-layout {
+    transform: translateX(280px);
   }
 
   .sidebar {
     position: fixed !important;
-    left: -100%;
+    left: -280px;
     top: var(--nav-height);
     height: calc(100vh - var(--nav-height));
     width: 280px;
     background: var(--bg-secondary);
-    z-index: 1001;
-    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+    transition: left 0.3s ease;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
   }
@@ -1094,8 +1100,13 @@ body {
 }
 
 @media (max-width: 640px) {
+  body.no-scroll .docs-layout {
+    transform: translateX(85vw);
+  }
+
   .sidebar {
-    width: 85%;
+    left: -85vw !important;
+    width: 85vw;
     max-width: 300px;
   }
 
@@ -1107,3 +1118,4 @@ body {
     padding: 1.5rem 1rem;
   }
 }
+
