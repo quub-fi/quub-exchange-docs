@@ -96,9 +96,9 @@ Use only properties defined in `openapi/fiat-banking.yaml`.
 Example curl: List accounts
 
 ```bash
-curl -X GET "https://api.quub.exchange/v2/orgs/ORG_ID/banking/accounts" \
+curl -X GET "https://api.quub.exchange/v2/orgs/{orgId}/banking/accounts" \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
-  -H "X-Org-Id: ORG_ID"
+  -H "X-Org-Id: {orgId}"
 ```
 
 ## 🏗️ Core API Operations {#core-operations}
@@ -114,9 +114,9 @@ Description: List fiat accounts linked to an organization. Supports pagination v
 Request (curl):
 
 ```bash
-curl -X GET "https://api.quub.exchange/v2/orgs/123e4567-e89b-12d3-a456-426614174000/banking/accounts" \
+curl -X GET "https://api.quub.exchange/v2/orgs/{orgId}/banking/accounts" \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
-  -H "X-Org-Id: 123e4567-e89b-12d3-a456-426614174000"
+  -H "X-Org-Id: {orgId}"
 ```
 
 Response (schema: PageResponse with data: BankAccount[]):
@@ -152,9 +152,9 @@ Description: Initiate a fiat deposit. Request body requires `accountId`, `amount
 Request (curl):
 
 ```bash
-curl -X POST "https://api.quub.exchange/v2/orgs/ORG_ID/banking/deposits" \
+curl -X POST "https://api.quub.exchange/v2/orgs/{orgId}/banking/deposits" \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
-  -H "X-Org-Id: ORG_ID" \
+  -H "X-Org-Id: {orgId}" \
   -H "Idempotency-Key: dep_1234567890" \
   -H "Content-Type: application/json" \
   -d '{
@@ -196,9 +196,9 @@ Description: Initiate a fiat withdrawal. The request body mirrors deposit fields
 Request (curl):
 
 ```bash
-curl -X POST "https://api.quub.exchange/v2/orgs/ORG_ID/banking/withdrawals" \
+curl -X POST "https://api.quub.exchange/v2/orgs/{orgId}/banking/withdrawals" \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
-  -H "X-Org-Id: ORG_ID" \
+  -H "X-Org-Id: {orgId}" \
   -H "Idempotency-Key: wdr_1234567890" \
   -H "Content-Type: application/json" \
   -d '{
@@ -239,9 +239,9 @@ Description: List settlement batches. Response items conform to the `Settlement`
 Request (curl):
 
 ```bash
-curl -X GET "https://api.quub.exchange/v2/orgs/ORG_ID/banking/settlements" \
+curl -X GET "https://api.quub.exchange/v2/orgs/{orgId}/banking/settlements" \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
-  -H "X-Org-Id: ORG_ID"
+  -H "X-Org-Id: {orgId}"
 ```
 
 Response (schema: PageResponse with data: Settlement[]):
@@ -251,53 +251,19 @@ Response (schema: PageResponse with data: Settlement[]):
   "data": [
     {
       "id": "stl_12345678-90ab-cdef-1234-567890abcdef",
-      "batchId": "BATCH_20251102_001",
-      "status": "CONFIRMED",
-      "totalAmount": 150000.0,
+      "orgId": "123e4567-e89b-12d3-a456-426614174000",
+      "period": "2025-11-02",
       "currency": "USD",
-      "transactionCount": 45,
-      "settlementDate": "2025-11-02T15:00:00Z"
+      "totalCredits": 160000.0,
+      "totalDebits": 10000.0,
+      "netAmount": 150000.0,
+      "status": "CONFIRMED",
+      "settledAt": "2025-11-02T15:00:00Z"
     }
   ],
   "pagination": { "cursor": "...", "hasMore": false }
 }
 ```
-
-Notes:
-
-- The OpenAPI defines `Settlement` properties: id, orgId, period, currency, totalCredits, totalDebits, netAmount, status, settledAt (nullable). Use those fields in integrations.
-
-## 🔐 Authentication Setup {#authentication}
-
-The spec exposes two supported security mechanisms for these endpoints:
-
-- OAuth2 (client credentials or authorization code) with scopes `read:fiat-banking` and `write:fiat-banking`.
-- API Key: header `X-API-KEY` (org-bound).
-
-Example (Bearer token):
-
-```
-Authorization: Bearer <ACCESS_TOKEN>
-```
-
-Example (API key):
-
-```
-X-API-KEY: <your-org-api-key>
-```
-
-## ✨ Best Practices {#best-practices}
-
-- Always include `Idempotency-Key` on POST requests (deposits, withdrawals).
-- Validate amounts client-side to respect minimums (amount >= 0.01).
-- Handle 4xx/5xx responses per spec: 409 (Conflict), 422 (ValidationError), 401, 403, 429.
-- Use pagination for list endpoints (cursor, limit parameters referenced by the spec).
-
-## 🔒 Security Guidelines {#security}
-
-- Use OAuth2 where possible for fine-grained scopes.
-- Rotate API keys and use org-scoped keys for production.
-- Mask or tokenise full account numbers in logs. The API responses may return masked accountNumber values.
 
 ## 🚀 Performance Optimization {#performance}
 
