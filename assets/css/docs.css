@@ -1057,14 +1057,16 @@ body {
 
   .docs-layout {
     margin-top: 0;
+    grid-template-columns: 1fr;
   }
 
   .sidebar {
-    position: fixed;
+    position: fixed !important;
     left: -100%;
     top: var(--nav-height);
     height: calc(100vh - var(--nav-height));
     width: 280px;
+    background: var(--bg-secondary);
     z-index: 1001;
     transition: left 0.3s ease-in-out;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
@@ -1072,12 +1074,13 @@ body {
   }
 
   .sidebar.active {
-    left: 0;
+    left: 0 !important;
   }
 
   .content {
     padding: 2rem 1.5rem;
     max-width: 100%;
+    margin-left: 0;
   }
 
   .toc {
